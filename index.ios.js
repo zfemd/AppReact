@@ -6,29 +6,31 @@
 
 import React, { Component } from 'react';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View
+    AppRegistry,
+    Navigator,
+    StyleSheet,
+    Text,
+    View
 } from 'react-native';
 
+import LoginPage from './view/login/LoginPage';
+
 class AppReact extends Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
-      </View>
-    );
-  }
+    render() {
+        let defaultName = 'LoginPage';
+        let defaultComponent = LoginPage;
+        return (
+            <Navigator
+                initialRoute={{ name: defaultName, component: defaultComponent, title:'登陆', rightButtonTitle:'取消'}}
+                configureScene={(route, routeStack) => {
+                        return Navigator.SceneConfigs.VerticalDownSwipeJump;
+                    }}
+                renderScene={(route, navigator) => {
+                        let Component = route.component;
+                        return <Component {...route.params} navigator={navigator} />
+                    }}/>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
