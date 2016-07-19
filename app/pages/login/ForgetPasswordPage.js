@@ -39,7 +39,7 @@ export default class ForgetPasswordPage extends Component {
         }
     }
     _sendCode() {
-        // this.codeBtn.children='59秒';
+        this.codeBtn.props.children='59秒';
         // this.codeBtn.setState({codeBtn:null});
     }
 
