@@ -12,5 +12,8 @@
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "react-native-vector-icons": "^2.0.3"
+  },
+  "devDependencies": {
+    "redux-logger": "^2.6.1"
   }
 }
