@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 
 import Button from '../../../app/components/button/Button';
+import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import LoginPage from './LoginPage';
 
@@ -39,7 +40,7 @@ export default class ForgetPasswordPage extends Component {
         }
     }
     _sendCode() {
-        this.codeBtn.props.children='59秒';
+        this.codeBtn.state('codeBtnText', '59秒');
         // this.codeBtn.setState({codeBtn:null});
     }
 
@@ -83,10 +84,7 @@ export default class ForgetPasswordPage extends Component {
                                onChangeText={(text) => {this.state.code=text, this.validate()}}
                                value={this.state.text}
                                onFocus={(e) => this.setState({focus:'code'})}/>
-                    <Button ref={(component) => this.codeBtn = component}
-                            onPress={this._sendCode.bind(this)}
-                            style={{fontSize: 14, backgroundColor:'#ececec', padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}>
-                        发送验证码</Button>
+                    <PhoneCodeButton phone={123456789}>发送验证码</PhoneCodeButton>
                 </View>
 
                 <View style={{justifyContent:'flex-end', flexDirection:'row'}}>
@@ -109,6 +107,12 @@ export default class ForgetPasswordPage extends Component {
  onValueChange={(lang) => this.setState({region: lang})}>
  <Picker.Item label="+86" value="China" />
  </Picker>*/
+
+/*<Button ref={(component) => this.codeBtn = component}
+        onPress={this._sendCode.bind(this)}
+        style={{fontSize: 14, backgroundColor:'#ececec', padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}>
+
+    发送验证码</Button>*/
 
 var styles = StyleSheet.create({
     description: {
