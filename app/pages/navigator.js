@@ -48,7 +48,7 @@ class Nav extends React.Component {
             <View style={{ flex: 1 }}>
                 <StatusBar
                     hidden = {this.state.hidden}
-                    backgroundColor="#fff"
+                    backgroundColor="#000"
                     barStyle="default"
                     />
                 <Navigator

@@ -1,7 +1,11 @@
 'use strict';
 
-const reducer = function (state, action) {
-    console.log('reducer was called with state', state, 'and action', action)
+const initialState = {
+    name: ''
 };
 
-export default reducer;
+const tabTitle = function (state, action) {
+
+};
+
+export default tabTitle;
