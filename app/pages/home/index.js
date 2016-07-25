@@ -11,6 +11,7 @@ import TabBar from './tab';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import Toolbar from '../../components/toolbar';
 import Flow from '../../components/flow';
+import MyPage from '../my';
 
 class Home extends React.Component {
     constructor(props) {
@@ -60,9 +61,7 @@ class Home extends React.Component {
                         </View>
                     </ScrollView>
                     <ScrollView tabLabel="ios-person-outline" style={styles.tabView}>
-                        <View style={styles.card}>
-                            <Text>4</Text>
-                        </View>
+                        <MyPage />
                     </ScrollView>
                 </ScrollableTabView>
             </View>
