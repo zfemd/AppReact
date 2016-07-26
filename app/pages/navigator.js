@@ -32,7 +32,7 @@ class Nav extends React.Component {
     }
 
     _configureScene() {
-        return Navigator.SceneConfigs.PushFromRight;
+        return Navigator.SceneConfigs.FloatFromRight;
     }
 
     _renderScene(route, navigator) {

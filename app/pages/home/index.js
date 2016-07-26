@@ -4,7 +4,8 @@ import React from 'react';
 import {
     ScrollView,
     Text,
-    View
+    View,
+    InteractionManager
 } from 'react-native';
 import styles from './style';
 import TabBar from './tab';
@@ -12,10 +13,12 @@ import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-vi
 import Toolbar from '../../components/toolbar';
 import Flow from '../../components/flow';
 import MyPage from '../my';
+import DetailPage from '../detail';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
+        this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
     }
 
     static defaultProps = {
@@ -28,6 +31,16 @@ class Home extends React.Component {
         }
 
     };
+
+    _jumpToDetailPage() {
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: DetailPage,
+                name: 'DetailPage',
+            });
+        });
+    }
 
     render() {
         return (
@@ -43,7 +56,9 @@ class Home extends React.Component {
                     renderTabBar={() => <TabBar {...this.props}/>}
                     >
                     <ScrollView tabLabel="ios-home-outline" style={styles.tabView}>
-                        <Flow/>
+                        <Flow
+                            press={this._jumpToDetailPage}
+                            />
                     </ScrollView>
                     <ScrollView tabLabel="ios-compass-outline" style={styles.tabView}>
                         <View style={styles.card}>

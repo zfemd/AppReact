@@ -55,7 +55,7 @@ var ListViewGridLayoutExample = React.createClass({
 
     render: function() {
         let {
-                tabs
+                tabs , press
             } = this.props;
         return (
             // ListView wraps ScrollView and so takes on its properties.
@@ -75,7 +75,7 @@ var ListViewGridLayoutExample = React.createClass({
         var rowHash = Math.abs(hashCode(rowData));
         var imgSource = THUMB_URLS[rowHash % THUMB_URLS.length];
         return (
-            <TouchableHighlight onPress={() => this._pressRow(rowID)} underlayColor="transparent">
+            <TouchableHighlight onPress={() => this.props.press()} underlayColor="transparent">
                 <View>
                     <View style={styles.row}>
                         <Image style={styles.thumb} source={imgSource} />
