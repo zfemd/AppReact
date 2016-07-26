@@ -128,6 +128,7 @@ var hashCode = function(str) {
 
 var styles = StyleSheet.create({
     list: {
+        flex: 1,
         justifyContent: 'space-around',
         flexDirection: 'row',
         flexWrap: 'wrap',

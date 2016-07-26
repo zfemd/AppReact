@@ -22,19 +22,19 @@ const propTypes = {
     title: PropTypes.string,
     actions: PropTypes.array,
     navigator: PropTypes.object,
-    onActionSelected: PropTypes.func,
-    onIconClicked: PropTypes.func,
+    _onActionSelected: PropTypes.func,
+    _onIconClicked: PropTypes.func,
     navIcon: PropTypes.number
 };
 
 class Toolbar extends React.Component {
     constructor(props) {
         super(props);
-        this.onIconClicked = this.onIconClicked.bind(this);
-        this.onActionSelected = this.onActionSelected.bind(this);
+        this._onIconClicked = this._onIconClicked.bind(this);
+        this._onActionSelected = this._onActionSelected.bind(this);
     }
 
-    onIconClicked() {
+    _onIconClicked() {
         if (this.props.onIconClicked) {
             //TODO
         } else {
@@ -47,11 +47,11 @@ class Toolbar extends React.Component {
         }
     }
 
-    onActionSelected() {
+    _onActionSelected() {
         this.props.onActionSelected();
     }
 
-    renderToolbarAndroid() {
+    _renderToolbarAndroid() {
         return (
             <ToolbarAndroid
 
@@ -60,30 +60,42 @@ class Toolbar extends React.Component {
         );
     }
 
-    renderToolbarIOS() {
+    _onArrowClicked() {
+        return (
+            <View
+                />
+        );
+    }
+
+    _renderToolbarIOS() {
         const action = this.props.actions[0];
         showActionButton = action !== undefined;
         return (
             <View style={styles.toolbar}>
                 <ImageButton
-                    containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                     source={addImg}
                     style={styles.leftIOS}
-                    onPress={this.onIconClicked}
+                    onPress={this._onIconClicked}
                     />
-                <Text
-                    style={[styles.titleIOS,
-                            showActionButton ? { paddingLeft: 0 } : { paddingLeft: -35 }]}
-                    >
-                    {this.props.title}
-                </Text>
 
+                <View style={styles.titleViewIOS}>
+                    <Text
+                        style={[styles.titleIOS,
+                            showActionButton ? { paddingLeft: 0 } : { paddingLeft: 0 }]}
+                        >
+                        {this.props.title}
+                    </Text>
+                    <ImageButton
+                        source={arrowImg}
+                        style={styles.arrowIOS}
+                        onPress={this._onArrowClicked}
+                        />
+                </View>
 
                 <ImageButton
-                    containerStyle={{ justifyContent: 'center', alignItems: 'center' }}
                     source={searchImg}
                     style={styles.rightIOS}
-                    onPress={this.onIconClicked}
+                    onPress={this._onIconClicked}
                     />
 
             </View>
@@ -92,8 +104,8 @@ class Toolbar extends React.Component {
 
     render() {
         let Toolbar = Platform.select({
-            android: () => this.renderToolbarAndroid(),
-            ios: () => this.renderToolbarIOS()
+            android: () => this._renderToolbarAndroid(),
+            ios: () => this._renderToolbarIOS()
         });
         return <Toolbar />;
     }
@@ -101,37 +113,43 @@ class Toolbar extends React.Component {
 
 const styles = StyleSheet.create({
     toolbar: {
-        flexDirection: 'row',
         backgroundColor: '#fff',
         alignItems: 'center',
         height: 58,
         shadowOffset: {width: 0, height: .2,},
         shadowOpacity: .3,
         shadowColor: '#555',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
     },
     titleIOS: {
-        flex: 1,
         textAlign: 'center',
         color: '#696969',
         fontWeight: 'bold',
         fontSize: 20,
-        marginTop: 20,
     },
     leftIOS: {
         height: 18,
         width: 24,
         marginTop: 20,
-        marginLeft: 20
+        marginLeft: 10
     },
     rightIOS: {
-        justifyContent: 'center',
-        alignItems: 'center',
         marginTop: 20,
-        marginRight: 10
+        marginRight: 10,
+        right: 0
     },
     arrowIOS: {
+        marginLeft: 10,
+        width: 10,
+        height: 7
+    },
+    titleViewIOS: {
+        flex: 2,
         marginTop: 20,
-        marginLeft: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
     }
 
 });
@@ -139,7 +157,7 @@ const styles = StyleSheet.create({
 Toolbar.propTypes = propTypes;
 
 Toolbar.defaultProps = {
-    onActionSelected() {
+    _onActionSelected() {
     },
     title: '',
     actions: []

@@ -9,7 +9,7 @@ var {
 const styles = StyleSheet.create({
     tabView: {
         flex: 1,
-        padding: 10,
+        padding: 0,
         backgroundColor: 'rgba(0,0,0,0.01)',
     },
     card: {
