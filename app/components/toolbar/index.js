@@ -100,8 +100,8 @@ class Toolbar extends React.Component {
                     style={styles.rightIOS}
                     onPress={this._onIconClicked}
                     />
-
             </View>
+
         );
     }
 
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
         shadowColor: '#555',
         flexDirection: 'row',
         flexWrap: 'wrap',
+        zIndex: 10
     },
     titleIOS: {
         textAlign: 'center',
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-    },
+    }
 });
 
 Toolbar.propTypes = propTypes;

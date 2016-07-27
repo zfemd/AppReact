@@ -6,7 +6,8 @@ import {
     Text,
     View,
     InteractionManager,
-    Navigator
+    Navigator,
+    TouchableOpacity,
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './style';
@@ -14,6 +15,7 @@ import TabBar from './tab';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import Toolbar from '../../components/toolbar';
 import Flow from '../../components/flow';
+import HomeFilter from '../../components/homeFilter';
 import MyPage from '../my';
 import DetailPage from '../detail';
 
@@ -94,8 +96,7 @@ class Home extends React.Component {
                 {[this.state.showCate].map((show) => {
                     if(show){
                         return (
-                            <View key='' style={styles.cate}>
-                            </View>
+                            <HomeFilter key='' />
                         );
                     }
                 })}

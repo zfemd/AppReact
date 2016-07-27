@@ -49,18 +49,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#f1f1f1',
     },
-    cate: {
-        flex: 1,
-        position: 'absolute',
-        width: width,
-        height: height,
-        top: 0,
-        left: 0,
-        backgroundColor: '#000',
-        marginTop: 58,
-        zIndex: 1,
-        opacity: 0.4
-    }
 });
 
 export default styles
