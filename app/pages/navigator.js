@@ -31,8 +31,8 @@ class Nav extends React.Component {
         return naviGoBack(tempNavigator);
     }
 
-    _configureScene() {
-        return Navigator.SceneConfigs.FloatFromRight;
+    _configureScene(route) {
+        return route.sceneConfigs || Navigator.SceneConfigs.FloatFromRight;
     }
 
     _renderScene(route, navigator) {

@@ -1,11 +1,10 @@
 'use strict';
 
-const initialState = {
-    name: ''
-};
+import { combineReducers } from 'redux';
+import home from './home';
 
-const tabTitle = function (state, action) {
+const rootReducer = combineReducers({
+    home,
+});
 
-};
-
-export default tabTitle;
+export default rootReducer;

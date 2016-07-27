@@ -10,7 +10,8 @@ var {
     Text,
     View,
     PixelRatio,
-    Dimensions
+    Dimensions,
+    TouchableOpacity
     } = ReactNative;
 
 var {height, width} = Dimensions.get('window');
@@ -75,7 +76,7 @@ var ListViewGridLayoutExample = React.createClass({
         var rowHash = Math.abs(hashCode(rowData));
         var imgSource = THUMB_URLS[rowHash % THUMB_URLS.length];
         return (
-            <TouchableHighlight onPress={() => this.props.press()} underlayColor="transparent">
+            <TouchableOpacity onPress={() => this.props.press()} underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.row}>
                         <Image style={styles.thumb} source={imgSource} />
@@ -95,7 +96,7 @@ var ListViewGridLayoutExample = React.createClass({
                         </View>
                     </View>
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
     },
 
@@ -128,7 +129,6 @@ var hashCode = function(str) {
 
 var styles = StyleSheet.create({
     list: {
-        flex: 1,
         justifyContent: 'space-around',
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -138,10 +138,10 @@ var styles = StyleSheet.create({
         flex: 1,
         marginLeft: width/100*2,
         marginTop: 8,
+        marginBottom: 0,
         width: (width/100)*47 ,
         backgroundColor: '#fff',
         alignItems: 'center',
-        top: 0
     },
     thumb: {
         width: width/100*47,

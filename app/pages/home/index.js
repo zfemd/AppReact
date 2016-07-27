@@ -5,8 +5,10 @@ import {
     ScrollView,
     Text,
     View,
-    InteractionManager
+    InteractionManager,
+    Navigator
 } from 'react-native';
+import { connect } from 'react-redux';
 import styles from './style';
 import TabBar from './tab';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
@@ -19,6 +21,10 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
+        this._showCate = this._showCate.bind(this);
+        this.state = {
+            showCate: false,
+        }
     }
 
     static defaultProps = {
@@ -38,16 +44,22 @@ class Home extends React.Component {
             navigator.push({
                 component: DetailPage,
                 name: 'DetailPage',
+                sceneConfigs: Navigator.SceneConfigs.FloatFromRight
             });
         });
     }
 
+    _showCate() {
+        this.setState({showCate: this.props.home.showCate});
+    }
+
     render() {
         return (
-            <View style={styles.container}>
+            <View style={styles.container} visible='hidden'>
                 <Toolbar
                     title="剁手记"
                     navigator={navigator}
+                    showCate={this._showCate}
                     />
                 <ScrollableTabView
                     style={{marginTop: 0, }}
@@ -79,11 +91,26 @@ class Home extends React.Component {
                         <MyPage />
                     </ScrollView>
                 </ScrollableTabView>
+                {[this.state.showCate].map((show) => {
+                    if(show){
+                        return (
+                            <View key='' style={styles.cate}>
+                            </View>
+                        );
+                    }
+                })}
+
             </View>
 
         );
     }
 }
 
+function mapStateToProps(state) {
+    const { home } = state;
+    return {
+        home
+    };
+}
 
-export default Home;
+export default connect(mapStateToProps)(Home);

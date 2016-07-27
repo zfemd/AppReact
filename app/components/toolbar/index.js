@@ -6,9 +6,11 @@ import {
     ToolbarAndroid,
     Platform,
     View,
-    Text
+    Text,
+    Alert,
+    Dimensions
 } from 'react-native';
-
+import { connect } from 'react-redux';
 import { naviGoBack } from '../../utils/common';
 import ImageButton from './ImageButton';
 import Button from './Button';
@@ -17,6 +19,7 @@ let showActionButton = false;
 const addImg = require('../../assets/header/add.png');
 const searchImg = require('../../assets/header/search.png');
 const arrowImg = require('../../assets/header/arrow.png');
+var {height, width} = Dimensions.get('window');
 
 const propTypes = {
     title: PropTypes.string,
@@ -24,7 +27,8 @@ const propTypes = {
     navigator: PropTypes.object,
     _onActionSelected: PropTypes.func,
     _onIconClicked: PropTypes.func,
-    navIcon: PropTypes.number
+    navIcon: PropTypes.number,
+    cate: PropTypes.object,
 };
 
 class Toolbar extends React.Component {
@@ -32,6 +36,7 @@ class Toolbar extends React.Component {
         super(props);
         this._onIconClicked = this._onIconClicked.bind(this);
         this._onActionSelected = this._onActionSelected.bind(this);
+        this._onArrowClicked = this._onArrowClicked.bind(this);
     }
 
     _onIconClicked() {
@@ -61,10 +66,8 @@ class Toolbar extends React.Component {
     }
 
     _onArrowClicked() {
-        return (
-            <View
-                />
-        );
+        this.props.home.showCate = !this.props.home.showCate;
+        this.props.showCate();
     }
 
     _renderToolbarIOS() {
@@ -80,8 +83,8 @@ class Toolbar extends React.Component {
 
                 <View style={styles.titleViewIOS}>
                     <Text
-                        style={[styles.titleIOS,
-                            showActionButton ? { paddingLeft: 0 } : { paddingLeft: 0 }]}
+                        style={styles.titleIOS}
+                        onPress={this._onArrowClicked}
                         >
                         {this.props.title}
                     </Text>
@@ -150,8 +153,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-    }
-
+    },
 });
 
 Toolbar.propTypes = propTypes;
@@ -163,4 +165,11 @@ Toolbar.defaultProps = {
     actions: []
 };
 
-export default Toolbar;
+function mapStateToProps(state) {
+    const { home } = state;
+    return {
+        home
+    };
+}
+
+export default connect(mapStateToProps)(Toolbar);
