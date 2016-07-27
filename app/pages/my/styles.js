@@ -9,8 +9,7 @@ var {
 
 export default styles = StyleSheet.create({
     text:{
-        color: '#4a4a4a',
-        fontFamily: 'STHeitiSC-Light'
+        color: '#4a4a4a'
     },
     userContainer: {
         flexDirection:'column',

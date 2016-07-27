@@ -11,6 +11,14 @@ import {
 import MyHomePage from './MyHomePage';
 
 class MyPage extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            region: 'China'
+        };
+    }
+    
     render() {
         let defaultName = 'MyHomePage';
         let defaultComponent = MyHomePage;
