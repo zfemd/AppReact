@@ -7,8 +7,10 @@ import {
     TouchableOpacity,
     Animated,
     StyleSheet,
-    Dimensions
+    Dimensions,
+    TouchableWithoutFeedback
 } from 'react-native';
+import { connect } from 'react-redux';
 
 var {height, width} = Dimensions.get('window');
 
@@ -35,24 +37,30 @@ class HomeFilter extends React.Component {
 
     }
 
+    componentWillMount() {
+        this.props.home.filterMounted = true;
+    }
+
     render() {
         return (
-            <View style={styles.cate}>
-                <Animated.View style={[styles.cateList, {marginTop: this.state.dropAnim}]}>
-                    <TouchableOpacity style={styles.cateItem}>
-                        <Text style={styles.cateFont}>全部</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cateItem}>
-                        <Text style={styles.cateFont}>关注</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cateItem}>
-                        <Text style={styles.cateFont}>附件</Text>
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View style={[styles.cateShadow, {opacity: this.state.fadeAnim}]}>
+            <TouchableWithoutFeedback onPress={this.props.click}>
+                <View style={styles.cate}>
+                    <Animated.View style={[styles.cateList, {marginTop: this.state.dropAnim}]}>
+                        <TouchableOpacity style={styles.cateItem}>
+                            <Text style={styles.cateFont}>全部</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.cateItem}>
+                            <Text style={styles.cateFont}>关注</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.cateItem}>
+                            <Text style={styles.cateFont}>附件</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+                    <Animated.View  style={[styles.cateShadow, {opacity: this.state.fadeAnim}]}>
 
-                </Animated.View>
-            </View>
+                    </Animated.View>
+                </View>
+            </TouchableWithoutFeedback>
         )
     }
 
@@ -94,4 +102,11 @@ const styles = StyleSheet.create({
     }
 });
 
-export default HomeFilter;
+function mapStateToProps(state) {
+    const { home } = state;
+    return {
+        home
+    };
+}
+
+export default connect(mapStateToProps)(HomeFilter);

@@ -66,8 +66,8 @@ class Toolbar extends React.Component {
     }
 
     _onArrowClicked() {
-        this.props.home.showCate = !this.props.home.showCate;
-        this.props.showCate();
+        this.props.home.showFilter = !this.props.home.showFilter;
+        this.props.showFilter();
     }
 
     _renderToolbarIOS() {

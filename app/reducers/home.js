@@ -1,7 +1,8 @@
 'use strict';
 
 const initialState = {
-    showCate: false
+    showFilter: false,
+    filterMounted: false,
 };
 
 const home = function (state = initialState, action) {

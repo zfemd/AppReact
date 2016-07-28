@@ -23,9 +23,11 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
-        this._showCate = this._showCate.bind(this);
+        this._showFilter = this._showFilter.bind(this);
+        this._onFilterClicked = this._onFilterClicked.bind(this);
         this.state = {
-            showCate: false,
+            showFilter: false,
+            filterMounted: false,
         }
     }
 
@@ -51,8 +53,15 @@ class Home extends React.Component {
         });
     }
 
-    _showCate() {
-        this.setState({showCate: this.props.home.showCate});
+    _showFilter() {
+        this.setState({showFilter: this.props.home.showFilter});
+    }
+
+    _onFilterClicked() {
+        if (this.props.home.filterMounted) {
+            this.props.home.showFilter = !this.props.home.showFilter;
+            this._showFilter();
+        }
     }
 
     render() {
@@ -61,7 +70,7 @@ class Home extends React.Component {
                 <Toolbar
                     title="剁手记"
                     navigator={navigator}
-                    showCate={this._showCate}
+                    showFilter={this._showFilter}
                     />
                 <ScrollableTabView
                     style={{marginTop: 0, }}
@@ -93,10 +102,10 @@ class Home extends React.Component {
                         <MyPage />
                     </ScrollView>
                 </ScrollableTabView>
-                {[this.state.showCate].map((show) => {
-                    if(show){
+                {[this.state.showFilter].map((show) => {
+                    if (show) {
                         return (
-                            <HomeFilter key='' />
+                            <HomeFilter click={this._onFilterClicked} key=''/>
                         );
                     }
                 })}
