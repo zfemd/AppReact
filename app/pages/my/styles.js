@@ -49,9 +49,13 @@ export default styles = StyleSheet.create({
     assetText: {
         fontSize:12
     },
-    separator: {
+    separatorVertical: {
         borderLeftWidth:1,
         borderLeftColor:'#ccc'
+    },
+    separatorHorizontal: {
+        borderBottomWidth:1,
+        borderBottomColor:'#ccc'
     },
     count: {
         fontSize:20,
@@ -109,6 +113,47 @@ export default styles = StyleSheet.create({
     },
     noteAssetIcon: {
         color:'#FC4D30'  
+    },
+    messageHeader: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        backgroundColor: '#f5f4f5',
+        paddingVertical: 12,
+        borderBottomWidth:1,
+        borderBottomColor: '#ccc'
+    },
+    messageHeaderTitle: {
+        fontSize: 20
+    },
+    messageRow: {
+        flexDirection:'row',
+        backgroundColor:'#fff',
+        paddingHorizontal: 15,
+        paddingVertical: 10
+    },
+    messageTitle: {
+        fontSize:16,
+        color:'#686868',
+        flex:1
+    },
+    messageNewMark: {
+        backgroundColor:'#f00',
+        marginRight:5,
+        paddingHorizontal:5
+    },
+    messageNewNum: {
+        fontSize:12,
+        lineHeight:16,
+        color:'#fff'
+    },
+    messageAssertIcon: {
+        color:'#9b9b9b',
+        marginRight: 5,
+        width: 20
+    },
+    messageLinkIcon: {
+        color:'#9b9b9b',
+        marginLeft: 5
     },
     container: {
         borderTopWidth: 1,

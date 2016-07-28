@@ -131,7 +131,7 @@ export default class MyHomePage extends Component {
         });
     }
 
-    _renderNotesHeader() {
+    _renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.myNotesTitle}>
                 <Text style={{fontSize:16}}>我的笔记</Text>
@@ -160,17 +160,17 @@ export default class MyHomePage extends Component {
                         {zanIcon}
                         <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.zanNum}</Text>
                     </View>
-                    <View style={styles.separator}></View>
+                    <View style={styles.separatorVertical}></View>
                     <View style={styles.noteAsset}>
                         {commentIcon}
                         <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.commentNum}</Text>
                     </View>
-                    <View style={styles.separator}></View>
+                    <View style={styles.separatorVertical}></View>
                     <View style={styles.noteAsset}>
                         {shoppingCartIcon}
                         <Text style={[styles.text, {marginLeft:5}]}>({rmbIcon} {rowData.summary.income})</Text>
                     </View>
-                    <View style={styles.separator}></View>
+                    <View style={styles.separatorVertical}></View>
                     <View style={styles.noteAsset}>
                         <Text style={[styles.text]}>...</Text>
                     </View>
@@ -179,10 +179,10 @@ export default class MyHomePage extends Component {
         );
     }
 
-    _renderSeperator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
+    _renderSeparator(sectionID: number, rowID: number, adjacentRowHighlighted: bool) {
         return (
             <View key={sectionID + '_' + rowID}
-                style={{height: 1, backgroundColor: adjacentRowHighlighted ? '#3B5998' : '#ccc'}}/>
+                style={styles.separatorHorizontal}/>
         );
     }
 
@@ -227,10 +227,11 @@ export default class MyHomePage extends Component {
                 </View>
 
                 <ListView dataSource={this.state.dataSource}
-                          renderHeader={this._renderNotesHeader}
+                          renderSectionHeader={this._renderSectionHeader}
                           renderRow={this._renderNote}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-                          renderSeparator={this._renderSeperator} />
+                          renderSeparator={this._renderSeparator}
+                          stickyHeaderIndices={[0]}/>
 
             </View>
         );
