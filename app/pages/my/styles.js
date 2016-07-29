@@ -89,12 +89,11 @@ export default styles = StyleSheet.create({
     },
     noteThumbBox: {
         marginTop: 10,
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        height: 191
     },
     noteThumb: {
-        
+        height: 191,
+        width: 191,
+        overflow:'hidden'
     },
     noteTitle: {
         fontSize: 14,

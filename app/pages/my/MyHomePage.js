@@ -39,6 +39,7 @@ export default class MyHomePage extends Component {
             name: '天才小熊猫',
             gender: 'women',
             income: 32,
+            thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png',
             summary: {
                 noteNum: 32,
                 transNum: 38,
@@ -50,7 +51,8 @@ export default class MyHomePage extends Component {
         this.notes = {notes:
         {'noteId1': {
             user: {
-                name: '天才小熊猫'
+                name: '天才小熊猫',
+                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
             },
             detail: {
                 title: '最新入手的羊毛线',
@@ -63,16 +65,17 @@ export default class MyHomePage extends Component {
             }
         },'noteId2': {
             user: {
-                name: '天才小熊猫',
+                name: '天才小子',
+                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
             },
             detail: {
-                title: '最新入手的羊毛线',
+                title: '滚出',
                 createTime: '05-28 08:29'
             },
             summary: {
-                zanNum: 28,
+                zanNum: 8,
                 commentNum: 8,
-                income: 32
+                income: 3
             }
         }}};
 
@@ -129,6 +132,10 @@ export default class MyHomePage extends Component {
         this.setState({
             datasource: this.state.ds.cloneWithRows(this._notes)
         });
+
+        Image.getSize(this.props.source.uri, (width, height) => {
+            this.setState({width, height});
+        });
     }
 
     _renderSectionHeader(sectionData, sectionID) {
@@ -144,16 +151,20 @@ export default class MyHomePage extends Component {
             <View style={styles.myNote}>
                 <View style={styles.noteUserBox}>
                     <View style={[styles.portrait, {borderRadius:31}]}>
-                        <Image source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 31, height: 31}} />
+                        <Image source={{uri: rowData.user.thumbUri, width: 31, height: 31}} />
                     </View>
                     <View style={styles.noteUserMsgBox}>
                         <Text style={styles.noteUserTitle}>{rowData.user.name}</Text>
                         <Text style={styles.noteCreateTime}>{rowData.detail.createTime}</Text>
                     </View>
                 </View>
-                <TouchableHighlight style={styles.noteThumbBox}>
-                    <Image style={styles.noteThumb} source={THUMB_URLS[0]} height={191} width={191}/>
+
+                <TouchableHighlight>
+                    <View style={styles.noteThumbBox}>
+                        <Image style={styles.noteThumb} source={THUMB_URLS[0]} resizeMode={Image.resizeMode.contain} />
+                    </View>
                 </TouchableHighlight>
+
                 <Text style={styles.noteTitle}>{rowData.detail.title}</Text>
                 <View style={styles.noteAssets}>
                     <View style={styles.noteAsset}>
@@ -191,7 +202,7 @@ export default class MyHomePage extends Component {
             <View>
                 <View style={styles.userContainer}>
                     <View style={styles.portrait}>
-                        <Image source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 45, height: 45}} />
+                        <Image source={{uri: this.user.thumbUri, width: 45, height: 45}} />
                     </View>
                     <View style={styles.user}>
                         <Text style={{fontSize:16}}>{this.user.name}</Text>
