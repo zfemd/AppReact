@@ -1,7 +1,9 @@
 'use strict';
 import React, { Component } from 'react';
 import {
+    AsyncStorage,
     Flex,
+    InteractionManager,
     ListView,
     StyleSheet,
     Text,
@@ -31,53 +33,13 @@ var THUMB_URLS = [
     require('../../assets/test/test1.png')
 ];
 
+var ME_STORAGE_KEY = '@duoshouji:me';
+var MY_NOTES_STORAGE_KEY = '@duoshouji:mynotes';
+var TOKEN_STORAGE_KEY = '@duoshouji:token';
+
 export default class MyHomePage extends Component {
     constructor(props) {
         super(props);
-
-        this.user = {
-            name: '天才小熊猫',
-            gender: 'women',
-            income: 32,
-            thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png',
-            summary: {
-                noteNum: 32,
-                transNum: 38,
-                watcherNum: 29,
-                fansNum: 28
-            }
-        }
-
-        this.notes = {notes:
-        {'noteId1': {
-            user: {
-                name: '天才小熊猫',
-                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
-            },
-            detail: {
-                title: '最新入手的羊毛线',
-                createTime: '05-28 08:29'
-            },
-            summary: {
-                zanNum: 28,
-                commentNum: 8,
-                income: 32
-            }
-        },'noteId2': {
-            user: {
-                name: '天才小子',
-                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
-            },
-            detail: {
-                title: '滚出',
-                createTime: '05-28 08:29'
-            },
-            summary: {
-                zanNum: 8,
-                commentNum: 8,
-                income: 3
-            }
-        }}};
 
         /* we used the defaultGetRowData, this requires dataBlob has below structure:
          * dataBlob = {section:{rowID_1: rowData1, rowID_2: rowData2,...},...};
@@ -91,9 +53,45 @@ export default class MyHomePage extends Component {
         });
 
         this.state = {
-            dataSource: ds.cloneWithRowsAndSections(this.notes)
+            dataSource: ds
+        };
+    }
+
+    async componentWillMount () {
+        // load old data to display
+        await this._loadInitialState();
+    }
+
+    componentDidMount() {
+        // refresh data from server
+        InteractionManager.runAfterInteractions(() => {
+            this.updateFromServer();
+        });
+    }
+
+    async _loadInitialState() {
+        try {
+            await this._getToken();
+
+            let meDetail = await AsyncStorage.getItem(ME_STORAGE_KEY);
+            if (meDetail !== null){
+                this.setState({user: JSON.parse(meDetail)});
+            }
+
+            let myNotes = await AsyncStorage.getItem(MY_NOTES_STORAGE_KEY);
+            if (myNotes !== null){
+                this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(JSON.parse(myNotes))});
+            }
+        } catch (error) {
+            console.log('AsyncStorage error: ' + error.message);
         }
     }
+
+    async updateFromServer(){
+        await this._getAboutMe();
+        await this._getMyNotes();
+    }
+
     _pressButton() {
         const { navigator } = this.props;
         //为什么这里可以取得 props.navigator?请看上文:
@@ -107,24 +105,107 @@ export default class MyHomePage extends Component {
         }
     }
 
-    _getUserData() {
-        fetch('https://mywebsite.com/endpoint/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: 'yourValue',
-                secondParam: 'yourOtherValue',
-            })
-        }).then((response) => response.json())
-        .then((responseJson) => {
-            return responseJson.movies;
+    async _getToken() {
+        try {
+            let token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
+            if (token !== null){
+                this.state.token = token;
+            }
+        } catch (error) {
+            console.log('AsyncStorage error: ' + error.message);
+        }
+    }
+
+    async _getAboutMe () {
+        // fetch('https://duoshouji.com/endpoint/aboutme', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         token: this.state.token
+        //     })
+        // }).then((response) => response.json())
+        // .then((responseJson) => {
+        //     this._updateUserSource(responseJson);
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        // });
+
+        this._updateUserSource({
+            name: '天才小熊猫',
+            gender: 'women',
+            income: 32,
+            thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png',
+            summary: {
+                noteNum: 32,
+                transNum: 38,
+                watcherNum: 29,
+                fansNum: 28
+            }
         })
-        .catch((error) => {
-            console.error(error);
-        });
+    }
+
+    async _updateUserSource(source) {
+        await AsyncStorage.setItem(ME_STORAGE_KEY, JSON.stringify(source));
+        this.setState({user:source});
+    }
+
+    async _updateNoteSource(source){
+        await AsyncStorage.setItem(MY_NOTES_STORAGE_KEY, JSON.stringify(source));
+        this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+    }
+
+    async _getMyNotes() {
+        // fetch('https://duoshouji.com/endpoint/aboutme', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         token: this.state.token
+        //     })
+        // }).then((response) => response.json())
+        // .then((responseJson) => {
+        //     this._updateUserSource(responseJson);
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        // });
+
+        this._updateNoteSource({notes:
+            {'noteId1': {
+                user: {
+                    name: '天才小熊猫',
+                    thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
+                },
+                detail: {
+                    title: '最新入手的羊毛线',
+                    createTime: '05-28 08:29'
+                },
+                summary: {
+                    zanNum: 28,
+                    commentNum: 8,
+                    income: 32
+                }
+            },'noteId2': {
+                user: {
+                    name: '天才小子',
+                    thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
+                },
+                detail: {
+                    title: '滚出',
+                    createTime: '05-28 08:29'
+                },
+                summary: {
+                    zanNum: 8,
+                    commentNum: 8,
+                    income: 3
+                }
+            }}});
     }
 
     _onDataArrived(newData) {
@@ -198,6 +279,12 @@ export default class MyHomePage extends Component {
     }
 
     render() {
+        if (this.state.user == null) {
+            return null;
+        }
+
+        this.user = this.state.user;
+
         return (
             <View>
                 <View style={styles.userContainer}>
@@ -241,8 +328,7 @@ export default class MyHomePage extends Component {
                           renderSectionHeader={this._renderSectionHeader}
                           renderRow={this._renderNote}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-                          renderSeparator={this._renderSeparator}
-                          stickyHeaderIndices={[0]}/>
+                          renderSeparator={this._renderSeparator}/>
 
             </View>
         );
