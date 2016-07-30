@@ -138,7 +138,8 @@ export default styles = StyleSheet.create({
     messageNewMark: {
         backgroundColor:'#f00',
         marginRight:5,
-        paddingHorizontal:5
+        paddingHorizontal:5,
+        borderRadius: 5
     },
     messageNewNum: {
         fontSize:12,

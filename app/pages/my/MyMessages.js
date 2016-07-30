@@ -4,7 +4,9 @@
 'use strict';
 import React, { Component } from 'react';
 import {
+    AsyncStorage,
     Flex,
+    InteractionManager,
     ListView,
     StyleSheet,
     Text,
@@ -12,7 +14,6 @@ import {
     TouchableHighlight,
     TouchableOpacity,
     Image,
-    NavigatorIOS,
     RecyclerViewBackedScrollView
 } from 'react-native';
 
@@ -20,6 +21,10 @@ import Toolbar from '../../components/toolbar';
 import Button from '../../../app/components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import styles from './styles';
+import StorageKeys from '../../constants/StorageKeys';
+import {
+    getToken
+} from '../../utils/common'
 
 var fileIcon = <Icon style={[styles.messageAssertIcon]} size={16} name="file-text-o"/>;
 var userIcon = <Icon style={[styles.messageAssertIcon]} size={16} name="user"/>;
@@ -30,25 +35,6 @@ var shoppingCartIcon = <Icon style={[styles.messageAssertIcon]} size={16} name="
 export default class MyMessagesPage extends Component {
     constructor(props) {
         super(props);
-
-        this.messages = {messages:
-        {"message1":{
-            title: '新的笔记',
-            newCnt: 1,
-            type: 'note'
-        },"message2":{
-            title: '新的交易',
-            newCnt: 9,
-            type: 'trans'
-        },"message3":{
-            title: '新的粉丝',
-            newCnt: 1,
-            type: 'fan'
-        },"message4":{
-            title: '新的评论',
-            newCnt: 7,
-            type: 'comment'
-        }}};
 
         /* we used the defaultGetRowData, this requires dataBlob has below structure:
          * dataBlob = {section:{rowID_1: rowData1, rowID_2: rowData2,...},...};
@@ -62,9 +48,35 @@ export default class MyMessagesPage extends Component {
         });
 
         this.state = {
-            dataSource: ds.cloneWithRowsAndSections(this.messages)
+            dataSource: ds
         }
     }
+
+    async componentWillMount () {
+        // load old data to display
+        await this._loadInitialState();
+    }
+
+    componentDidMount() {
+        // refresh data from server
+        InteractionManager.runAfterInteractions(() => {
+            this._getMessagesFromServer();
+        });
+    }
+
+    async _loadInitialState() {
+        try {
+            await getToken();
+
+            let value = await AsyncStorage.getItem(StorageKeys.MY_MESSAGES_STORAGE_KEY);
+            if (value !== null){
+                this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(JSON.parse(value))});
+            }
+        } catch (error) {
+            console.log('AsyncStorage error: ' + error.message);
+        }
+    }
+
     _pressButton() {
         const { navigator } = this.props;
         //为什么这里可以取得 props.navigator?请看上文:
@@ -78,24 +90,48 @@ export default class MyMessagesPage extends Component {
         }
     }
 
-    _getNewMessages() {
-        fetch('https://mywebsite.com/endpoint/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                firstParam: 'yourValue',
-                secondParam: 'yourOtherValue',
-            })
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                return responseJson.movies;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    _getMessagesFromServer() {
+        // fetch('https://mywebsite.com/endpoint/', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         firstParam: 'yourValue',
+        //         secondParam: 'yourOtherValue',
+        //     })
+        // }).then((response) => response.json())
+        //     .then((responseJson) => {
+        //         return responseJson.movies;
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
+
+        this._updateMessagesSource({messages:
+            {"message1":{
+                title: '新的笔记',
+                newCnt: 1,
+                type: 'note'
+            },"message2":{
+                title: '新的交易',
+                newCnt: 9,
+                type: 'trans'
+            },"message3":{
+                title: '新的粉丝',
+                newCnt: 1,
+                type: 'fan'
+            },"message4":{
+                title: '新的评论',
+                newCnt: 7,
+                type: 'comment'
+            }}});
+    }
+
+    async _updateMessagesSource(source) {
+        this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+        AsyncStorage.setItem(StorageKeys.MY_MESSAGES_STORAGE_KEY, JSON.stringify(source));
     }
 
     _onDataArrived(newData) {
@@ -156,8 +192,7 @@ export default class MyMessagesPage extends Component {
                           renderSectionHeader={this._renderSectionHeader}
                           renderRow={this._renderMessage}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-                          renderSeparator={this._renderSeparator}
-                          stickyHeaderIndices={[0]}/>
+                          renderSeparator={this._renderSeparator}/>
 
             </View>
         );

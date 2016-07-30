@@ -19,6 +19,10 @@ import Toolbar from '../../components/toolbar';
 import Button from '../../../app/components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import styles from './styles';
+import StorageKeys from '../../constants/StorageKeys';
+import {
+    getToken
+} from '../../utils/common'
 
 var womanIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="venus"/>;
 var manIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="mars"/>;
@@ -32,10 +36,6 @@ var THUMB_URLS = [
     require('../../assets/test/test.png'),
     require('../../assets/test/test1.png')
 ];
-
-var ME_STORAGE_KEY = '@duoshouji:me';
-var MY_NOTES_STORAGE_KEY = '@duoshouji:mynotes';
-var TOKEN_STORAGE_KEY = '@duoshouji:token';
 
 export default class MyHomePage extends Component {
     constructor(props) {
@@ -71,14 +71,14 @@ export default class MyHomePage extends Component {
 
     async _loadInitialState() {
         try {
-            await this._getToken();
+            await _getToken();
 
-            let meDetail = await AsyncStorage.getItem(ME_STORAGE_KEY);
+            let meDetail = await AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY);
             if (meDetail !== null){
                 this.setState({user: JSON.parse(meDetail)});
             }
 
-            let myNotes = await AsyncStorage.getItem(MY_NOTES_STORAGE_KEY);
+            let myNotes = await AsyncStorage.getItem(StorageKeys.MY_NOTES_STORAGE_KEY);
             if (myNotes !== null){
                 this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(JSON.parse(myNotes))});
             }
@@ -102,17 +102,6 @@ export default class MyHomePage extends Component {
             //     name: 'ForgetPasswordPage',
             //     component: ForgetPasswordPage,
             // })
-        }
-    }
-
-    async _getToken() {
-        try {
-            let token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
-            if (token !== null){
-                this.state.token = token;
-            }
-        } catch (error) {
-            console.log('AsyncStorage error: ' + error.message);
         }
     }
 
@@ -149,12 +138,12 @@ export default class MyHomePage extends Component {
     }
 
     async _updateUserSource(source) {
-        await AsyncStorage.setItem(ME_STORAGE_KEY, JSON.stringify(source));
+        await AsyncStorage.setItem(StorageKeys.ME_STORAGE_KEY, JSON.stringify(source));
         this.setState({user:source});
     }
 
     async _updateNoteSource(source){
-        await AsyncStorage.setItem(MY_NOTES_STORAGE_KEY, JSON.stringify(source));
+        await AsyncStorage.setItem(StorageKeys.MY_NOTES_STORAGE_KEY, JSON.stringify(source));
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
     }
 
@@ -307,17 +296,17 @@ export default class MyHomePage extends Component {
                         <Text style={styles.count}>{this.user.summary.noteNum}</Text>
                         <Text style={[styles.text, styles.assetText]}>笔记</Text>
                     </View>
-                    <View style={styles.separator} />
+                    <View style={styles.separatorVertical} />
                     <View style={styles.asset}>
                         <Text style={styles.count}>{this.user.summary.transNum}</Text>
                         <Text style={[styles.text, styles.assetText]}>交易</Text>
                     </View>
-                    <View style={styles.separator} />
+                    <View style={styles.separatorVertical} />
                     <View style={styles.asset}>
                         <Text style={styles.count}>{this.user.summary.watcherNum}</Text>
                         <Text style={[styles.text, styles.assetText]}>关注</Text>
                     </View>
-                    <View style={styles.separator} />
+                    <View style={styles.separatorVertical} />
                     <View style={styles.asset}>
                         <Text style={styles.count}>{this.user.summary.fansNum}</Text>
                         <Text style={[styles.text, styles.assetText]}>粉丝</Text>
