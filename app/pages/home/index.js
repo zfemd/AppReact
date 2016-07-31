@@ -17,7 +17,7 @@ import Toolbar from '../../components/toolbar';
 import Flow from '../../components/flow';
 import HomeFilter from '../../components/homeFilter';
 import MyPage from '../my';
-import MyMessagesPage from '../my/MyMessages';
+import MessagesPage from '../messages';
 import DetailPage from '../detail';
 
 class Home extends React.Component {
@@ -95,10 +95,10 @@ class Home extends React.Component {
                         </View>
                     </ScrollView>
                     <ScrollView tabLabel="ios-mail-outline" style={styles.tabView}>
-                        <MyMessagesPage/>
+                        <MessagesPage navigator={this.props.navigator}/>
                     </ScrollView>
                     <ScrollView tabLabel="ios-person-outline" style={styles.tabView}>
-                        <MyPage />
+                        <MyPage navigator={this.props.navigator}/>
                     </ScrollView>
                 </ScrollableTabView>
                 {[this.state.showFilter].map((show) => {

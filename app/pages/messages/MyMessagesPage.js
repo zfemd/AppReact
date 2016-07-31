@@ -17,20 +17,22 @@ import {
     RecyclerViewBackedScrollView
 } from 'react-native';
 
-import Toolbar from '../../components/toolbar';
-import Button from '../../../app/components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
-import styles from './styles';
+import Toolbar from '../../components/toolbar';
+import Button from '../../components/button/Button';
 import StorageKeys from '../../constants/StorageKeys';
+import styles from './styles';
+import MessageDetailPage from './MessageDetailPage';
 import {
     getToken
-} from '../../utils/common'
+} from '../../utils/common';
 
-var fileIcon = <Icon style={[styles.messageAssertIcon]} size={16} name="file-text-o"/>;
-var userIcon = <Icon style={[styles.messageAssertIcon]} size={16} name="user"/>;
-var commentIcon = <Icon style={[styles.messageAssertIcon]} size={16} name="comment-o"/>;
+var fileIcon = <Icon style={[styles.messageIndicatortIcon]} size={16} name="file-text-o"/>;
+var userIcon = <Icon style={[styles.messageIndicatortIcon]} size={16} name="user"/>;
+var commentIcon = <Icon style={[styles.messageIndicatortIcon]} size={16} name="comment-o"/>;
+var shoppingCartIcon = <Icon style={[styles.messageIndicatortIcon]} size={16} name="shopping-cart"/>;
+var infoIcon = <Icon style={[styles.messageIndicatortIcon]} size={16} name="info"/>;
 var chevronRightIcon = <Icon style={[styles.messageLinkIcon]} size={16} name="angle-right"/>;
-var shoppingCartIcon = <Icon style={[styles.messageAssertIcon]} size={16} name="shopping-cart"/>;
 
 export default class MyMessagesPage extends Component {
     constructor(props) {
@@ -74,19 +76,6 @@ export default class MyMessagesPage extends Component {
             }
         } catch (error) {
             console.log('AsyncStorage error: ' + error.message);
-        }
-    }
-
-    _pressButton() {
-        const { navigator } = this.props;
-        //为什么这里可以取得 props.navigator?请看上文:
-        //<Component {...route.params} navigator={navigator} />
-        //这里传递了navigator作为props
-        if(navigator) {
-            // navigator.push({
-            //     name: 'ForgetPasswordPage',
-            //     component: ForgetPasswordPage,
-            // })
         }
     }
 
@@ -149,24 +138,39 @@ export default class MyMessagesPage extends Component {
         );
     }
 
-    _renderMessage(rowData, sectionID, rowID, highlightRow) {
-        function _getMessageIcon(type) {
-            switch(type) {
-                case 'note' :
-                    return fileIcon;
-                case 'comment':
-                    return commentIcon;
-                case 'trans' :
-                    return shoppingCartIcon;
-                case 'fan':
-                    return userIcon;
-            }
+    _onPressMessage(messageData) {
+        const { navigator } = this.props;
+        //为什么这里可以取得 props.navigator?请看上文:
+        //<Component {...route.params} navigator={navigator} />
+        //这里传递了navigator作为props
+        if(navigator) {
+            navigator.push({
+                name: 'MessageDetailPage',
+                component: MessageDetailPage,
+            })
         }
+    }
 
+    _getMessageIcon(type) {
+        switch(type) {
+            case 'note' :
+                return fileIcon;
+            case 'comment':
+                return commentIcon;
+            case 'trans' :
+                return shoppingCartIcon;
+            case 'fan':
+                return userIcon;
+            default:
+                return infoIcon;
+        }
+    }
+
+    _renderMessage(rowData, sectionID, rowID, highlightRow) {
         return (
-            <TouchableHighlight>
+            <TouchableHighlight onPress={() => {highlightRow(sectionID, rowID); this._onPressMessage(rowData);}}>
                 <View style={styles.messageRow}>
-                    {_getMessageIcon(rowData.type)}
+                    {this._getMessageIcon(rowData.type)}
                     <Text style={styles.messageTitle}>{rowData.title}</Text>
                     <View style={styles.messageNewMark}>
                         <Text style={styles.messageNewNum}>{rowData.newCnt}</Text>
@@ -190,7 +194,7 @@ export default class MyMessagesPage extends Component {
 
                 <ListView dataSource={this.state.dataSource}
                           renderSectionHeader={this._renderSectionHeader}
-                          renderRow={this._renderMessage}
+                          renderRow={this._renderMessage.bind(this)}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
                           renderSeparator={this._renderSeparator}/>
 
