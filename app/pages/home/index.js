@@ -1,14 +1,15 @@
 'use strict';
 
 import React from 'react';
-import {
+const ReactNative = require('react-native');
+const {
     ScrollView,
     Text,
     View,
     InteractionManager,
     Navigator,
-    TouchableOpacity,
-} from 'react-native';
+    TouchableOpacity
+} = ReactNative;
 import { connect } from 'react-redux';
 import styles from './style';
 import TabBar from './tab';
@@ -19,6 +20,7 @@ import HomeFilter from '../../components/homeFilter';
 import MyPage from '../my';
 import MessagesPage from '../messages';
 import DetailPage from '../detail';
+import CreateNotePage from '../note';
 
 class Home extends React.Component {
     constructor(props) {
@@ -65,6 +67,26 @@ class Home extends React.Component {
         }
     }
 
+    /**
+     * Parameter data is a object {i:currentPage, ref:Component, from: prevPage}.
+     * Properties 'i' and 'from' both are number.
+     * @param data
+     * @private
+     */
+    _onChangeTab(data) {
+        const { navigator } = this.props;
+        if (data.i == 2) {
+            // take photo
+            InteractionManager.runAfterInteractions(() => {
+                navigator.push({
+                    component: CreateNotePage,
+                    name: 'CreateNotePage',
+                    sceneConfigs: Navigator.SceneConfigs.HorizontalSwipeJumpFromRight
+                });
+            });
+        }
+    }
+
     render() {
         return (
             <View style={styles.container} visible='hidden'>
@@ -78,6 +100,7 @@ class Home extends React.Component {
                     tabBarPosition='overlayBottom'
                     initialPage={0}
                     renderTabBar={() => <TabBar {...this.props}/>}
+                    onChangeTab={this._onChangeTab.bind(this)}
                     >
                     <ScrollView tabLabel="ios-home-outline" style={styles.tabView}>
                         <Flow
@@ -90,9 +113,6 @@ class Home extends React.Component {
                         </View>
                     </ScrollView>
                     <ScrollView tabLabel="md-camera" style={styles.tabView}>
-                        <View style={styles.card}>
-                            <Text>2</Text>
-                        </View>
                     </ScrollView>
                     <ScrollView tabLabel="ios-mail-outline" style={styles.tabView}>
                         <MessagesPage navigator={this.props.navigator}/>
