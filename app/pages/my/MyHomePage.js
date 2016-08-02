@@ -144,6 +144,7 @@ export default class MyHomePage extends Component {
 
     async _updateNoteSource(source){
         await AsyncStorage.setItem(StorageKeys.MY_NOTES_STORAGE_KEY, JSON.stringify(source));
+        this.state.notes = source.s1;
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
     }
 
@@ -165,7 +166,7 @@ export default class MyHomePage extends Component {
         //     console.error(error);
         // });
 
-        this._updateNoteSource({notes:
+        this._updateNoteSource({s1:
             {'noteId1': {
                 user: {
                     name: '天才小熊猫',
@@ -197,17 +198,76 @@ export default class MyHomePage extends Component {
             }}});
     }
 
-    _onDataArrived(newData) {
-        this._notes = this._notes.concat(newData);
-        this.setState({
-            datasource: this.state.ds.cloneWithRows(this._notes)
-        });
-
-        Image.getSize(this.props.source.uri, (width, height) => {
-            this.setState({width, height});
-        });
+    async _getMoreNotes(){
+        // fetch('https://duoshouji.com/endpoint/aboutme', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         token: this.state.token
+        //     })
+        // }).then((response) => response.json())
+        // .then((responseJson) => {
+        //     this._updateUserSource(responseJson);
+        // })
+        // .catch((error) => {
+        //     console.error(error);
+        // });
+        this._onDataArrived({'noteId3': {
+            user: {
+                name: '天才小熊猫2',
+                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
+            },
+            detail: {
+                title: '最新入手羊毛线',
+                createTime: '05-28 08:29'
+            },
+            summary: {
+                zanNum: 28,
+                commentNum: 8,
+                income: 32
+            }
+        },'noteId4': {
+            user: {
+                name: '天才小子2',
+                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
+            },
+            detail: {
+                title: '滚出',
+                createTime: '05-28 08:29'
+            },
+            summary: {
+                zanNum: 8,
+                commentNum: 8,
+                income: 3
+            }
+        }});
     }
 
+    _onDataArrived(newData) {
+        let _this = this;
+        Object.keys(newData).forEach(function(key){
+            _this.state.notes[key] = newData[key];
+        });
+
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(this.state.notes)
+        });
+
+        // Image.getSize(this.props.source.uri, (width, height) => {
+        //     this.setState({width, height});
+        // });
+    }
+
+    /**
+     * If dataBlob doesn't have sectionID, then the default sectionID is 's1'. So, this method will always be called.
+     * @param sectionData
+     * @param sectionID
+     * @returns {XML}
+     * @private
+     */
     _renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.myNotesTitle}>
@@ -315,9 +375,10 @@ export default class MyHomePage extends Component {
 
                 <ListView dataSource={this.state.dataSource}
                           renderSectionHeader={this._renderSectionHeader}
-                          renderRow={this._renderNote}
+                          renderRow={this._renderNote.bind(this)}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-                          renderSeparator={this._renderSeparator}/>
+                          renderSeparator={this._renderSeparator}
+                          onEndReached={this._getMoreNotes.bind(this)}/>
 
             </View>
         );
