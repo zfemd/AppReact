@@ -9,7 +9,7 @@ import {
     View
 } from 'react-native';
 
-import PhoneLib from './PhoneLib';
+import PhoneLib from '../../components/camera/PhoneLib';
 
 class CreateNotePage extends Component {
     constructor(props) {
