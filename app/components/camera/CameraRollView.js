@@ -1,9 +1,9 @@
 /**
  * Created by lyan2 on 16/8/2.
  */
-var React = require('react');
-var ReactNative = require('react-native');
-var {
+import React, { Component } from 'react';
+import ReactNative from 'react-native';
+const {
     ActivityIndicator,
     CameraRoll,
     Image,

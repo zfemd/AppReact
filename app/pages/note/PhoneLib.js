@@ -9,6 +9,7 @@ const {
     Text,
     View
 } = ReactNative;
+import CameraRollView from '../../components/camera/CameraRollView'
 
 class PhoneLib extends Component {
     constructor(props) {
@@ -19,9 +20,19 @@ class PhoneLib extends Component {
         };
     }
 
+    _renderImage(){
+        return (
+            <Text>Hello world</Text>
+        );
+    }
+
     render() {
         return (
-            <Text>Phone Lib page</Text>
+            <CameraRollView
+                batchSize={8}
+                groupTypes="SavedPhotos"
+                imagesPerRow={3}
+                assetType="Photos"/>
         );
     }
 }
