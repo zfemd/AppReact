@@ -83,15 +83,19 @@ var CameraRollView = React.createClass({
     getInitialState: function() {
         var ds = new ListView.DataSource({rowHasChanged: this._rowHasChanged});
 
-        return {
+        let state = {
             assets: ([]: Array<Image>),
             groupTypes: this.props.groupTypes,
-            lastCursor: (null : ?string),
+                lastCursor: (null : ?string),
             assetType: this.props.assetType,
-            noMore: false,
-            loadingMore: false,
-            dataSource: ds
+                noMore: false,
+                loadingMore: false,
+                dataSource: ds
         };
+
+        state.assets = [{camera:true}];
+
+        return state;
     },
 
     /**

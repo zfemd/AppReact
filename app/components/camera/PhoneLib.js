@@ -15,15 +15,19 @@ const {
 import CameraRollView from './CameraRollView';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-var cameraIcon = <Icon name="camera" size={32}  />;
+var cameraIcon = <Icon name="camera" size={40} color="#000" />;
 
 class PhoneLib extends Component {
     constructor(props) {
         super(props);
 
-        this._touchableProps = {
+        this._imageProps = {
             onPress : this.props.onPressImage
         };
+
+        this._cameraProps = {
+            onPress : this.props.onPressCamera
+        }
 
         this.imageCount = 0;
     }
@@ -32,14 +36,13 @@ class PhoneLib extends Component {
         let {height, width} = Dimensions.get('window');
         let imageWidth = (width - 24) / 3;
         let imageHeight = imageWidth;
-        this.imageCount += 1;
-        return this.imageCount == 1 ? (
-            <TouchableHighlight {...this._touchableProps}>
+        return asset.camera ? (
+            <TouchableHighlight {...this._cameraProps} style={[styles.cameraContainer, {width:imageWidth, height:imageHeight}]}>
                 {cameraIcon}
             </TouchableHighlight>
         ) : (
-            <TouchableHighlight {...this._touchableProps}>
-                <Image style={{margin:4}}
+            <TouchableHighlight {...this._imageProps}>
+                <Image style={styles.image}
                     source={asset.node.image}
                     height={imageHeight} width={imageWidth}
                 />
@@ -68,6 +71,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
+    },
+    image: {
+        margin: 4
+    },
+    cameraContainer: {
+        backgroundColor: '#fff',
+        margin: 4,
+        justifyContent:'center',
+        alignItems:'center'
     }
 });
 
