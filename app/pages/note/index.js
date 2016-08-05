@@ -11,13 +11,17 @@ import {
 
 import PhoneLib from '../../components/camera/PhoneLib';
 
-class CreateNotePage extends Component {
+class SelectPhotoPage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             region: 'China'
         };
+    }
+
+    _onPressCamera() {
+        
     }
 
     render() {
@@ -33,7 +37,7 @@ class CreateNotePage extends Component {
             //             let Component = route.component;
             //             return <Component {...route.params} navigator={navigator} />
             //         }}/>
-            <PhoneLib navigator={this.props.navigator} />
+            <PhoneLib navigator={this.props.navigator} onPressCamera={this._onPressCamera} />
         );
     }
 }
@@ -47,4 +51,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default CreateNotePage;
+export default SelectPhotoPage;
