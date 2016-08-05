@@ -103,7 +103,7 @@ class Home extends React.Component {
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
                     <ScrollView tabLabel="ios-home-outline" style={styles.tabView}>
-                        <Flow
+                        <Flow style={styles.flow}
                             press={this._jumpToDetailPage}
                             />
                     </ScrollView>

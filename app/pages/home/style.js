@@ -49,6 +49,9 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#f1f1f1',
     },
+    flow: {
+        flex: 1,
+    }
 });
 
 export default styles
