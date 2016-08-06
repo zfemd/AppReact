@@ -14,6 +14,7 @@ import Spinner from 'react-native-spinkit';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { prefetchImageAction } from '../../actions';
+let prefetchedHeight = 0;
 
 class PrefetchImage extends React.Component {
 
@@ -21,38 +22,51 @@ class PrefetchImage extends React.Component {
         super(props);
         this._onPrefetchComplete = this._onPrefetchComplete.bind(this);
         this._onPrefetchStart = this._onPrefetchStart.bind(this);
-        const hasPrefetched = this.hasPrefetched();
+        this._hasPrefetched = this._hasPrefetched.bind(this);
+        const _hasPrefetched = this._hasPrefetched();
 
         this.state = {
             events: [],
-            isLoading: true,
-            prefetchTask: hasPrefetched ? null : Image.prefetch(this.props.imageUri),
-            height: 200
+            isLoading: false,
+            prefetchTask: _hasPrefetched ? null : Image.prefetch(this.props.imageUri),
+            height: prefetchedHeight ? prefetchedHeight : 200
         };
 
-        this._onPrefetchStart()
     }
 
-    hasPrefetched = () => {
+    componentWillMount () {
+        this._onPrefetchStart();
+    }
+
+    _hasPrefetched ()  {
         const images = this.props.prefetchedImages.images;
         const currentImage = this.props.imageUri;
-
-        return _.indexOf(images, currentImage) > -1 ? true : false;
+        var index = _.findIndex(images, { 'uri': currentImage });
+        if(index > -1) {
+            const scaleHeight = (images[index].height / images[index].width) * this.props.width;
+            prefetchedHeight = scaleHeight;
+            return true;
+        } else {
+            return false;
+        }
     }
 
-
-    _onPrefetchComplete = () => {
-        this.props.dispatch(prefetchImageAction(this.props.imageUri));
+    _onPrefetchComplete (width, height)  {
+        const scaleHeight = (height / width) * this.props.width;
+        this.setState({height: scaleHeight});
         this.setState({isLoading: false });
+        if (!this._hasPrefetched){
+            this.props.dispatch(prefetchImageAction(this.props.imageUri, width, height));
+        }
+
     }
 
-    _onPrefetchStart = () => {
+    _onPrefetchStart ()  {
         if (this.state.prefetchTask) {
+            this.setState({isLoading: true });
             this.state.prefetchTask.then(() => {
                 Image.getSize(this.props.imageUri, (width, height) => {
-                    const scaleHeight = (height / width) * ((Dimensions.get('window').width / 100) * 47);
-                    this.setState({height: scaleHeight});
-                    this._onPrefetchComplete();
+                    this._onPrefetchComplete(width, height);
                 });
             }, error => {
                 console.log('error fetching image', error);

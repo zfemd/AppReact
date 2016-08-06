@@ -17,6 +17,12 @@ import PrefetchImage from '../prefetchImage'
 
 const {height, width} = Dimensions.get('window');
 const thumbs = [
+
+    {
+        uri: 'http://hbimg.b0.upaiyun.com/fd7af3c379c8888a1ede4ea1046efea1fe953c63db770-sUI89w_fw658',
+            width: (width/100)*47,
+        height: 200
+    },
     {
         uri: 'https://hbimg.b0.upaiyun.com/0e343198bc21f4bfb6208dbb8e6d7d4358cffb3f2336c-M90TeP_fw658',
         width: (width/100)*47,
@@ -112,6 +118,7 @@ class Flow extends React.Component {
                             imageUri={imgSource.uri}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
+                            width={(width/100)*47}
                             />
                         <Text style={styles.text}>
                             miya2016夏装新品宽松镂空短袖蕾丝衫女韩系显瘦性感度假上衣潮
@@ -144,6 +151,7 @@ class Flow extends React.Component {
                             imageUri={imgSource.uri}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
+                            width={(width/100)*47}
                             />
                         <Text style={styles.text}>
                             miya2016夏装新品宽松镂空短袖蕾丝衫女韩系显瘦性感度假上衣潮
