@@ -20,9 +20,8 @@ var cameraIcon = <Icon name="camera" size={40} color="#000" />;
 class PhoneLib extends Component {
     constructor(props) {
         super(props);
-
+        
         this._imageProps = {
-            onPress : this.props.onPressImage
         };
 
         this._cameraProps = {
@@ -32,16 +31,23 @@ class PhoneLib extends Component {
         this.imageCount = 0;
     }
 
+    _onPressImage(node) {
+        if (this.props.onPressImage) {
+            this.props.onPressImage.call(null, node);
+        }
+    }
+
     _renderImage(asset){
         let {height, width} = Dimensions.get('window');
         let imageWidth = (width - 24) / 3;
         let imageHeight = imageWidth;
+
         return asset.camera ? (
             <TouchableHighlight {...this._cameraProps} style={[styles.cameraContainer, {width:imageWidth, height:imageHeight}]}>
                 {cameraIcon}
             </TouchableHighlight>
         ) : (
-            <TouchableHighlight {...this._imageProps}>
+            <TouchableHighlight {...this._imageProps} onPress={() => {this._onPressImage(asset.node)}}>
                 <Image style={styles.image}
                     source={asset.node.image}
                     height={imageHeight} width={imageWidth}
@@ -49,7 +55,7 @@ class PhoneLib extends Component {
             </TouchableHighlight>
         );
     }
-
+    
     render() {
         return (
             <View style={styles.container}>

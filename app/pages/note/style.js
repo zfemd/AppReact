@@ -12,9 +12,15 @@ var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#f1f1f1'
+        marginTop: 21,
+        backgroundColor: '#f1f1f1',
+        flex: 1
+    },
+    uploadAvatarContainer: {
+
+    },
+    uploadAvatar: {
+
     }
 });
 
