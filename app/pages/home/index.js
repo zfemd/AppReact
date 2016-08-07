@@ -19,13 +19,11 @@ import Flow from '../../components/flow';
 import HomeFilter from '../../components/homeFilter';
 import MyPage from '../my';
 import MessagesPage from '../messages';
-import DetailPage from '../detail';
 import CreateNotePage from '../note';
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
-        this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
         this._showFilter = this._showFilter.bind(this);
         this._onFilterClicked = this._onFilterClicked.bind(this);
         this.state = {
@@ -44,17 +42,6 @@ class Home extends React.Component {
         }
 
     };
-
-    _jumpToDetailPage() {
-        const { navigator } = this.props;
-        InteractionManager.runAfterInteractions(() => {
-            navigator.push({
-                component: DetailPage,
-                name: 'DetailPage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromRight
-            });
-        });
-    }
 
     _showFilter() {
         this.setState({showFilter: this.props.home.showFilter});
@@ -102,11 +89,8 @@ class Home extends React.Component {
                     renderTabBar={() => <TabBar {...this.props}/>}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
-                    <ScrollView tabLabel="ios-home-outline" style={styles.tabView}>
-                        <Flow style={styles.flow}
-                            press={this._jumpToDetailPage}
-                            />
-                    </ScrollView>
+                    <Flow navigator={this.props.navigator}  tabLabel="ios-home-outline" style={styles.tabView}/>
+
                     <ScrollView tabLabel="ios-compass-outline" style={styles.tabView}>
                         <View style={styles.card}>
                             <Text>1</Text>
@@ -114,12 +98,9 @@ class Home extends React.Component {
                     </ScrollView>
                     <ScrollView tabLabel="md-camera" style={styles.tabView}>
                     </ScrollView>
-                    <ScrollView tabLabel="ios-mail-outline" style={styles.tabView}>
-                        <MessagesPage navigator={this.props.navigator}/>
-                    </ScrollView>
-                    <ScrollView tabLabel="ios-person-outline" style={styles.tabView}>
-                        <MyPage navigator={this.props.navigator}/>
-                    </ScrollView>
+
+                    <MessagesPage navigator={this.props.navigator} tabLabel="ios-mail-outline" style={styles.tabView}/>
+                    <MyPage navigator={this.props.navigator} tabLabel="ios-person-outline" style={styles.tabView}/>
                 </ScrollableTabView>
                 {[this.state.showFilter].map((show) => {
                     if (show) {

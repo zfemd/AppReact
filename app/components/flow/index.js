@@ -11,10 +11,16 @@ import {
     PixelRatio,
     Dimensions,
     TouchableOpacity,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    RefreshControl,
+    ScrollView,
+    InteractionManager,
+    Navigator
 } from 'react-native';
 
-import PrefetchImage from '../prefetchImage'
+import PrefetchImage from '../prefetchImage';
+import DetailPage from '../../pages/detail';
+import UserPage from '../../pages/user';
 
 const {height, width} = Dimensions.get('window');
 const thumbs = [
@@ -98,20 +104,49 @@ class Flow extends React.Component {
         super(props);
         this._renderRow = this._renderRow.bind(this);
         this._renderRow1 = this._renderRow1.bind(this);
+        this._onRefresh = this._onRefresh.bind(this);
+        this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds.cloneWithRows(this._genRows({})),
             stars: ds.cloneWithRows([
                 '1', '2', '3', '4', '5'
-            ])
+            ]),
+            refreshing: false,
         };
+    }
+
+    _onRefresh() {
+        this.setState({refreshing: true});
+    }
+
+    _jumpToDetailPage() {
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: DetailPage,
+                name: 'DetailPage',
+                sceneConfigs: Navigator.SceneConfigs.FloatFromRight
+            });
+        });
+    }
+
+    _jumpToUserPage() {
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: UserPage,
+                name: 'UserPage',
+                sceneConfigs: Navigator.SceneConfigs.FloatFromRight
+            });
+        });
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
         var rowHash = Math.abs(hashCode(rowData));
         var imgSource = thumbs[(rowHash) % thumbs.length];
         return (
-            <TouchableOpacity onPress={() => this.props.press()} underlayColor="transparent" activeOpacity={0.5}>
+            <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.row}>
                         <PrefetchImage
@@ -123,7 +158,7 @@ class Flow extends React.Component {
                         <View style={styles.price}>
                             <Text style={styles.priceText}>￥100</Text>
                         </View>
-                        <TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
                             <View style={styles.portrait}>
                                 <Image
                                     source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 30, height: 30}}/>
@@ -161,7 +196,7 @@ class Flow extends React.Component {
         var rowHash = Math.abs(hashCode(rowData));
         var imgSource = thumbs[(rowHash - 2) % thumbs.length];
         return (
-            <TouchableOpacity onPress={() => this.props.press()} underlayColor="transparent" activeOpacity={0.5}>
+            <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.row}>
                         <PrefetchImage
@@ -173,7 +208,7 @@ class Flow extends React.Component {
                         <View style={styles.price}>
                             <Text style={styles.priceText}>￥100</Text>
                         </View>
-                        <TouchableWithoutFeedback>
+                        <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
                             <View style={styles.portrait}>
                                 <Image
                                     source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 30, height: 30}}/>
@@ -209,7 +244,7 @@ class Flow extends React.Component {
 
     _genRows(pressData:{[key: number]: boolean}):Array<string> {
         var dataBlob = [];
-        for (var ii = 0; ii < 100; ii++) {
+        for (var ii = 0; ii < 10; ii++) {
             var pressedText = pressData[ii] ? ' (X)' : '';
             dataBlob.push('Cell ' + ii + pressedText);
         }
@@ -218,6 +253,14 @@ class Flow extends React.Component {
 
     render() {
         return (
+        <ScrollView
+            refreshControl={
+                          <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                          />
+                      }
+            >
             <View style={styles.container}>
                 <ListView
                     contentContainerStyle={styles.list}
@@ -236,6 +279,8 @@ class Flow extends React.Component {
                     renderRow={this._renderRow1}
                     />
             </View>
+        </ScrollView>
+
 
         );
     }
@@ -297,10 +342,10 @@ var styles = StyleSheet.create({
         position: 'absolute',
         top: 20,
         left: 0,
-        width: 70,
-        height: 25,
-        borderBottomRightRadius: 13,
-        borderTopRightRadius: 13,
+        width: 60,
+        height: 22,
+        borderBottomRightRadius: 11,
+        borderTopRightRadius: 11,
         backgroundColor: 'rgba(109, 109, 109, 0.8)',
 
     },
