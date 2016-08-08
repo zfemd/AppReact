@@ -21,18 +21,38 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: 30,
-        paddingHorizontal: 30
+        paddingHorizontal: 10
     },
     navigatorTitle: {
         justifyContent:'center',
         alignItems:'center',
-        flexDirection:'row'
+        flexDirection:'row',
+        flex:2
+    },
+    navigatorText: {
+        fontSize:18,
+        color:'#4a4a4a'
+    },
+    rightContainer: {
+        justifyContent: 'flex-end'
+    },
+    leftContainer: {
+        justifyContent: 'flex-start'
     },
     uploadAvatarContainer: {
 
     },
     uploadAvatar: {
 
+    },
+    selectedPhotoContainer: {
+        backgroundColor: '#000'
+    },
+    selectedPhoto: {
+    },
+    tabView: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

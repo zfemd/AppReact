@@ -39,7 +39,7 @@ class Nav extends React.Component {
         let Component = route.component;
         tempNavigator = navigator;
         return (
-            <Component navigator={navigator} route={route}/>
+            <Component {...route.params} navigator={navigator} route={route}/>
         );
     }
 

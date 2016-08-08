@@ -146,7 +146,7 @@ export default class MyMessagesPage extends Component {
         if(navigator) {
             navigator.push({
                 name: 'MessageDetailPage',
-                component: MessageDetailPage,
+                component: MessageDetailPage
             })
         }
     }
