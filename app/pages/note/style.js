@@ -16,6 +16,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
         flex: 1
     },
+    navigator: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 30,
+        paddingHorizontal: 30
+    },
+    navigatorTitle: {
+        justifyContent:'center',
+        alignItems:'center',
+        flexDirection:'row'
+    },
     uploadAvatarContainer: {
 
     },
