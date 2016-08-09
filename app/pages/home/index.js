@@ -20,6 +20,7 @@ import HomeFilter from '../../components/homeFilter';
 import MyPage from '../my';
 import MessagesPage from '../messages';
 import CreateNotePage from '../note';
+import Channel from '../channel';
 
 class Home extends React.Component {
     constructor(props) {
@@ -91,11 +92,8 @@ class Home extends React.Component {
                     >
                     <Flow navigator={this.props.navigator}  tabLabel="ios-home-outline" style={styles.tabView}/>
 
-                    <ScrollView tabLabel="ios-compass-outline" style={styles.tabView}>
-                        <View style={styles.card}>
-                            <Text>1</Text>
-                        </View>
-                    </ScrollView>
+                    <Channel navigator={this.props.navigator} tabLabel="ios-compass-outline" style={styles.tabView}></Channel>
+
                     <ScrollView tabLabel="md-camera" style={styles.tabView}>
                     </ScrollView>
 

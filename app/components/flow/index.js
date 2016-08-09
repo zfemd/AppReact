@@ -15,7 +15,8 @@ import {
     RefreshControl,
     ScrollView,
     InteractionManager,
-    Navigator
+    Navigator,
+    ActivityIndicator
 } from 'react-native';
 
 import PrefetchImage from '../prefetchImage';
@@ -106,12 +107,10 @@ class Flow extends React.Component {
         this._renderRow1 = this._renderRow1.bind(this);
         this._onRefresh = this._onRefresh.bind(this);
         this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
+        this._renderFooter = this._renderFooter.bind(this);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds.cloneWithRows(this._genRows({})),
-            stars: ds.cloneWithRows([
-                '1', '2', '3', '4', '5'
-            ]),
             refreshing: false,
         };
     }
@@ -140,6 +139,20 @@ class Flow extends React.Component {
                 sceneConfigs: Navigator.SceneConfigs.FloatFromRight
             });
         });
+    }
+
+    _renderFooter() {
+        return (
+            <View
+                style={{ flex: 1, flexDirection: 'row', justifyContent: 'center',
+            alignItems: 'center', padding: 5, width: width, marginTop: 10 , position: 'absolute', bottom: 0, }}
+                >
+                <ActivityIndicator size="small" color="#3e9ce9"/>
+                <Text style={{ textAlign: 'center', fontSize: 16, marginLeft: 10 }}>
+                    数据加载中……
+                </Text>
+            </View>
+        );
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
@@ -242,47 +255,64 @@ class Flow extends React.Component {
         );
     }
 
-    _genRows(pressData:{[key: number]: boolean}):Array<string> {
+    _genRows(pressData) {
         var dataBlob = [];
-        for (var ii = 0; ii < 10; ii++) {
-            var pressedText = pressData[ii] ? ' (X)' : '';
-            dataBlob.push('Cell ' + ii + pressedText);
+        for (var i = 0; i < 10; i++) {
+            var pressedText = pressData[i] ? ' (X)' : '';
+            dataBlob.push('Cell ' + i + pressedText);
         }
         return dataBlob;
     }
 
     render() {
-        return (
-        <ScrollView
-            refreshControl={
+        if(0==0){
+            return(
+                <ScrollView
+                    refreshControl={
                           <RefreshControl
                             refreshing={this.state.refreshing}
                             onRefresh={this._onRefresh}
                           />
                       }
-            >
-            <View style={styles.container}>
-                <ListView
-                    contentContainerStyle={styles.list}
-                    dataSource={this.state.dataSource}
-                    initialListSize={21}
-                    pageSize={3} // should be a multiple of the no. of visible cells per row
-                    scrollRenderAheadDistance={500}
-                    renderRow={this._renderRow}
-                    />
-                <ListView
-                    contentContainerStyle={[styles.list, {paddingLeft: width/100*1}]}
-                    dataSource={this.state.dataSource}
-                    initialListSize={21}
-                    pageSize={3} // should be a multiple of the no. of visible cells per row
-                    scrollRenderAheadDistance={500}
-                    renderRow={this._renderRow1}
-                    />
-            </View>
-        </ScrollView>
+                    >
+                    <View style={styles.container}>
+                        <ListView
+                            contentContainerStyle={styles.list}
+                            dataSource={this.state.dataSource}
+                            initialListSize={21}
+                            pageSize={3} // should be a multiple of the no. of visible cells per row
+                            scrollRenderAheadDistance={500}
+                            renderRow={this._renderRow}
+                            />
+                        <ListView
+                            contentContainerStyle={[styles.list, {paddingLeft: width/100*1}]}
+                            dataSource={this.state.dataSource}
+                            initialListSize={21}
+                            pageSize={3} // should be a multiple of the no. of visible cells per row
+                            scrollRenderAheadDistance={500}
+                            renderRow={this._renderRow1}
+                            />
+                    </View>
+                </ScrollView>
+
+            )
+        } else {
+            return (
+                <ScrollView
+                    refreshControl={
+                          <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this._onRefresh}
+                          />
+                      }
+                    >
+
+                </ScrollView>
 
 
-        );
+            );
+        }
+
     }
 }
 
@@ -327,7 +357,7 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignSelf: 'flex-start',
-        marginBottom: 60
+        marginBottom: 60,
     },
     portrait: {
         backgroundColor: '#d8d8d8',
