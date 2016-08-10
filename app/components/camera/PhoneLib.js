@@ -15,7 +15,7 @@ const {
 import CameraRollView from './CameraRollView';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-var cameraIcon = <Icon name="camera" size={40} color="#000" />;
+var cameraIcon = <Icon name="camera" size={40} color="#f00" />;
 
 class PhoneLib extends Component {
     constructor(props) {

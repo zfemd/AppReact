@@ -42,12 +42,29 @@ class PhotoEditPage extends Component {
     }
 
     _onPressImage(event) {
-        let {locationX, locationY} = event.nativeEvent;
-        console.log(this.image.getSize)
+        let point = {locationX, locationY} = event.nativeEvent;
+        let scope = this.state.imageScope;
+
+        if (point.locationX < scope.left || point.locationX > scope.left + scope.width
+            || point.locationY < scope.top || point.locationY > scope.top + scope.height) {
+            console.log("not in image");
+        } else {
+            this.state.clickedPos = {x: point.locationX - scope.left, y: point.locationY - scope.top};
+        }
     }
 
     _onImageLoad() {
-        console.log("imageload");
+        let windowSize = {height, width} = Dimensions.get('window');
+        let containerSize = {width: windowSize.width, height: 300};
+        let imageSize = {height, width} =this.state.avatarSource;
+
+        let ratio = imageSize.width > 0 ? imageSize.height / imageSize.width : 1;
+        let scale = ratio > 1 ? containerSize.height / imageSize.height : windowSize.width / imageSize.width;
+        let actualSize = {width: imageSize.width * scale, height: imageSize.height * scale};
+
+        // left and top is the let top corner position of image in image container.
+        this.state.imageScope = {left: (containerSize.width - actualSize.width) / 2, top: (containerSize.height - actualSize.height) / 2,
+            width: actualSize.width, height: actualSize.height};
     }
 
     render() {
@@ -69,7 +86,7 @@ class PhotoEditPage extends Component {
                 <View style={styles.selectedPhotoContainer}>
                     <TouchableHighlight onPress={this._onPressImage.bind(this)}>
                         <Image source={this.state.avatarSource} style={styles.selectedPhoto} width={width} height={300}
-                        resizeMode='contain' onLoad={this._onImageLoad}/>
+                        resizeMode='contain' onLoad={this._onImageLoad.bind(this)}/>
                     </TouchableHighlight>
                 </View>
 

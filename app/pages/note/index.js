@@ -123,6 +123,7 @@ class SelectPhotoPage extends Component {
     }
     
     _onPressImage(imageNode) {
+        console.log(imageNode);
         this.setState({
             avatarSource: imageNode.image
         });
