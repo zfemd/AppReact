@@ -6,6 +6,7 @@ import {
     CameraRoll,
     Dimensions,
     Image,
+    Modal,
     Navigator,
     Platform,
     ScrollView,
@@ -24,7 +25,9 @@ class PhotoEditPage extends Component {
         super(props);
 
         this.state = {
-            avatarSource: this.props.selectedPhoto
+            avatarSource: this.props.selectedPhoto,
+            modalVisible:false,
+            transparent:true
         };
 
     }
@@ -50,6 +53,7 @@ class PhotoEditPage extends Component {
             console.log("not in image");
         } else {
             this.state.clickedPos = {x: point.locationX - scope.left, y: point.locationY - scope.top};
+            this.setState({modalVisible: true});
         }
     }
 
@@ -67,8 +71,23 @@ class PhotoEditPage extends Component {
             width: actualSize.width, height: actualSize.height};
     }
 
+    setModalVisible(flag) {
+        this.setState({modalVisible:flag});
+    }
+
     render() {
         let {height, width} = Dimensions.get('window');
+
+        var modalBackgroundStyle = {
+            backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#f5fcff',
+        };
+        var innerContainerTransparentStyle = this.state.transparent
+            ? {backgroundColor: '#fff', padding: 20}
+            : null;
+        var activeButtonStyle = {
+            backgroundColor: '#ddd'
+        };
+
 
         return (
             <View style={styles.container}>
@@ -108,6 +127,26 @@ class PhotoEditPage extends Component {
 
                     <ScrollView navigator={this.props.navigator} tabLabel="贴图"/>
                 </ScrollableTabView>
+
+                <Modal
+                    animationType={"slide"}
+                    transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {alert("Modal has been closed.")}}
+                    >
+                    <View style={[styles.container, modalBackgroundStyle]}>
+                        <View>
+                            <Text>Hello World!</Text>
+
+                            <TouchableHighlight onPress={() => {
+                                this.setModalVisible(!this.state.modalVisible)
+                            }}>
+                                <Text>Hide Modal</Text>
+                            </TouchableHighlight>
+
+                        </View>
+                    </View>
+                </Modal>
             </View>
         );
     }
