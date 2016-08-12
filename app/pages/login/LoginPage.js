@@ -14,7 +14,7 @@ import {
     ActivityIndicatorIOS
 } from 'react-native';
 
-import Button from '../../../app/components/button/Button';
+import Button from '../..//components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import ForgetPasswordPage from './ForgetPasswordPage';
 

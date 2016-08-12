@@ -12,9 +12,11 @@ import {
     ScrollView,
     StyleSheet,
     Text,
+    TextInput,
     TouchableHighlight,
     View
 } from 'react-native';
+import Button from '../../components/button/Button';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import ImageButton from '../../components/toolbar/ImageButton';
 const arrowImg = require('../../assets/header/arrow.png');
@@ -134,16 +136,26 @@ class PhotoEditPage extends Component {
                     visible={this.state.modalVisible}
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
-                    <View style={[styles.container, modalBackgroundStyle]}>
-                        <View>
-                            <Text>Hello World!</Text>
-
-                            <TouchableHighlight onPress={() => {
-                                this.setModalVisible(!this.state.modalVisible)
-                            }}>
-                                <Text>Hide Modal</Text>
-                            </TouchableHighlight>
-
+                    <View style={[styles.container, modalBackgroundStyle, styles.modalContainer, {height: height}]}>
+                        <View style={styles.formRow}>
+                            <TextInput placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput}/>
+                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
+                        </View>
+                        <View style={styles.formRow}>
+                            <TextInput placeholder='币种' placeholderTextColor='#fff' style={styles.textInput}/>
+                            <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput}/>
+                        </View>
+                        <View style={styles.formRow}>
+                            <TextInput placeholder='国家' placeholderTextColor='#fff' style={styles.textInput}/>
+                            <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
+                        </View>
+                        <View style={{marginHorizontal: 20}}>
+                            <Button style={styles.buttonText} containerStyle={styles.button}>
+                                完成
+                            </Button>
+                            <Button style={[styles.buttonText]} containerStyle={[styles.button, styles.cancelBtn]}>
+                                取消
+                            </Button>
                         </View>
                     </View>
                 </Modal>
