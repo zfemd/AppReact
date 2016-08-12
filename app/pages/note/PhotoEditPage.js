@@ -29,6 +29,7 @@ class PhotoEditPage extends Component {
         this.state = {
             avatarSource: this.props.selectedPhoto,
             modalVisible:false,
+            brandModalVisible: false,
             transparent:true
         };
 
@@ -75,6 +76,11 @@ class PhotoEditPage extends Component {
 
     setModalVisible(flag) {
         this.setState({modalVisible:flag});
+    }
+
+    showBrandModal(flag) {
+        this.state.modalVisible = false;
+        this.setState({brandModalVisible: flag});
     }
 
     render() {
@@ -150,10 +156,32 @@ class PhotoEditPage extends Component {
                             <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
                         </View>
                         <View style={{marginHorizontal: 20}}>
-                            <Button style={styles.buttonText} containerStyle={styles.button}>
+                            <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this.showBrandModal.call(this, true)}>
                                 完成
                             </Button>
-                            <Button style={[styles.buttonText]} containerStyle={[styles.button, styles.cancelBtn]}>
+                            <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
+                                    onPress={() => this.setModalVisible.call(this, false)}>
+                                取消
+                            </Button>
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.brandModalVisible}
+                    onRequestClose={() => {alert("Modal has been closed.")}}
+                    >
+                    <View style={[styles.container, modalBackgroundStyle, styles.modalContainer, {height: height}]}>
+
+                        <View style={{marginHorizontal: 20}}>
+                            <Button style={styles.buttonText} containerStyle={styles.button}
+                                    onPress={() => this.showBrandModal.call(this, false)}>
+                                完成
+                            </Button>
+                            <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
+                                    onPress={() => this.showBrandModal.call(this, false)}>
                                 取消
                             </Button>
                         </View>

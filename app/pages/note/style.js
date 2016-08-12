@@ -90,6 +90,9 @@ const styles = StyleSheet.create({
     },
     cancelBtn: {
         backgroundColor: '#F1f1f1'
+    },
+    cancelBtnText: {
+        color: '#000'
     }
 });
 
