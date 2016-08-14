@@ -84,6 +84,7 @@ class Home extends React.Component {
                     showFilter={this._showFilter}
                     />
                 <ScrollableTabView
+                    scrollWithoutAnimation={true}
                     style={{marginTop: 0, }}
                     tabBarPosition='overlayBottom'
                     initialPage={0}
