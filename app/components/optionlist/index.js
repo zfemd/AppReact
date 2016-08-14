@@ -36,6 +36,8 @@ class OptionList extends React.Component {
         this.state = {
             dataSource: ds
         }
+
+        this._renderRow = this._defaultRenderRow;
     }
 
     componentDidMount() {
@@ -88,7 +90,16 @@ class OptionList extends React.Component {
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
     }
 
-    _onPressOption(messageData) {
+    _onPressOption(rowData) {
+        if (typeof this.props.onSelect == 'function') {
+            this.props.onSelect.call(this, rowData);
+        }
+    }
+
+    _onCancel() {
+        if (typeof this.props.onCancel == 'function') {
+            this.props.onCancel.call(this);
+        }
     }
 
     _renderSectionHeader(sectionData, sectionID) {
@@ -96,16 +107,16 @@ class OptionList extends React.Component {
             <View style={styles.optionsHeader}>
                 <View style={styles.richTextInput}>
                     {searchIcon}
-                    <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={true} style={styles.textInput} onEndEditing={(text) => this._updateFromServer(text)}/>
+                    <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={false} style={styles.textInput} onEndEditing={(text) => this._updateFromServer(text)}/>
                 </View>
-                <TouchableHighlight>
+                <TouchableHighlight onPress={this._onCancel.bind(this)}>
                     <Text style={[styles.text, styles.cancelText]}>取消</Text>
                 </TouchableHighlight>
             </View>
         );
     }
 
-    _renderRow(rowData, sectionID, rowID, highlightRow) {
+    _defaultRenderRow(rowData, sectionID, rowID, highlightRow) {
         return (
             <TouchableHighlight onPress={() => {highlightRow(sectionID, rowID); this._onPressOption(rowData);}}>
                 <View style={styles.optionRow}>

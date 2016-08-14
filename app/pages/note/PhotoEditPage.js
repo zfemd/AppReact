@@ -79,12 +79,17 @@ class PhotoEditPage extends Component {
         this.showBrandModal(true);
     }
 
+    _onBrandSelect(rowData) {
+        this.setState({brand:rowData.title});
+        this.showBrandModal(false);
+    }
+
     setModalVisible(flag) {
         this.setState({modalVisible:flag});
     }
 
     showBrandModal(flag) {
-        this.state.modalVisible = false;
+        this.state.modalVisible = !flag;
         this.setState({brandModalVisible: flag});
     }
 
@@ -149,7 +154,7 @@ class PhotoEditPage extends Component {
                     >
                     <View style={[styles.container, modalBackgroundStyle, styles.modalContainer, {height: height}]}>
                         <View style={styles.formRow}>
-                            <TextInput placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
+                            <TextInput value={this.state.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
                             <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
                         </View>
                         <View style={styles.formRow}>
@@ -179,7 +184,7 @@ class PhotoEditPage extends Component {
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
                     <View style={[styles.container, styles.modalContainer, {height: height}]}>
-                        <OptionList />
+                        <OptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/>
                     </View>
                 </Modal>
             </View>
