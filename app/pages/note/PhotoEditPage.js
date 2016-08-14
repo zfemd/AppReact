@@ -17,6 +17,7 @@ import {
     View
 } from 'react-native';
 import Button from '../../components/button/Button';
+import OptionList from '../../components/optionlist';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import ImageButton from '../../components/toolbar/ImageButton';
 const arrowImg = require('../../assets/header/arrow.png');
@@ -72,6 +73,10 @@ class PhotoEditPage extends Component {
         // left and top is the let top corner position of image in image container.
         this.state.imageScope = {left: (containerSize.width - actualSize.width) / 2, top: (containerSize.height - actualSize.height) / 2,
             width: actualSize.width, height: actualSize.height};
+    }
+
+    _onBrandInputFocus() {
+        this.showBrandModal(true);
     }
 
     setModalVisible(flag) {
@@ -144,7 +149,7 @@ class PhotoEditPage extends Component {
                     >
                     <View style={[styles.container, modalBackgroundStyle, styles.modalContainer, {height: height}]}>
                         <View style={styles.formRow}>
-                            <TextInput placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput}/>
+                            <TextInput placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
                             <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
                         </View>
                         <View style={styles.formRow}>
@@ -156,7 +161,7 @@ class PhotoEditPage extends Component {
                             <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
                         </View>
                         <View style={{marginHorizontal: 20}}>
-                            <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this.showBrandModal.call(this, true)}>
+                            <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onBrandInputFocus()}>
                                 完成
                             </Button>
                             <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
@@ -173,18 +178,8 @@ class PhotoEditPage extends Component {
                     visible={this.state.brandModalVisible}
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
-                    <View style={[styles.container, modalBackgroundStyle, styles.modalContainer, {height: height}]}>
-
-                        <View style={{marginHorizontal: 20}}>
-                            <Button style={styles.buttonText} containerStyle={styles.button}
-                                    onPress={() => this.showBrandModal.call(this, false)}>
-                                完成
-                            </Button>
-                            <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
-                                    onPress={() => this.showBrandModal.call(this, false)}>
-                                取消
-                            </Button>
-                        </View>
+                    <View style={[styles.container, styles.modalContainer, {height: height}]}>
+                        <OptionList />
                     </View>
                 </Modal>
             </View>
