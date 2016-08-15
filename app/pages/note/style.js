@@ -13,8 +13,7 @@ var {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         marginTop: 21,
-        backgroundColor: '#f1f1f1',
-        flex: 1
+        backgroundColor: '#f1f1f1'
     },
     navigator: {
         flexDirection: 'row',
@@ -53,6 +52,17 @@ const styles = StyleSheet.create({
     tabView: {
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    overlay: {
+        margin: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0,
+        flexDirection: 'column',
+        justifyContent: 'center'
     },
     modalContainer: {
         flexDirection: 'column',

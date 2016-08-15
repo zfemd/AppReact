@@ -20,6 +20,7 @@ import Button from '../../components/button/Button';
 import OptionList from '../../components/optionlist';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import ImageButton from '../../components/toolbar/ImageButton';
+import CurrencyOptionList from './CurrencyOptionList';
 const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
@@ -79,6 +80,19 @@ class PhotoEditPage extends Component {
         this.showBrandModal(true);
     }
 
+    _onCurrencyInputFocus() {
+        const { navigator } = this.props;
+        //为什么这里可以取得 props.navigator?请看上文:
+        //<Component {...route.params} navigator={navigator} />
+        //这里传递了navigator作为props
+        if(navigator) {
+            navigator.push({
+                name: 'CurrencyOptionList',
+                component: CurrencyOptionList
+            })
+        }
+    }
+
     _onBrandSelect(rowData) {
         this.setState({brand:rowData.title});
         this.showBrandModal(false);
@@ -108,7 +122,7 @@ class PhotoEditPage extends Component {
 
 
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {height: height}]}>
                 <View style={styles.navigator}>
                     <TouchableHighlight onPress={this._onCancel.bind(this)} style={styles.leftContainer}>
                         <Text style={[styles.navigatorText]}>返回</Text>
@@ -146,36 +160,29 @@ class PhotoEditPage extends Component {
                     <ScrollView navigator={this.props.navigator} tabLabel="贴图"/>
                 </ScrollableTabView>
 
-                <Modal
-                    animationType={"slide"}
-                    transparent={true}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => {alert("Modal has been closed.")}}
-                    >
-                    <View style={[styles.container, modalBackgroundStyle, styles.modalContainer, {height: height}]}>
-                        <View style={styles.formRow}>
-                            <TextInput value={this.state.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
-                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
-                        </View>
-                        <View style={styles.formRow}>
-                            <TextInput placeholder='币种' placeholderTextColor='#fff' style={styles.textInput}/>
-                            <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput}/>
-                        </View>
-                        <View style={styles.formRow}>
-                            <TextInput placeholder='国家' placeholderTextColor='#fff' style={styles.textInput}/>
-                            <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
-                        </View>
-                        <View style={{marginHorizontal: 20}}>
-                            <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onBrandInputFocus()}>
-                                完成
-                            </Button>
-                            <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
-                                    onPress={() => this.setModalVisible.call(this, false)}>
-                                取消
-                            </Button>
-                        </View>
+                <View style={[styles.overlay]}>
+                    <View style={styles.formRow}>
+                        <TextInput value={this.state.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
+                        <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
                     </View>
-                </Modal>
+                    <View style={styles.formRow}>
+                        <TextInput placeholder='币种' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onCurrencyInputFocus.bind(this)}/>
+                        <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput}/>
+                    </View>
+                    <View style={styles.formRow}>
+                        <TextInput placeholder='国家' placeholderTextColor='#fff' style={styles.textInput}/>
+                        <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
+                    </View>
+                    <View style={{marginHorizontal: 20}}>
+                        <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onBrandInputFocus()}>
+                            完成
+                        </Button>
+                        <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
+                                onPress={() => this.setModalVisible.call(this, false)}>
+                            取消
+                        </Button>
+                    </View>
+                </View>
 
                 <Modal
                     animationType={"slide"}

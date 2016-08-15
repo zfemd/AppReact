@@ -33,6 +33,10 @@ class OptionList extends React.Component {
             sectionHeaderHasChanged: (s1, s2) => s1 != s2
         });
 
+        if (this.props.dataSource) {
+            ds = this.props.dataSource;
+        }
+
         this.state = {
             dataSource: ds
         }
