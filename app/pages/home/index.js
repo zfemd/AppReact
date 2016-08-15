@@ -22,6 +22,9 @@ import MessagesPage from '../messages';
 import CreateNotePage from '../note';
 import Channel from '../channel';
 
+const addImg = require('../../assets/header/add.png');
+const searchImg = require('../../assets/header/search.png');
+
 class Home extends React.Component {
     constructor(props) {
         super(props);
@@ -82,6 +85,8 @@ class Home extends React.Component {
                     title="剁手记"
                     navigator={navigator}
                     showFilter={this._showFilter}
+                    leftImg={addImg}
+                    rightImg={searchImg}
                     />
                 <ScrollableTabView
                     scrollWithoutAnimation={true}

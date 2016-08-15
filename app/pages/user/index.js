@@ -18,7 +18,8 @@ class User extends React.Component {
             <View style={{backgroundColor: '#fc7d30', flex: 1}}>
                 <Toolbar
                     title="用户"
-                    navigator={navigator}
+                    navigator={this.props.navigator}
+                    hideDrop={true}
                     />
                 <Text>detail</Text>
             </View>

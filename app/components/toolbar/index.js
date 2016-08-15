@@ -15,32 +15,35 @@ import { naviGoBack } from '../../utils/common';
 import ImageButton from './ImageButton';
 import Button from './Button';
 
-let showActionButton = false;
-const addImg = require('../../assets/header/add.png');
-const searchImg = require('../../assets/header/search.png');
 const arrowImg = require('../../assets/header/arrow.png');
+var backImg = require('../../assets/upload/rg_left.png');
 var {height, width} = Dimensions.get('window');
 
 const propTypes = {
     title: PropTypes.string,
     actions: PropTypes.array,
     navigator: PropTypes.object,
-    _onActionSelected: PropTypes.func,
-    _onIconClicked: PropTypes.func,
+    _onRightIconClicked: PropTypes.func,
+    _onLeftIconClicked: PropTypes.func,
     navIcon: PropTypes.number,
     cate: PropTypes.object,
+    leftImg: PropTypes.number,
+    rightImg: PropTypes.number,
+    onLeftIconClicked: PropTypes.func,
+    hideDrop: PropTypes.bool,
+    onRightIconClicked: PropTypes.func
 };
 
 class Toolbar extends React.Component {
     constructor(props) {
         super(props);
-        this._onIconClicked = this._onIconClicked.bind(this);
-        this._onActionSelected = this._onActionSelected.bind(this);
+        this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
+        this._onRightIconClicked = this._onRightIconClicked.bind(this);
         this._onArrowClicked = this._onArrowClicked.bind(this);
     }
 
-    _onIconClicked() {
-        if (this.props.onIconClicked) {
+    _onLeftIconClicked() {
+        if (this.props.onLeftIconClicked) {
             //TODO
         } else {
             const {
@@ -52,33 +55,32 @@ class Toolbar extends React.Component {
         }
     }
 
-    _onActionSelected() {
-        this.props.onActionSelected();
+    _onRightIconClicked() {
+        this.props.onRightIconClicked();
     }
 
     _renderToolbarAndroid() {
         return (
             <ToolbarAndroid
-
                 title={this.props.title}
                 />
         );
     }
 
     _onArrowClicked() {
-        this.props.home.showFilter = !this.props.home.showFilter;
-        this.props.showFilter();
+        if(!this.props.hideDrop){
+            this.props.home.showFilter = !this.props.home.showFilter;
+            this.props.showFilter();
+        }
     }
 
     _renderToolbarIOS() {
-        const action = this.props.actions[0];
-        showActionButton = action !== undefined;
         return (
             <View style={styles.toolbar}>
                 <ImageButton
-                    source={addImg}
+                    source={this.props.leftImg ? this.props.leftImg : backImg}
                     style={styles.leftIOS}
-                    onPress={this._onIconClicked}
+                    onPress={this._onLeftIconClicked}
                     />
 
                 <View style={styles.titleViewIOS}>
@@ -88,17 +90,21 @@ class Toolbar extends React.Component {
                         >
                         {this.props.title}
                     </Text>
-                    <ImageButton
-                        source={arrowImg}
-                        style={styles.arrowIOS}
-                        onPress={this._onArrowClicked}
-                        />
+                    {
+                        !this.props.hideDrop?
+                            <ImageButton
+                            source={arrowImg}
+                            style={styles.arrowIOS}
+                            onPress={this._onArrowClicked}
+                            /> : <View/>
+                    }
+
                 </View>
 
                 <ImageButton
-                    source={searchImg}
+                    source={this.props.rightImg}
                     style={styles.rightIOS}
-                    onPress={this._onIconClicked}
+                    onPress={this._onRightIconClicked}
                     />
             </View>
 
@@ -133,8 +139,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     leftIOS: {
-        height: 18,
-        width: 24,
+        //height: 18,
+        //width: 24,
         marginTop: 20,
         marginLeft: 10
     },
@@ -158,13 +164,6 @@ const styles = StyleSheet.create({
 });
 
 Toolbar.propTypes = propTypes;
-
-Toolbar.defaultProps = {
-    _onActionSelected() {
-    },
-    title: '',
-    actions: []
-};
 
 function mapStateToProps(state) {
     const { home } = state;
