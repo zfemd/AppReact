@@ -7,7 +7,8 @@ import {
     Image,
     ScrollView,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -39,6 +40,7 @@ class Detail extends React.Component {
                     rightImg={shareImg}
                     />
                 <ScrollView style={styles.main}>
+
                     <View style={[styles.note,styles.block]}>
                         <View style={styles.user}>
                             <Image style={styles.portrait} source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 34, height: 34}}/>
@@ -73,6 +75,36 @@ class Detail extends React.Component {
                         </View>
                     </View>
                 </ScrollView>
+                <View style={styles.float}>
+                    <TouchableOpacity style={styles.floatOp}>
+                        <View style={styles.floatOpView}>
+                            <Image style={styles.floatOpImage} source={require('../../assets/note/heart.png')}/>
+                            <Text style={styles.floatOpText}>200</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.floatOpLine}></View>
+                    <TouchableOpacity style={styles.floatOp}>
+                        <View style={styles.floatOpView}>
+                            <Image style={styles.floatOpImage} source={require('../../assets/personal/comment.png')}/>
+                            <Text style={styles.floatOpText}>200</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.floatOpLine}></View>
+                    <TouchableOpacity style={styles.floatOp}>
+                        <View style={styles.floatOpView}>
+                            <Image style={styles.floatOpImage} source={require('../../assets/note/shopping_cart.png')}/>
+                            <Text style={styles.floatOpText}>200</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={styles.floatOpLine}></View>
+                    <TouchableOpacity style={styles.floatOp}>
+                        <View style={styles.floatOpView}>
+                            <Image style={styles.floatOpImage} source={require('../../assets/note/save.png')}/>
+                            <Text style={styles.floatOpText}>200</Text>
+
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
 

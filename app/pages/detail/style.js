@@ -97,6 +97,41 @@ const styles = StyleSheet.create({
         fontSize: 12,
         lineHeight: 18,
         color: '#9b9b9b'
+    },
+    float: {
+        flex:1,
+        flexDirection: 'row',
+        position: 'absolute',
+        width: width,
+        height: 40,
+        bottom: 0,
+        backgroundColor: '#fff',
+        borderTopWidth: 1,
+        borderColor: 'rgba(155,155,155,0.1)',
+    },
+    floatOp: {
+        width: width/4,
+    },
+    floatOpView: {
+        flex:1,
+        flexDirection: 'row',
+        alignSelf: 'center',
+        justifyContent: 'center'
+    },
+    floatOpImage: {
+        marginTop: 12,
+    },
+    floatOpText: {
+        lineHeight: 27,
+        paddingLeft: 5,
+        color: '#9b9b9b'
+    },
+    floatOpLine: {
+        flex: 1,
+        height: 20,
+        width: 1.5,
+        backgroundColor: 'rgba(155,155,155,0.4)',
+        marginTop: 8,
     }
 });
 

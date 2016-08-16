@@ -38,7 +38,7 @@ class Splash extends React.Component {
     render() {
         return (
             <Image
-                style={{ width: 284, height: 200, top: (maxHeight-200)/2, left: (maxWidth-284)/2 }}
+                style={{ width: 284, height: 200, top: (maxHeight-200)/2, left: (maxWidth-284)/2, borderRadius: 20 }}
                 source={splashImg}
                 />
         );
