@@ -10,7 +10,7 @@ const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     baseText:{
-        fontSize: 14,
+        fontSize: 13,
         color: '#4a4a4a',
         lineHeight: 18,
         paddingBottom: 2
@@ -21,19 +21,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
     },
     main: {
-        //padding: 10,
-        //marginBottom: 40
+        //padding: 15,
+        marginBottom: 40
     },
     block: {
         backgroundColor: '#fff',
         marginBottom: 5,
-        flex: 1,
         flexDirection: 'column',
     },
     user: {
         flex: 1,
         flexDirection: 'row',
-        padding: 10,
+        padding: 15,
         paddingBottom: 0,
     },
     portrait: {
@@ -73,13 +72,13 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     description: {
-        padding: 10,
+        padding: 15,
     },
     dTitle: {
-        paddingBottom: 8
+        marginBottom: 14,
     },
     tags: {
-        padding: 10,
+        padding: 15,
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignSelf: 'flex-start',
@@ -132,6 +131,63 @@ const styles = StyleSheet.create({
         width: 1.5,
         backgroundColor: 'rgba(155,155,155,0.4)',
         marginTop: 8,
+    },
+
+    GC: {
+        flex: 1,
+        flexDirection: 'row',
+    },
+    grade: {
+        width: width/2,
+        padding: 15
+    },
+    comment: {
+        width: width/2,
+        padding: 15
+    },
+    blockTitle: {
+        paddingBottom: 5,
+        borderBottomWidth: 1,
+        borderColor: 'rgba(155,155,155,0.1)',
+        marginBottom: 5,
+        flexDirection: 'row',
+    },
+    blockTitleText: {
+        color: '#4a4a4a',
+        fontSize: 16,
+        lineHeight: 18,
+    },
+    star: {
+        flexDirection: 'row',
+        flex: 1,
+        height: 30,
+        alignItems: 'center'
+    },
+    starTitle: {
+        width: 70,
+        color: '#9b9b9b',
+        fontSize: 13
+    },
+    rightArrow: {
+        position: 'absolute',
+        right: 0,
+        top: 2
+    },
+    commentList: {
+        flexDirection: 'row',
+        flex: 1,
+        height: 30,
+        alignItems: 'center',
+        overflow: 'hidden'
+    },
+    NickName: {
+        color: '#9b9b9b',
+        fontSize: 13,
+        marginRight: 5
+    },
+    commentContent: {
+        color: '#4a4a4a',
+        fontSize: 13,
     }
 });
 

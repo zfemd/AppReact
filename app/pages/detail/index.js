@@ -74,6 +74,56 @@ class Detail extends React.Component {
                             <TouchableOpacity style={styles.tag}><Text style={styles.tagText}>新款</Text></TouchableOpacity>
                         </View>
                     </View>
+
+                    <View style={[styles.block, styles.GC]}>
+                        <View style={styles.grade}>
+                            <View style={styles.blockTitle}><Text style={styles.blockTitleText}>评分</Text></View>
+                            <View style={styles.star}>
+                                <Text style={styles.starTitle}>性价比</Text>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_unfilled.png')}/>
+                            </View>
+                            <View style={styles.star}>
+                                <Text style={styles.starTitle}>材质</Text>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_unfilled.png')}/>
+                            </View>
+                            <View style={styles.star}>
+                                <Text style={styles.starTitle}>舒适的</Text>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_filled.png')}/>
+                                <Image source={require('../../assets/note/star_unfilled.png')}/>
+                            </View>
+                        </View>
+                        <View style={styles.comment}>
+                            <View style={styles.blockTitle}>
+                                <Text style={styles.blockTitleText}>评论(100)</Text>
+                                <TouchableOpacity style={styles.rightArrow}>
+                                    <Image source={require('../../assets/note/rg_right.png')}/>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.commentList}>
+                                <Text style={styles.NickName}>小熊猫1号:</Text>
+                                <Text style={styles.commentContent}>很好看,很好看,很好看,很好看</Text>
+                            </View>
+                            <View style={styles.commentList}>
+                                <Text style={styles.NickName}>小熊猫1号:</Text>
+                                <Text style={styles.commentContent}>很好看</Text>
+                            </View>
+                            <View style={styles.commentList}>
+                                <Text style={styles.NickName}>小熊猫1号:</Text>
+                                <Text style={styles.commentContent}>很好看</Text>
+                            </View>
+                        </View>
+                    </View>
                 </ScrollView>
                 <View style={styles.float}>
                     <TouchableOpacity style={styles.floatOp}>
