@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
         lineHeight: 18,
         paddingBottom: 2
     },
+    dimText:{
+        color: '#9b9b9b',
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
@@ -26,7 +29,7 @@ const styles = StyleSheet.create({
     },
     block: {
         backgroundColor: '#fff',
-        marginBottom: 5,
+        marginBottom: 10,
         flexDirection: 'column',
     },
     user: {
@@ -188,7 +191,78 @@ const styles = StyleSheet.create({
     commentContent: {
         color: '#4a4a4a',
         fontSize: 13,
+    },
+    recommendByUser: {
+        padding: 15
+    },
+    recommendBySystem: {
+        padding: 15
+    },
+    relatedNote: {
+        backgroundColor: 'rgba(155,155,155,0)'
+    },
+    relatedNoteTitle: {
+        paddingLeft: 15,
+        paddingRight: 15,
+        borderBottomWidth: 0
+    },
+    sysList: {
+        justifyContent: 'space-around',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignSelf: 'flex-start',
+    },
+    sysRow: {
+        marginTop: 2,
+        marginBottom: 0,
+        width: width / 3,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+    },
+    sysThumb: {
+        width: width / 3 - 5
+    },
+    sysFrom: {
+        flexDirection: 'row',
+        marginBottom: 5
+    },
+    sysFromText: {
+        color: '#fc7d30'
+    },
+    sysFromMore: {
+        flexDirection: 'row',
+        position: 'absolute',
+        right: 0,
+        alignItems: 'center',
+    },
+    sysFromFrame: {
+        marginBottom: 10
+    },
+    recFrame:{
+        flexDirection: 'row',
+    },
+    recThumb:{
+        width: width / 4
+    },
+    recContent: {
+        width: width / 4 * 3 -40,
+        marginLeft: 10,
+        flexDirection: 'column',
+    },
+    recPrice: {
+        fontSize: 26,
+        lineHeight: 26
+    },
+    recPriceFrame: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 15
+    },
+    recPriceOld: {
+        textDecorationLine: 'line-through',
+        marginLeft: 5
     }
+
 });
 
 export default styles;

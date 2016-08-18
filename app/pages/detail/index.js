@@ -8,25 +8,143 @@ import {
     ScrollView,
     Dimensions,
     TouchableOpacity,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    ListView
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
 import PrefetchImage from '../../components/prefetchImage';
+import Flow from '../../components/flow';
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
     'https://hbimg.b0.upaiyun.com/b13d086f8c1a3040ae05637c6cb283d60c1286661f43b-OKqo08_fw658',
     'https://hbimg.b0.upaiyun.com/81329d6d0911921db04ee65f3df9d62aa6763b5f266fa-4kXDrj_fw658'
 ];
 const {height, width} = Dimensions.get('window');
+const thumbs = [
+
+    {
+        uri: 'http://hbimg.b0.upaiyun.com/fd7af3c379c8888a1ede4ea1046efea1fe953c63db770-sUI89w_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/0e343198bc21f4bfb6208dbb8e6d7d4358cffb3f2336c-M90TeP_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/be437a14550ce40dd0967e26bc4dd72dc2acdd88c418-TfAcUn_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/9944373939d4afd9b8c393973c3875f91ebf6c1d26d0e-lAUGG4_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/27e37520133ada3bde5c20d28bee40a5042f671711574-uM60Kq_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/3bfa27a07f27ab9a88493ca06cc21c001e3c943271027-VYWzdp_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/783b504aba16ddbc54e572d243ce70796c3bacd169828-uqStAZ_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/81329d6d0911921db04ee65f3df9d62aa6763b5f266fa-4kXDrj_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/cedb001478d5ad0dfe54a5af1797ad655efccd851d7d9-F0bnZJ_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/f065d8ce338b6f07a6b80471739c6739bb2c18979ada4-XKfULg_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/3720c87acb331491191a17d077f9b3f0e2705a69240ca-g1GUjG_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/7bb5cb03ac44b15d1dd5d2b9f20fc300c8d61252cf0f-BJ4TZf_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/21f167d573b123a69b6e7e52f0b68e1a374f13f165462-1CoVG0_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+    {
+        uri: 'https://hbimg.b0.upaiyun.com/e5a9ab3f0ed21b2ad8758138b6f8c1f5f238c96ee506-FqVv3B_fw658',
+        width: (width / 100) * 47,
+        height: 200
+    },
+
+
+];
 
 class Detail extends React.Component {
     constructor(props) {
         super(props);
+        this._renderRow = this._renderRow.bind(this);
+        this._genRows = this._genRows.bind(this);
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.state = {
+            dataSource: ds.cloneWithRows(this._genRows({})),
+        };
     }
 
     _onLeftIconClicked() {
 
+    }
+
+    _renderRow(rowData:string, sectionID:number, rowID:number) {
+        var rowHash = Math.abs(hashCode(rowData));
+        var imgSource = thumbs[(rowHash - 2) % thumbs.length];
+        return (
+            <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
+                <View>
+                    <View style={styles.sysRow}>
+                        <PrefetchImage
+                            imageUri={imgSource.uri}
+                            imageStyle={styles.sysThumb}
+                            resizeMode="cover"
+                            width={width/3-5}
+                            height={width/3-5}
+                            />
+                        <View>
+                            <Text style={styles.baseText} lineBreakMode={'tail'} numberOfLines={1}>
+                                miya2016夏装新品宽松镂空短袖蕾丝衫女韩系显瘦性感度假上衣潮
+                            </Text>
+                        </View>
+
+                    </View>
+                </View>
+            </TouchableOpacity>
+        )
+    }
+
+    _genRows(pressData) {
+        var dataBlob = [];
+        for (var i = 0; i < 10; i++) {
+            var pressedText = pressData[i] ? ' (X)' : '';
+            dataBlob.push('Cell ' + i + pressedText);
+        }
+        return dataBlob;
     }
 
     render() {
@@ -112,17 +230,84 @@ class Detail extends React.Component {
                             </View>
                             <View style={styles.commentList}>
                                 <Text style={styles.NickName}>小熊猫1号:</Text>
-                                <Text style={styles.commentContent}>很好看,很好看,很好看,很好看</Text>
+                                <Text style={styles.commentContent} lineBreakMode={'tail'}>很好看,很好看,很好看,很好看</Text>
                             </View>
                             <View style={styles.commentList}>
                                 <Text style={styles.NickName}>小熊猫1号:</Text>
-                                <Text style={styles.commentContent}>很好看</Text>
+                                <Text style={styles.commentContent} lineBreakMode={'tail'}>很好看</Text>
                             </View>
                             <View style={styles.commentList}>
                                 <Text style={styles.NickName}>小熊猫1号:</Text>
-                                <Text style={styles.commentContent}>很好看</Text>
+                                <Text style={styles.commentContent} lineBreakMode={'tail'}>很好看</Text>
                             </View>
                         </View>
+                    </View>
+                    <View style={[styles.block, styles.recommendByUser]}>
+                        <View style={styles.blockTitle}>
+                            <Text style={styles.blockTitleText}>作者推荐商品</Text>
+                        </View>
+                        <TouchableOpacity style={styles.recFrame}>
+                            <PrefetchImage
+                                imageUri={thumbs[4.].uri}
+                                imageStyle={styles.recThumb}
+                                resizeMode="cover"
+                                width={width/4}
+                                height={width/4}
+                                />
+                            <View style={styles.recContent}>
+                                <Text style={styles.baseText} lineBreakMode={'tail'} numberOfLines={2}>
+                                    miya2016夏装新品宽松镂空短袖蕾丝衫女韩系显瘦性感度假上衣潮
+                                </Text>
+                                <View style={styles.recPriceFrame}>
+                                    <Text style={[styles.baseText,styles.recPrice]}>￥100</Text>
+                                    <Text style={[styles.baseText,styles.dimText,styles.recPriceOld]}>￥120</Text>
+                                </View>
+
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.block, styles.recommendBySystem]}>
+                        <View style={styles.blockTitle}>
+                            <Text style={styles.blockTitleText}>系统为你推荐</Text>
+                        </View>
+                        <View style={styles.sysFromFrame}>
+                            <View style={styles.sysFrom}>
+                                <Text style={[styles.baseText, styles.sysFromText]} >来自天猫</Text>
+                                <TouchableOpacity style={styles.sysFromMore}>
+                                    <Text style={[styles.baseText, styles.dimText]}>更多</Text>
+                                    <Image source={require('../../assets/note/rg_right.png')}/>
+                                </TouchableOpacity>
+                            </View>
+                            <ListView
+                                contentContainerStyle={styles.sysList}
+                                dataSource={this.state.dataSource}
+                                renderRow={this._renderRow}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                />
+                        </View>
+                        <View style={styles.sysFromFrame}>
+                            <View style={styles.sysFrom}>
+                                <Text style={[styles.baseText, styles.sysFromText]} >来自京东</Text>
+                                <TouchableOpacity style={styles.sysFromMore}>
+                                    <Text style={[styles.baseText, styles.dimText]}>更多</Text>
+                                    <Image source={require('../../assets/note/rg_right.png')}/>
+                                </TouchableOpacity>
+                            </View>
+                            <ListView
+                                contentContainerStyle={styles.sysList}
+                                dataSource={this.state.dataSource}
+                                renderRow={this._renderRow}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                />
+                        </View>
+                    </View>
+                    <View style={[styles.block, styles.relatedNote]}>
+                        <View style={[styles.blockTitle,styles.relatedNoteTitle]}>
+                            <Text style={styles.blockTitleText}>相关笔记</Text>
+                        </View>
+                        <Flow navigator={this.props.navigator}></Flow>
                     </View>
                 </ScrollView>
                 <View style={styles.float}>
@@ -160,5 +345,13 @@ class Detail extends React.Component {
 
     }
 }
+
+var hashCode = function (str) {
+    var hash = 8;
+    for (var ii = str.length - 1; ii >= 0; ii--) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(ii);
+    }
+    return hash;
+};
 
 export default Detail;

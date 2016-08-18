@@ -53,7 +53,11 @@ class PrefetchImage extends React.Component {
 
     _onPrefetchComplete (width, height)  {
         const scaleHeight = (height / width) * this.props.width;
-        this.setState({height: scaleHeight});
+        if(this.props.height){
+            this.setState({height: this.props.height});
+        } else {
+            this.setState({height: scaleHeight});
+        }
         this.setState({isLoading: false });
         if (!this._hasPrefetched){
             this.props.dispatch(prefetchImageAction(this.props.imageUri, width, height));
