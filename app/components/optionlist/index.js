@@ -33,6 +33,21 @@ class OptionList extends React.Component {
             sectionHeaderHasChanged: (s1, s2) => s1 != s2
         });
 
+        let source = {options:
+        {"option1":{
+            title: '苹果'
+        },"option2":{
+            title: 'Dell'
+        },"option3":{
+            title: '美特斯邦威'
+        },"option4":{
+            title: '李宁'
+        },"option5":{
+            title: '特步'
+        }}}
+
+        ds = ds.cloneWithRowsAndSections(source);
+
         if (this.props.dataSource) {
             ds = this.props.dataSource;
         }
@@ -45,17 +60,6 @@ class OptionList extends React.Component {
     }
 
     componentDidMount() {
-        let source = {options:
-        {"option1":{
-            title: '新的笔记'
-        },"option2":{
-            title: '新的交易'
-        },"option3":{
-            title: '新的粉丝'
-        },"option4":{
-            title: '新的评论'
-        }}}
-        this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
     }
 
     componentWillMount() {

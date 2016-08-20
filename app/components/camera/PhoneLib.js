@@ -41,13 +41,14 @@ class PhoneLib extends Component {
         let {height, width} = Dimensions.get('window');
         let imageWidth = (width - 24) / 3;
         let imageHeight = imageWidth;
+        console.log(asset);
 
         return asset.camera ? (
-            <TouchableHighlight {...this._cameraProps} style={[styles.cameraContainer, {width:imageWidth, height:imageHeight}]}>
+            <TouchableHighlight key='camera' {...this._cameraProps} style={[styles.cameraContainer, {width:imageWidth, height:imageHeight}]}>
                 {cameraIcon}
             </TouchableHighlight>
         ) : (
-            <TouchableHighlight {...this._imageProps} onPress={() => {this._onPressImage(asset.node)}}>
+            <TouchableHighlight key={asset.node.image.uri} {...this._imageProps} onPress={() => {this._onPressImage(asset.node)}}>
                 <Image style={styles.image}
                     source={asset.node.image}
                     height={imageHeight} width={imageWidth}

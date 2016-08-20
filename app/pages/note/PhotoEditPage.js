@@ -17,10 +17,12 @@ import {
     View
 } from 'react-native';
 import Button from '../../components/button/Button';
+import Tag from '../../components/tag';
 import OptionList from '../../components/optionlist';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import ImageButton from '../../components/toolbar/ImageButton';
 import CurrencyOptionList from './CurrencyOptionList';
+import NationOptionList from './NationOptionList';
 const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
@@ -30,14 +32,20 @@ class PhotoEditPage extends Component {
 
         this.state = {
             avatarSource: this.props.selectedPhoto,
-            modalVisible:false,
-            brandModalVisible: false,
-            transparent:true
+            optionsModalVisible:false,
+            currencyOptionsVisible: false,
+            brandOptionsVisible: false,
+            nationOptionsVisible: false,
+            transparent:true,
+            tagOverlayVisible: false,
+            tags: [],
+            tagData: []
         };
 
     }
 
     _onCancel() {
+        this.setState({tagOverlayVisible:false});
         const { navigator } = this.props;
 
         if(navigator) {
@@ -58,7 +66,7 @@ class PhotoEditPage extends Component {
             console.log("not in image");
         } else {
             this.state.clickedPos = {x: point.locationX - scope.left, y: point.locationY - scope.top};
-            this.setState({modalVisible: true});
+            this.setState({tagOverlayVisible: true});
         }
     }
 
@@ -81,16 +89,11 @@ class PhotoEditPage extends Component {
     }
 
     _onCurrencyInputFocus() {
-        const { navigator } = this.props;
-        //为什么这里可以取得 props.navigator?请看上文:
-        //<Component {...route.params} navigator={navigator} />
-        //这里传递了navigator作为props
-        if(navigator) {
-            navigator.push({
-                name: 'CurrencyOptionList',
-                component: CurrencyOptionList
-            })
-        }
+        this.showCurrencyModal(true);
+    }
+
+    _onNationInputFocus() {
+        this.showNationModal(true);
     }
 
     _onBrandSelect(rowData) {
@@ -98,13 +101,64 @@ class PhotoEditPage extends Component {
         this.showBrandModal(false);
     }
 
-    setModalVisible(flag) {
-        this.setState({modalVisible:flag});
+    _onCurrencySelect(rowData) {
+        this.setState({currency:rowData.title});
+        this.showCurrencyModal(false);
+    }
+
+    _onNationSelect(rowData) {
+        this.setState({nation:rowData.title});
+        this.showCurrencyModal(false);
+    }
+
+    setOptionsModalVisible(flag) {
+        this.setState({optionsModalVisible:flag});
     }
 
     showBrandModal(flag) {
-        this.state.modalVisible = !flag;
-        this.setState({brandModalVisible: flag});
+        this.state.brandOptionsVisible = flag;
+        this.state.nationOptionsVisible = false;
+        this.state.currencyOptionsVisible = false;
+        this.setOptionsModalVisible(flag);
+    }
+
+    showCurrencyModal(flag){
+        this.state.currencyOptionsVisible = flag;
+        this.state.brandOptionsVisible = false;
+        this.state.nationOptionsVisible = false;
+        this.setOptionsModalVisible(flag);
+    }
+
+    showNationModal(flag){
+        this.state.nationOptionsVisible = flag;
+        this.state.currencyOptionsVisible = false;
+        this.state.brandOptionsVisible = false;
+        this.setOptionsModalVisible(flag);
+    }
+
+    _onAddTag() {
+        let {tagData, tags} = this.state;
+
+        let data = {
+            nation: this.state.nation,
+            currency: this.state.currency,
+            brand: this.state.brand
+        }
+
+        tagData.push(data);
+
+        let position = {left: this.state.imageScope.left + this.state.clickedPos.left,
+            top: this.state.imageScope.top + this.state.clickedPos.top};
+
+        let tag = (
+            <Tag data={data} position={position}/>
+        );
+
+        tags.push(tag);
+        this.state.tags = tags;
+        this.state.tagData = tagData;
+        //this.setState({tags: tags, tagData: tagData});
+        this.setOptionsModalVisible(false);
     }
 
     render() {
@@ -120,9 +174,8 @@ class PhotoEditPage extends Component {
             backgroundColor: '#ddd'
         };
 
-
         return (
-            <View style={[styles.container, {height: height}]}>
+            <View style={[styles.container, {height: height - 21}]}>
                 <View style={styles.navigator}>
                     <TouchableHighlight onPress={this._onCancel.bind(this)} style={styles.leftContainer}>
                         <Text style={[styles.navigatorText]}>返回</Text>
@@ -139,7 +192,9 @@ class PhotoEditPage extends Component {
                         <Image source={this.state.avatarSource} style={styles.selectedPhoto} width={width} height={300}
                         resizeMode='contain' onLoad={this._onImageLoad.bind(this)}/>
                     </TouchableHighlight>
+                    {this.state.tags}
                 </View>
+
 
                 <ScrollableTabView
                     style={{marginTop: 0, }}
@@ -160,38 +215,41 @@ class PhotoEditPage extends Component {
                     <ScrollView navigator={this.props.navigator} tabLabel="贴图"/>
                 </ScrollableTabView>
 
-                <View style={[styles.overlay]}>
-                    <View style={styles.formRow}>
-                        <TextInput value={this.state.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
-                        <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
-                    </View>
-                    <View style={styles.formRow}>
-                        <TextInput placeholder='币种' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onCurrencyInputFocus.bind(this)}/>
-                        <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput}/>
-                    </View>
-                    <View style={styles.formRow}>
-                        <TextInput placeholder='国家' placeholderTextColor='#fff' style={styles.textInput}/>
-                        <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
-                    </View>
-                    <View style={{marginHorizontal: 20}}>
-                        <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onBrandInputFocus()}>
-                            完成
-                        </Button>
-                        <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
-                                onPress={() => this.setModalVisible.call(this, false)}>
-                            取消
-                        </Button>
-                    </View>
-                </View>
+                {this.state.tagOverlayVisible ?
+                    (<View style={[styles.overlay]}>
+                        <View style={styles.formRow}>
+                            <TextInput value={this.state.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
+                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
+                        </View>
+                        <View style={styles.formRow}>
+                            <TextInput value={this.state.currency} placeholder='币种' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onCurrencyInputFocus.bind(this)}/>
+                            <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput}/>
+                        </View>
+                        <View style={styles.formRow}>
+                            <TextInput value={this.state.nation} placeholder='国家' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onNationInputFocus.bind(this)} />
+                            <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
+                        </View>
+                        <View style={{marginHorizontal: 20}}>
+                            <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onAddTag.call(this)}>
+                                完成
+                            </Button>
+                            <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
+                                    onPress={this._onCancel.bind(this)}>
+                                取消
+                            </Button>
+                        </View>
+                    </View>) : null}
 
                 <Modal
                     animationType={"slide"}
                     transparent={false}
-                    visible={this.state.brandModalVisible}
+                    visible={this.state.optionsModalVisible}
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
                     <View style={[styles.container, styles.modalContainer, {height: height}]}>
-                        <OptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/>
+                        { this.state.brandOptionsVisible ? <OptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
+                        { this.state.currencyOptionsVisible ? <CurrencyOptionList onCancel={() => this.showCurrencyModal.call(this, false)} onSelect={(rowData)=> this._onCurrencySelect.call(this, rowData) }/> : null}
+                        { this.state.nationOptionsVisible ? <NationOptionList onCancel={() => this.showNationModal.call(this, false)} onSelect={(rowData)=> this._onNationSelect.call(this, rowData) }/> : null}
                     </View>
                 </Modal>
             </View>

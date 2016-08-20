@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import OptionList from '../../components/optionlist';
 
-export default class CurrencyOptionList extends Component {
+export default class NationOptionList extends Component {
     constructor(props) {
         super(props);
 
@@ -31,21 +31,21 @@ export default class CurrencyOptionList extends Component {
     componentWillMount() {
         let source = {options:
         {"option1":{
-            title: '人民币'
+            title: '中国'
         },"option2":{
-            title: '美元'
+            title: '美国'
         },"option3":{
-            title: '欧元'
+            title: '日本'
         },"option4":{
-            title: '英镑'
+            title: '加拿大'
         }, 'option5': {
-            title: '加元'
+            title: '韩国'
         }, 'option6': {
-            title: '新台币'
+            title: '澳大利亚'
         }, 'option7': {
-            title: '日元'
+            title: '英国'
         }, 'option8': {
-            title: '韩元'
+            title: '法国'
         }}};
 
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
