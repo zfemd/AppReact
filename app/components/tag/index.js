@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View,
 } from 'react-native';
 
@@ -24,7 +25,7 @@ export default class Tag extends Component {
 
     constructor(props) {
         super(props);
-        index++;
+        Tag.index++;
     }
 
     render() {
@@ -36,6 +37,8 @@ export default class Tag extends Component {
             touchableProps.onLongPress = this.props.onLongPress;
         }
 
+        // TouchableWithoutFeedback doesn't support position, because it doesn't have size and position.
+        // so we have to transfer position to Circle component.
         let position = this.props.position ? this.props.position : {left: 0, top: 0};
 
         //<TouchableOpacity {...touchableProps} testID={this.props.testID} style={this.props.containerStyle}>
@@ -43,9 +46,9 @@ export default class Tag extends Component {
         //</TouchableOpacity>
 
         return (
-            <View key={index} style={{left: position.left, top: position.top, position: 'absolute'}}>
-                <Circle></Circle>
-            </View>
+            <TouchableWithoutFeedback>
+                <Circle position={position}></Circle>
+            </TouchableWithoutFeedback>
         );
     }
 };
@@ -58,12 +61,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-    disabledText: {
-        color: '#dcdcdc',
-    },
-    group: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
+    tag: {
+
+    }
 });

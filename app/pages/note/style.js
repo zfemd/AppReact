@@ -45,8 +45,7 @@ const styles = StyleSheet.create({
 
     },
     selectedPhotoContainer: {
-        backgroundColor: '#000',
-        position: 'relative'
+        backgroundColor: '#000'
     },
     selectedPhoto: {
     },

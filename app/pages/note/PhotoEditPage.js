@@ -39,7 +39,8 @@ class PhotoEditPage extends Component {
             transparent:true,
             tagOverlayVisible: false,
             tags: [],
-            tagData: []
+            tagData: [],
+            clickedPos: {x:0, y:0}
         };
 
     }
@@ -136,6 +137,11 @@ class PhotoEditPage extends Component {
         this.setOptionsModalVisible(flag);
     }
 
+    _onModalCancel() {
+        this.state.nation = this.state.currency = this.state.brand = "";
+        this.setState({tagOverlayVisible: false});
+    }
+
     _onAddTag() {
         let {tagData, tags} = this.state;
 
@@ -147,18 +153,21 @@ class PhotoEditPage extends Component {
 
         tagData.push(data);
 
-        let position = {left: this.state.imageScope.left + this.state.clickedPos.left,
-            top: this.state.imageScope.top + this.state.clickedPos.top};
+        let position = {left: this.state.imageScope.left + this.state.clickedPos.x,
+            top: this.state.imageScope.top + this.state.clickedPos.y};
 
+        // position doesn't work here
         let tag = (
-            <Tag data={data} position={position}/>
+            <Tag key={position.left + '_' + position.top} data={data} position={position} style={{position: 'absolute', left: position.left, top: position.top}}/>
         );
+
+        console.log(position);
 
         tags.push(tag);
         this.state.tags = tags;
         this.state.tagData = tagData;
         //this.setState({tags: tags, tagData: tagData});
-        this.setOptionsModalVisible(false);
+        this.setState({tagOverlayVisible: false});
     }
 
     render() {
@@ -234,7 +243,7 @@ class PhotoEditPage extends Component {
                                 完成
                             </Button>
                             <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
-                                    onPress={this._onCancel.bind(this)}>
+                                    onPress={() => this._onModalCancel.call(this)}>
                                 取消
                             </Button>
                         </View>
