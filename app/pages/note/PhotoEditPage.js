@@ -32,6 +32,7 @@ class PhotoEditPage extends Component {
 
         this.state = {
             avatarSource: this.props.selectedPhoto,
+            imageClickable: false,
             optionsModalVisible:false,
             currencyOptionsVisible: false,
             brandOptionsVisible: false,
@@ -54,11 +55,17 @@ class PhotoEditPage extends Component {
         }
     }
 
-    _onChangeTab() {
-
+    /**
+     * @param args: {i:currentPage, from: prevPage, ref: currentPage component}
+     * @private
+     */
+    _onChangeTab(args) {
+        this.state.imageClickable = (args.i == 1);
     }
 
     _onPressImage(event) {
+        if (!this.state.imageClickable) return;
+
         let point = {locationX, locationY} = event.nativeEvent;
         let scope = this.state.imageScope;
 
@@ -153,12 +160,17 @@ class PhotoEditPage extends Component {
 
         tagData.push(data);
 
+        let labels = [];
+        data.nation && labels.push(data.nation);
+        data.currency && labels.push(data.currency);
+        data.brand && labels.push(data.brand);
+
         let position = {left: this.state.imageScope.left + this.state.clickedPos.x,
             top: this.state.imageScope.top + this.state.clickedPos.y};
 
         // position doesn't work here
         let tag = (
-            <Tag key={position.left + '_' + position.top} data={data} position={position} style={{position: 'absolute', left: position.left, top: position.top}}/>
+            <Tag key={position.left + '_' + position.top} labels={labels} position={position} style={{position: 'absolute', left: position.left, top: position.top}}/>
         );
 
         console.log(position);
