@@ -23,6 +23,7 @@ import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-vi
 import ImageButton from '../../components/toolbar/ImageButton';
 import CurrencyOptionList from './CurrencyOptionList';
 import NationOptionList from './NationOptionList';
+import PostNotePage from './PostNotePage';
 const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
@@ -52,6 +53,18 @@ class PhotoEditPage extends Component {
 
         if(navigator) {
             navigator.pop();
+        }
+    }
+
+    _onContinue() {
+        const { navigator } = this.props;
+
+        if(navigator) {
+            navigator.push({
+                name: 'PostNotePage',
+                component: PostNotePage,
+                params: {selectedPhoto:this.state.avatarSource}
+            })
         }
     }
 
@@ -204,7 +217,7 @@ class PhotoEditPage extends Component {
                     <View style={styles.navigatorTitle} >
                         <Text style={styles.navigatorText}>编辑照片</Text>
                     </View>
-                    <TouchableHighlight style={styles.rightContainer}>
+                    <TouchableHighlight style={styles.rightContainer} onPress={this._onContinue.bind(this)}>
                         <Text style={[styles.navigatorText]}>继续</Text>
                     </TouchableHighlight>
                 </View>
