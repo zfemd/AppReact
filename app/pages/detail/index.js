@@ -15,6 +15,7 @@ import styles from './style';
 import Toolbar from '../../components/toolbar';
 import PrefetchImage from '../../components/prefetchImage';
 import Flow from '../../components/flow';
+import Share from '../../components/share';
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
     'https://hbimg.b0.upaiyun.com/b13d086f8c1a3040ae05637c6cb283d60c1286661f43b-OKqo08_fw658',
@@ -102,9 +103,11 @@ class Detail extends React.Component {
         super(props);
         this._renderRow = this._renderRow.bind(this);
         this._genRows = this._genRows.bind(this);
+        this._onSharePress = this._onSharePress.bind(this);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds.cloneWithRows(this._genRows({})),
+            showShare: false
         };
     }
 
@@ -147,6 +150,10 @@ class Detail extends React.Component {
         return dataBlob;
     }
 
+    _onSharePress(){
+        this.setState({showShare: !this.state.showShare});
+    }
+
     render() {
         return(
             <View style={styles.container}>
@@ -156,6 +163,7 @@ class Detail extends React.Component {
                     hideDrop={true}
                     onLeftIconClicked={this._onLeftIconClicked(0)}
                     rightImg={shareImg}
+                    rightImgPress={this._onSharePress}
                     />
                 <ScrollView style={styles.main}>
 
@@ -340,6 +348,13 @@ class Detail extends React.Component {
                         </View>
                     </TouchableOpacity>
                 </View>
+                {[this.state.showShare].map((show) => {
+                    if (show) {
+                        return (
+                            <Share key='' press={this._onSharePress}/>
+                        );
+                    }
+                })}
             </View>
         )
 

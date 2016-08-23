@@ -31,7 +31,8 @@ const propTypes = {
     rightImg: PropTypes.number,
     onLeftIconClicked: PropTypes.func,
     hideDrop: PropTypes.bool,
-    onRightIconClicked: PropTypes.func
+    onRightIconClicked: PropTypes.func,
+    rightImgPress: PropTypes.func
 };
 
 class Toolbar extends React.Component {
@@ -56,7 +57,7 @@ class Toolbar extends React.Component {
     }
 
     _onRightIconClicked() {
-        this.props.onRightIconClicked();
+        this.props.rightImgPress();
     }
 
     _renderToolbarAndroid() {
