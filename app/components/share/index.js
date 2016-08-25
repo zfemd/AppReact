@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-around',
         width: width,
-        padding: 50,
+        padding: 30,
         height: 120,
     },
     shareItem: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     button: {
         height: 36,
         backgroundColor: '#efefef',
-        margin: 50,
+        margin: 30,
         marginTop: 10,
         borderRadius: 4,
         alignItems: 'center',

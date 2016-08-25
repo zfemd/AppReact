@@ -9,13 +9,16 @@ import {
     Dimensions,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    ListView
+    ListView,
+    InteractionManager,
+    Navigator
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
 import PrefetchImage from '../../components/prefetchImage';
 import Flow from '../../components/flow';
 import Share from '../../components/share';
+import CommentPage from '../../pages/comment';
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
     'https://hbimg.b0.upaiyun.com/b13d086f8c1a3040ae05637c6cb283d60c1286661f43b-OKqo08_fw658',
@@ -152,6 +155,17 @@ class Detail extends React.Component {
 
     _onSharePress(){
         this.setState({showShare: !this.state.showShare});
+    }
+
+    _jumpToCommentPage(){
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: CommentPage,
+                name: 'CommentPage',
+                sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
+            });
+        });
     }
 
     render() {
@@ -319,14 +333,14 @@ class Detail extends React.Component {
                     </View>
                 </ScrollView>
                 <View style={styles.float}>
-                    <TouchableOpacity style={styles.floatOp}>
+                    <TouchableOpacity style={styles.floatOp} >
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/note/heart.png')}/>
                             <Text style={styles.floatOpText}>200</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.floatOpLine}></View>
-                    <TouchableOpacity style={styles.floatOp}>
+                    <TouchableOpacity style={styles.floatOp} onPress={() => this._jumpToCommentPage()} >
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/personal/comment.png')}/>
                             <Text style={styles.floatOpText}>200</Text>
