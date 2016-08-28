@@ -39,10 +39,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     uploadAvatarContainer: {
-
+        flexDirection: 'row'
     },
     uploadAvatar: {
-
+        marginRight: 10
     },
     selectedPhotoContainer: {
         backgroundColor: '#000'

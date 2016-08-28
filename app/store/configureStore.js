@@ -21,6 +21,7 @@ const finalCreateStore = compose(
 )(createStore);
 
 export default function configureStore(initialState) {
+    // store.dispatch() is override, call store.dispatch(action) will also call all middlewares.
     const store = finalCreateStore(reducers, initialState);
     return store;
 }

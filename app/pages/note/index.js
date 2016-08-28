@@ -14,7 +14,9 @@ import {
     View
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import { connect } from 'react-redux';
 import PhoneLib from '../../components/camera/PhoneLib';
+import StoreActions from '../../constants/actions';
 import PhotoEditPage from './PhotoEditPage';
 import ImageButton from '../../components/toolbar/ImageButton';
 const arrowImg = require('../../assets/header/arrow.png');
@@ -124,9 +126,20 @@ class SelectPhotoPage extends Component {
     
     _onPressImage(imageNode) {
         console.log(imageNode);
+        let store = this.props.store;
+        let selectedPhotos = this.props.selectedPhotos;
+
+        if (selectedPhotos == null) {
+            selectedPhotos = [imageNode.image];
+        } else {
+            selectedPhotos.push(imageNode.image);
+        }
+
         this.setState({
             avatarSource: imageNode.image
         });
+
+        store.dispatch({type:StoreActions.ADD_NOTE_PHOTO});
     }
 
     _getFirstImage(data) {
@@ -205,4 +218,12 @@ class SelectPhotoPage extends Component {
     }
 }
 
-export default SelectPhotoPage;
+// get selected photos from store.state object.
+function mapStateToProps(state) {
+    const { selectedPhotos } = state;
+    return {
+        selectedPhotos
+    };
+}
+
+export default connect(mapStateToProps)(SelectPhotoPage);

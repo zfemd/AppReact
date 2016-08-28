@@ -14,6 +14,7 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
+import { connect } from 'react-redux';
 import styles from './style';
 import Home from '../home';
 
@@ -85,6 +86,16 @@ class PostNotePage extends Component {
         this.state.nodeContent = event.nativeEvent.text;
     }
 
+    _renderSelectedPhotos() {
+        let selectedPhotos = this.props.selectedPhotos;
+        if (selectedPhotos != null && selectedPhotos.length > 0) {
+            this.photos = [];
+            selectedPhotos.forEach(function(photo){
+
+            });
+        }
+    }
+
     render() {
         let {height, width} = Dimensions.get('window');
 
@@ -123,4 +134,12 @@ class PostNotePage extends Component {
     }
 }
 
-export default PostNotePage;
+// get selected photos from store.state object.
+function mapStateToProps(state) {
+    const { selectedPhotos } = state;
+    return {
+        selectedPhotos
+    };
+}
+
+export default connect(mapStateToProps)(PostNotePage);
