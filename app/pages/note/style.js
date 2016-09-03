@@ -103,6 +103,14 @@ const styles = StyleSheet.create({
     },
     cancelBtnText: {
         color: '#000'
+    },
+    morePhotoBox: {
+        borderStyle: 'dashed',
+        borderWidth: 1,
+        width: 80,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

@@ -6,8 +6,6 @@
 import flowAction from './flow';
 import prefetchImageAction from './prefetchImage';
 
-
-
 export {
     flowAction,
     prefetchImageAction

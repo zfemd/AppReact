@@ -15,6 +15,8 @@ import {
     View
 } from 'react-native';
 import { connect } from 'react-redux';
+import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
+import SelectPhotoPage from './index';
 import styles from './style';
 import Home from '../home';
 
@@ -35,19 +37,18 @@ class PostNotePage extends Component {
         }
     }
 
-    _onContinue() {
-        //const { navigator } = this.props;
-        //
-        //if(navigator) {
-        //    navigator.push({
-        //        name: 'PhotoEditPage',
-        //        component: PhotoEditPage,
-        //        params: {selectedPhoto:this.state.avatarSource}
-        //    })
-        //}
+    componentDidMount() {
     }
 
-    componentDidMount() {
+    _addMorePhoto() {
+        const { navigator } = this.props;
+
+        if(navigator) {
+            navigator.push({
+                name: 'SelectPhotoPage',
+                component: SelectPhotoPage
+            })
+        }
     }
 
     _sendNote() {
@@ -87,13 +88,17 @@ class PostNotePage extends Component {
     }
 
     _renderSelectedPhotos() {
-        let selectedPhotos = this.props.selectedPhotos;
-        if (selectedPhotos != null && selectedPhotos.length > 0) {
-            this.photos = [];
-            selectedPhotos.forEach(function(photo){
+        let { draftPhotos } = this.props.notePhotos;
+        let photos = [];
+        if (draftPhotos != null && draftPhotos.length > 0) {
 
+            draftPhotos.forEach(function(photo){
+                let image = <Image key={photo.uri} source={photo} style={styles.uploadAvatar} width={80} height={80} />
+                photos.push(image);
             });
         }
+
+        return photos;
     }
 
     render() {
@@ -123,7 +128,10 @@ class PostNotePage extends Component {
                                style={{flex:1, height: 80}}/>
                 </View>
                 <View style={[styles.uploadAvatarContainer, {borderBottomWidth: 1, borderBottomColor: '#ccc', padding: 10}]}>
-                    <Image source={this.props.selectedPhoto} style={styles.uploadAvatar} width={80} height={80} />
+                    {this._renderSelectedPhotos()}
+                    <TouchableHighlight style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
+                        <Icon size={16} name="plus"/>
+                    </TouchableHighlight>
                 </View>
                 <TouchableHighlight onPress={this._sendNote.bind(this)}
                     style={{padding: 10, justifyContent:'center', backgroundColor: '#f00', flexDirection: 'row', position: 'absolute', bottom: 0, left: 0, right: 0}}>
@@ -136,9 +144,9 @@ class PostNotePage extends Component {
 
 // get selected photos from store.state object.
 function mapStateToProps(state) {
-    const { selectedPhotos } = state;
+    const { notePhotos } = state;
     return {
-        selectedPhotos
+        notePhotos
     };
 }
 

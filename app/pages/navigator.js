@@ -8,7 +8,7 @@ import {
     BackAndroid,
     View
 } from 'react-native';
-
+import { connect, storeShape } from 'react-redux';
 import Splash from '../pages/splash';
 import { naviGoBack } from '../utils/common';
 
@@ -16,8 +16,9 @@ let tempNavigator;
 let isRemoved = false;
 
 class Nav extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
+        console.log(context); // get react native store object
         this._renderScene = this._renderScene.bind(this);
         this._goBack = this._goBack.bind(this);
         BackAndroid.addEventListener('hardwareBackPress', this._goBack);
@@ -64,6 +65,10 @@ class Nav extends React.Component {
             </View>
         );
     }
+}
+
+Nav.contextTypes = {
+    store: () => storeShape
 }
 
 const styles = StyleSheet.create({

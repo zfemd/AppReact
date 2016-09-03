@@ -1,11 +1,10 @@
 /**
  * Created by lyan2 on 16/8/28.
  */
-/**
- * Created by lyan2 on 16/7/30.
- */
-const StoreActions = {
-    ADD_NOTE_PHOTO: 'add_note_photo'
-};
+import keyMirror from 'fbjs/lib/keyMirror';
 
-module.exports = StoreActions;
+export default keyMirror({
+    ADD_NOTE_PHOTO: null
+});
+
+// export const ADD_NOTE_PHOTO = 'ADD_NOTE_PHOTO';

@@ -23,7 +23,7 @@ const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
 class SelectPhotoPage extends Component {
-    constructor(props) {
+    constructor(props, context) {
         super(props);
 
         this.state = {
@@ -126,20 +126,10 @@ class SelectPhotoPage extends Component {
     
     _onPressImage(imageNode) {
         console.log(imageNode);
-        let store = this.props.store;
-        let selectedPhotos = this.props.selectedPhotos;
-
-        if (selectedPhotos == null) {
-            selectedPhotos = [imageNode.image];
-        } else {
-            selectedPhotos.push(imageNode.image);
-        }
 
         this.setState({
             avatarSource: imageNode.image
         });
-
-        store.dispatch({type:StoreActions.ADD_NOTE_PHOTO});
     }
 
     _getFirstImage(data) {
@@ -160,7 +150,9 @@ class SelectPhotoPage extends Component {
     }
 
     _onContinue() {
-        const { navigator } = this.props;
+        const { navigator, dispatch } = this.props;
+
+        dispatch({type:StoreActions.ADD_NOTE_PHOTO, photo: this.state.avatarSource});
 
         if(navigator) {
             navigator.push({
@@ -220,10 +212,7 @@ class SelectPhotoPage extends Component {
 
 // get selected photos from store.state object.
 function mapStateToProps(state) {
-    const { selectedPhotos } = state;
-    return {
-        selectedPhotos
-    };
+    return {};
 }
 
 export default connect(mapStateToProps)(SelectPhotoPage);

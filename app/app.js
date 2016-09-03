@@ -10,7 +10,6 @@ import { Provider } from 'react-redux';
 import configureStore from './store/configureStore';
 import Main from './pages/navigator';
 
-//Todo add initial states
 const store = configureStore();
 
 class App extends React.Component {
