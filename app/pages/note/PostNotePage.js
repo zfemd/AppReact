@@ -87,18 +87,45 @@ class PostNotePage extends Component {
         this.state.nodeContent = event.nativeEvent.text;
     }
 
+    _renderPhotosRow(photos, photosPerRow, fromIndex) {
+
+        if (photos != null && photos.length > 0) {
+            console.log(photos.slice(fromIndex, fromIndex + photosPerRow));
+            return photos.slice(fromIndex, fromIndex + photosPerRow);
+        }
+
+        return null;
+    }
+
     _renderSelectedPhotos() {
+        let morePhoto = (
+            <TouchableHighlight style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
+                <Icon size={16} name="plus"/>
+            </TouchableHighlight>
+        );
+
         let { draftPhotos } = this.props.notePhotos;
         let photos = [];
-        if (draftPhotos != null && draftPhotos.length > 0) {
+        let photoRows = [];
+        let photosPerRow = 4;
+        let rowIndex = 0;
 
+        if (draftPhotos != null && draftPhotos.length > 0) {
             draftPhotos.forEach(function(photo){
                 let image = <Image key={photo.uri} source={photo} style={styles.uploadAvatar} width={80} height={80} />
                 photos.push(image);
             });
         }
 
-        return photos;
+        photos.push(morePhoto);
+
+        rowIndex = Math.ceil(photos.length / photosPerRow) - 1;
+        for(let i = 0; i <= rowIndex; i++) {
+            let row = <View style={{flexDirection:'row'}}>{this._renderPhotosRow(photos, photosPerRow, i * photosPerRow)}</View>;
+            photoRows.push(row);
+        }
+
+        return photoRows;
     }
 
     render() {
@@ -129,9 +156,6 @@ class PostNotePage extends Component {
                 </View>
                 <View style={[styles.uploadAvatarContainer, {borderBottomWidth: 1, borderBottomColor: '#ccc', padding: 10}]}>
                     {this._renderSelectedPhotos()}
-                    <TouchableHighlight style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
-                        <Icon size={16} name="plus"/>
-                    </TouchableHighlight>
                 </View>
                 <TouchableHighlight onPress={this._sendNote.bind(this)}
                     style={{padding: 10, justifyContent:'center', backgroundColor: '#f00', flexDirection: 'row', position: 'absolute', bottom: 0, left: 0, right: 0}}>

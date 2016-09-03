@@ -38,9 +38,6 @@ const styles = StyleSheet.create({
     leftContainer: {
         justifyContent: 'flex-start'
     },
-    uploadAvatarContainer: {
-        flexDirection: 'row'
-    },
     uploadAvatar: {
         marginRight: 10
     },
