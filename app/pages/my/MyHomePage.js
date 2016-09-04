@@ -37,6 +37,9 @@ var THUMB_URLS = [
     require('../../assets/test/test1.png')
 ];
 
+const addImg = require('../../assets/header/add.png');
+const settingImg = require('../../assets/personal/setting.png');
+
 export default class MyHomePage extends Component {
     constructor(props) {
         super(props);
@@ -278,42 +281,44 @@ export default class MyHomePage extends Component {
 
     _renderNote(rowData, sectionID, rowID, highlightRow) {
         return (
-            <View style={styles.myNote}>
-                <View style={styles.noteUserBox}>
-                    <View style={[styles.portrait, {borderRadius:31}]}>
-                        <Image source={{uri: rowData.user.thumbUri, width: 31, height: 31}} />
+            <View>
+                <View style={styles.myNote}>
+                    <View style={styles.noteUserBox}>
+                        <View style={[styles.portrait, {borderRadius:31}]}>
+                            <Image source={{uri: rowData.user.thumbUri, width: 31, height: 31}} />
+                        </View>
+                        <View style={styles.noteUserMsgBox}>
+                            <Text style={styles.noteUserTitle}>{rowData.user.name}</Text>
+                            <Text style={styles.noteCreateTime}>{rowData.detail.createTime}</Text>
+                        </View>
                     </View>
-                    <View style={styles.noteUserMsgBox}>
-                        <Text style={styles.noteUserTitle}>{rowData.user.name}</Text>
-                        <Text style={styles.noteCreateTime}>{rowData.detail.createTime}</Text>
-                    </View>
-                </View>
 
-                <TouchableHighlight>
-                    <View style={styles.noteThumbBox}>
-                        <Image style={styles.noteThumb} source={THUMB_URLS[0]} resizeMode={Image.resizeMode.contain} />
-                    </View>
-                </TouchableHighlight>
+                    <TouchableHighlight>
+                        <View style={styles.noteThumbBox}>
+                            <Image style={styles.noteThumb} source={THUMB_URLS[0]} resizeMode={Image.resizeMode.contain} />
+                        </View>
+                    </TouchableHighlight>
 
-                <Text style={styles.noteTitle}>{rowData.detail.title}</Text>
-                <View style={styles.noteAssets}>
-                    <View style={styles.noteAsset}>
-                        {zanIcon}
-                        <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.zanNum}</Text>
-                    </View>
-                    <View style={styles.separatorVertical}></View>
-                    <View style={styles.noteAsset}>
-                        {commentIcon}
-                        <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.commentNum}</Text>
-                    </View>
-                    <View style={styles.separatorVertical}></View>
-                    <View style={styles.noteAsset}>
-                        {shoppingCartIcon}
-                        <Text style={[styles.text, {marginLeft:5}]}>({rmbIcon} {rowData.summary.income})</Text>
-                    </View>
-                    <View style={styles.separatorVertical}></View>
-                    <View style={styles.noteAsset}>
-                        <Text style={[styles.text]}>...</Text>
+                    <Text style={styles.noteTitle}>{rowData.detail.title}</Text>
+                    <View style={styles.noteAssets}>
+                        <View style={styles.noteAsset}>
+                            {zanIcon}
+                            <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.zanNum}</Text>
+                        </View>
+                        <View style={styles.separatorVertical}></View>
+                        <View style={styles.noteAsset}>
+                            {commentIcon}
+                            <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.commentNum}</Text>
+                        </View>
+                        <View style={styles.separatorVertical}></View>
+                        <View style={styles.noteAsset}>
+                            {shoppingCartIcon}
+                            <Text style={[styles.text, {marginLeft:5}]}>({rmbIcon} {rowData.summary.income})</Text>
+                        </View>
+                        <View style={styles.separatorVertical}></View>
+                        <View style={styles.noteAsset}>
+                            <Text style={[styles.text]}>...</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -336,6 +341,14 @@ export default class MyHomePage extends Component {
 
         return (
             <View>
+                <Toolbar
+                    title="我的主页"
+                    navigator={this.props.navigator}
+                    hideDrop={true}
+                    leftImg={addImg}
+                    rightImg={settingImg}
+                    />
+
                 <View style={styles.userContainer}>
                     <View style={styles.portrait}>
                         <Image source={{uri: this.user.thumbUri, width: 45, height: 45}} />

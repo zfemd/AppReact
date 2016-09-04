@@ -190,7 +190,7 @@ export default class MyMessagesPage extends Component {
 
     render() {
         return (
-            <View>
+            <View style={{marginTop: 21}}>
 
                 <ListView dataSource={this.state.dataSource}
                           renderSectionHeader={this._renderSectionHeader}

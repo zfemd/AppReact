@@ -31,6 +31,7 @@ class Home extends React.Component {
         this._showFilter = this._showFilter.bind(this);
         this._onFilterClicked = this._onFilterClicked.bind(this);
         this.state = {
+            showToolbar: this.props.home.showToolbar,
             showFilter: false,
             filterMounted: false,
         }
@@ -75,19 +76,30 @@ class Home extends React.Component {
                     sceneConfigs: Navigator.SceneConfigs.HorizontalSwipeJumpFromRight
                 });
             });
+        } else if (data.i == 3 || data.i == 4) {
+            this.setState({showToolbar: false});
+        } else {
+            this.setState({showToolbar: true});
         }
+
+        console.log(this);
     }
 
     render() {
         return (
             <View style={styles.container} visible='hidden'>
-                <Toolbar
-                    title="剁手记"
-                    navigator={navigator}
-                    showFilter={this._showFilter}
-                    leftImg={addImg}
-                    rightImg={searchImg}
-                    />
+                {
+                    this.state.showToolbar ? (
+                        <Toolbar
+                            title="剁手记"
+                            navigator={navigator}
+                            showFilter={this._showFilter}
+                            leftImg={addImg}
+                            rightImg={searchImg}
+                            />
+                    ) : null
+                }
+
                 <ScrollableTabView
                     scrollWithoutAnimation={true}
                     style={{marginTop: 0, }}

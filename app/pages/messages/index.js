@@ -7,16 +7,24 @@ import {
     Text,
     View
 } from 'react-native';
-
+import { connect } from 'react-redux';
+import StoreActions from '../../constants/actions';
+import Toolbar from '../../components/toolbar';
 import MyMessagesPage from './MyMessagesPage';
 
 class MessagesPage extends Component {
     constructor(props) {
         super(props);
 
+        console.log(this);
         this.state = {
             region: 'China'
         };
+    }
+
+    componentWillMount() {
+        let { dispatch } = this.props;
+        dispatch({type: StoreActions.HIDE_HOME_TOOLBAR});
     }
     
     render() {
@@ -46,4 +54,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export default MessagesPage;
+// get selected photos from store.state object.
+function mapStateToProps(state) {
+    return {};
+}
+
+export default connect(mapStateToProps)(MessagesPage);

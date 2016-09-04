@@ -59,7 +59,8 @@ class Nav extends React.Component {
                     renderScene={this._renderScene}
                     initialRoute={{
                         component: Splash,
-                        name: 'Splash'
+                        name: 'Splash',
+                        params: {store: this.context.store}
                       }}
                     />
             </View>

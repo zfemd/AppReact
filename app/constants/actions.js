@@ -4,6 +4,8 @@
 import keyMirror from 'fbjs/lib/keyMirror';
 
 export default keyMirror({
+    SHOW_HOME_TOOLBAR: null,
+    HIDE_HOME_TOOLBAR: null,
     ADD_NOTE_PHOTO: null
 });
 
