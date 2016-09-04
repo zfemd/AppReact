@@ -210,7 +210,7 @@ class PhotoEditPage extends Component {
         };
 
         return (
-            <View style={[styles.container, {height: height - 21}]}>
+            <View style={[styles.container, {minHeight: height}]}>
                 <Toolbar
                     title="编辑照片"
                     navigator={this.props.navigator}

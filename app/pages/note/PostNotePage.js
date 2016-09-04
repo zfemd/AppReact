@@ -133,13 +133,13 @@ class PostNotePage extends Component {
         let {height, width} = Dimensions.get('window');
 
         return (
-            <View style={[styles.container, {height: height - 21}]}>
+            <View style={[styles.container, {minHeight: height}]}>
                 <Toolbar
                     title="发布笔记"
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />
-                
+
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', padding: 10}}>
                     <TextInput placeholder='添加标题' maxLength={30} style={{flex:1}} onEndEtiting={this._onTitleEndEditing.bind(this)}/>
                     <Text>30</Text>
