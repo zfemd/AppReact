@@ -29,30 +29,28 @@ const propTypes = {
     cate: PropTypes.object,
     leftImg: PropTypes.number,
     rightImg: PropTypes.number,
+    rightText: PropTypes.string,
     onLeftIconClicked: PropTypes.func,
     hideDrop: PropTypes.bool,
     onRightIconClicked: PropTypes.func,
-    rightImgPress: PropTypes.func
+    rightImgPress: PropTypes.func,
+    showFilter: PropTypes.func,
+    onTitlePress: PropTypes.func
 };
 
 class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
-        this._onRightIconClicked = this._onRightIconClicked.bind(this);
-        this._onArrowClicked = this._onArrowClicked.bind(this);
+        this._onRightIconClicked = this.props.onLeftIconClicked || this._onRightIconClicked.bind(this);
+        this._onTitleClicked = this.props.onTitlePress || this._onArrowClicked.bind(this);
     }
 
     _onLeftIconClicked() {
-        if (this.props.onLeftIconClicked) {
-            //TODO
-        } else {
-            const {
-                navigator
-                } = this.props;
-            if (navigator) {
-                naviGoBack(navigator);
-            }
+        const { navigator } = this.props;
+
+        if (navigator) {
+            naviGoBack(navigator);
         }
     }
 
@@ -87,7 +85,7 @@ class Toolbar extends React.Component {
                 <View style={styles.titleViewIOS}>
                     <Text
                         style={styles.titleIOS}
-                        onPress={this._onArrowClicked}
+                        onPress={this._onTitleClicked}
                         >
                         {this.props.title}
                     </Text>
@@ -96,17 +94,18 @@ class Toolbar extends React.Component {
                             <ImageButton
                             source={arrowImg}
                             style={styles.arrowIOS}
-                            onPress={this._onArrowClicked}
+                            onPress={this._onTitleClicked}
                             /> : <View/>
                     }
 
                 </View>
 
-                <ImageButton
-                    source={this.props.rightImg}
-                    style={styles.rightIOS}
-                    onPress={this._onRightIconClicked}
-                    />
+                {
+                    this.props.rightText ?
+                        (<Text style={styles.rightIOS} onPress={this._onRightIconClicked}>{this.props.rightText}</Text>)
+                        : (<ImageButton source={this.props.rightImg} style={styles.rightIOS} onPress={this._onRightIconClicked} />)
+                }
+
             </View>
 
         );
@@ -165,6 +164,11 @@ const styles = StyleSheet.create({
 });
 
 Toolbar.propTypes = propTypes;
+
+Toolbar.defaultProps = {
+    rightText: ''
+};
+
 
 function mapStateToProps(state) {
     const { home } = state;

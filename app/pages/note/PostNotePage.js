@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
+import Toolbar from '../../components/toolbar';
 import SelectPhotoPage from './index';
 import styles from './style';
 import Home from '../home';
@@ -99,7 +100,7 @@ class PostNotePage extends Component {
 
     _renderSelectedPhotos() {
         let morePhoto = (
-            <TouchableHighlight style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
+            <TouchableHighlight key='morePhoto' style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
                 <Icon size={16} name="plus"/>
             </TouchableHighlight>
         );
@@ -111,8 +112,8 @@ class PostNotePage extends Component {
         let rowIndex = 0;
 
         if (draftPhotos != null && draftPhotos.length > 0) {
-            draftPhotos.forEach(function(photo){
-                let image = <Image key={photo.uri} source={photo} style={styles.uploadAvatar} width={80} height={80} />
+            draftPhotos.forEach(function(photo, index){
+                let image = <Image key={photo.uri+index} source={photo} style={styles.uploadAvatar} width={80} height={80} />
                 photos.push(image);
             });
         }
@@ -121,7 +122,7 @@ class PostNotePage extends Component {
 
         rowIndex = Math.ceil(photos.length / photosPerRow) - 1;
         for(let i = 0; i <= rowIndex; i++) {
-            let row = <View style={{flexDirection:'row'}}>{this._renderPhotosRow(photos, photosPerRow, i * photosPerRow)}</View>;
+            let row = <View key={i} style={{flexDirection:'row', paddingVertical: 5}}>{this._renderPhotosRow(photos, photosPerRow, i * photosPerRow)}</View>;
             photoRows.push(row);
         }
 
@@ -133,19 +134,12 @@ class PostNotePage extends Component {
 
         return (
             <View style={[styles.container, {height: height - 21}]}>
-                <View style={styles.navigator}>
-                    <TouchableHighlight onPress={this._onCancel.bind(this)} style={styles.leftContainer}>
-                        <Text style={styles.navigatorText}>取消</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={{flex:2}}>
-                        <View style={styles.navigatorTitle} >
-                            <Text style={styles.navigatorText}>发布笔记</Text>
-                        </View>
-                    </TouchableHighlight>
-                    <View style={styles.rightContainer}>
-                        <Text style={[styles.navigatorText]}></Text>
-                    </View>
-                </View>
+                <Toolbar
+                    title="发布笔记"
+                    navigator={this.props.navigator}
+                    hideDrop={true}
+                    />
+                
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', padding: 10}}>
                     <TextInput placeholder='添加标题' maxLength={30} style={{flex:1}} onEndEtiting={this._onTitleEndEditing.bind(this)}/>
                     <Text>30</Text>
@@ -154,7 +148,7 @@ class PostNotePage extends Component {
                     <TextInput placeholder='说点你的新得吧' multiline={true} onEndEditing={this._onContentEndEditing.bind(this)}
                                style={{flex:1, height: 80}}/>
                 </View>
-                <View style={[styles.uploadAvatarContainer, {borderBottomWidth: 1, borderBottomColor: '#ccc', padding: 10}]}>
+                <View style={[{borderBottomWidth: 1, borderBottomColor: '#ccc', padding: 10}]}>
                     {this._renderSelectedPhotos()}
                 </View>
                 <TouchableHighlight onPress={this._sendNote.bind(this)}

@@ -15,6 +15,8 @@ import {
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
+import Toolbar from '../../components/toolbar';
+//import ToolbarFilter from '../../components/toolbar/ToolbarFilter';
 import PhoneLib from '../../components/camera/PhoneLib';
 import StoreActions from '../../constants/actions';
 import PhotoEditPage from './PhotoEditPage';
@@ -27,7 +29,7 @@ class SelectPhotoPage extends Component {
         super(props);
 
         this.state = {
-            region: 'China'
+            showToolbarFilter: false
         };
 
         this.cameraOptions = {
@@ -163,6 +165,10 @@ class SelectPhotoPage extends Component {
         }
     }
 
+    _showFilter() {
+        this.setState({showToolbarFilter: true});
+    }
+
     componentDidMount() {
         var fetchParams: Object = {
             first: 1,
@@ -184,27 +190,19 @@ class SelectPhotoPage extends Component {
         
         return (
             <View style={styles.container}>
-                <View style={styles.navigator}>
-                    <TouchableHighlight onPress={this._onCancel.bind(this)} style={styles.leftContainer}>
-                        <Text style={styles.navigatorText}>取消</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={this._onPressImageLib.bind(this)} style={{flex:2}}>
-                        <View style={styles.navigatorTitle} >
-                            <Text style={styles.navigatorText}>所有照片</Text>
-                            <ImageButton
-                                source={arrowImg}
-                                style={styles.arrowIOS}
-                            />
-                        </View>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={this._onContinue.bind(this)} style={styles.rightContainer}>
-                        <Text style={styles.navigatorText}>继续</Text>
-                    </TouchableHighlight>
-                </View>
-                <View style={styles.uploadAvatarContainer}>
+                <Toolbar
+                    title="所有照片"
+                    onTitlePress = {this._onPressImageLib.bind(this)}
+                    navigator={this.props.navigator}
+                    hideDrop={true}
+                    rightText='继续'
+                    rightImgPress={this._onContinue.bind(this)}
+                    />
+                <View>
                     <Image source={this.state.avatarSource} style={styles.uploadAvatar} width={width} height={200} />
                 </View>
                 <PhoneLib ref={(component) => this.phoneLib = component} navigator={this.props.navigator} onPressCamera={this._onPressCamera} onPressImage={this._onPressImage.bind(this)} />
+
             </View>
         );
     }

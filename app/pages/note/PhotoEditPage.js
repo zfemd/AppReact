@@ -17,6 +17,7 @@ import {
     View
 } from 'react-native';
 import Button from '../../components/button/Button';
+import Toolbar from '../../components/toolbar';
 import Tag from '../../components/tag';
 import OptionList from '../../components/optionlist';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
@@ -210,17 +211,14 @@ class PhotoEditPage extends Component {
 
         return (
             <View style={[styles.container, {height: height - 21}]}>
-                <View style={styles.navigator}>
-                    <TouchableHighlight onPress={this._onCancel.bind(this)} style={styles.leftContainer}>
-                        <Text style={[styles.navigatorText]}>返回</Text>
-                    </TouchableHighlight>
-                    <View style={styles.navigatorTitle} >
-                        <Text style={styles.navigatorText}>编辑照片</Text>
-                    </View>
-                    <TouchableHighlight style={styles.rightContainer} onPress={this._onContinue.bind(this)}>
-                        <Text style={[styles.navigatorText]}>继续</Text>
-                    </TouchableHighlight>
-                </View>
+                <Toolbar
+                    title="编辑照片"
+                    navigator={this.props.navigator}
+                    hideDrop={true}
+                    rightText='继续'
+                    rightImgPress={this._onContinue.bind(this)}
+                    />
+
                 <View style={styles.selectedPhotoContainer}>
                     <TouchableHighlight onPress={this._onPressImage.bind(this)}>
                         <Image source={this.state.avatarSource} style={styles.selectedPhoto} width={width} height={300}

@@ -12,7 +12,7 @@ var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 21,
+        //marginTop: 21,
         backgroundColor: '#f1f1f1'
     },
     navigator: {
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
         borderStyle: 'dashed',
         borderWidth: 1,
         width: 80,
+        height: 80,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
