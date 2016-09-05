@@ -195,8 +195,8 @@ const styles = StyleSheet.create({
         color:'#9b9b9b'
     },
     optionRow: {
-        marginHorizontal: 10,
-        backgroundColor: '#f1f1f1',
+        paddingHorizontal: 10,
+        backgroundColor: '#fff',
         height: 40,
         flexDirection: 'row',
         alignItems: 'center',

@@ -278,7 +278,7 @@ class PhotoEditPage extends Component {
                     visible={this.state.optionsModalVisible}
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
-                    <View style={[styles.container, styles.modalContainer, {height: height}]}>
+                    <View style={[styles.container, styles.modalContainer, {height: height, marginTop:21}]}>
                         { this.state.brandOptionsVisible ? <OptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
                         { this.state.currencyOptionsVisible ? <CurrencyOptionList onCancel={() => this.showCurrencyModal.call(this, false)} onSelect={(rowData)=> this._onCurrencySelect.call(this, rowData) }/> : null}
                         { this.state.nationOptionsVisible ? <NationOptionList onCancel={() => this.showNationModal.call(this, false)} onSelect={(rowData)=> this._onNationSelect.call(this, rowData) }/> : null}

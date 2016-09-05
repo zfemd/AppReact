@@ -2,17 +2,17 @@
  * Created by lyan2 on 16/9/3.
  */
 const initialState = {
-    draftPhotos: []
+    notePhotos: []
 };
 
 import Actions from '../constants/actions';
 
-const notePhotos = function (state = initialState, action) {
+const draftNote = function (state = initialState, action) {
     console.log(state);
     switch (action.type) {
         case Actions.ADD_NOTE_PHOTO:
             if (action.photo) {
-                state.draftPhotos.push(action.photo);
+                state.notePhotos.push(action.photo);
             }
             return state;
         default:
@@ -20,4 +20,4 @@ const notePhotos = function (state = initialState, action) {
     }
 };
 
-export default notePhotos;
+export default draftNote;

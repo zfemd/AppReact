@@ -12,15 +12,13 @@ var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.bgGrayColor
+        backgroundColor: colors.white
     },
     uploadAvatar: {
         marginRight: 10
     },
     selectedPhotoContainer: {
-        backgroundColor: '#000'
-    },
-    selectedPhoto: {
+        backgroundColor: colors.black
     },
     tabView: {
         justifyContent: 'center',
@@ -45,12 +43,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         padding: 3,
         height: 26,
-        borderColor: '#fff',
+        borderColor: colors.white,
         borderWidth: 1,
         borderRadius: 5,
         flex:1,
         fontSize:18,
-        color:'#fff'
+        color: colors.white
     },
     formRow: {
         flexDirection: 'row',
@@ -61,24 +59,26 @@ const styles = StyleSheet.create({
     button: {
         marginVertical: 10,
         paddingVertical:9,
-        backgroundColor: '#F37D30',
+        backgroundColor: colors.orange,
         borderRadius:9,
         alignItems:'center',
         justifyContent:"center"
     },
     buttonText: {
         fontSize:18,
-        color:'#fff',
+        color: colors.white,
         fontFamily:'STHeitiSC-Medium'
     },
     cancelBtn: {
-        backgroundColor: '#F1f1f1'
+        backgroundColor: colors.bgGray
     },
     cancelBtnText: {
-        color: '#000'
+        color: colors.black
     },
     morePhotoBox: {
-        borderStyle: 'dashed',
+        backgroundColor: colors.bgGray,
+        borderStyle: 'solid',
+        borderColor: colors.gray,
         borderWidth: 1,
         width: 80,
         height: 80,

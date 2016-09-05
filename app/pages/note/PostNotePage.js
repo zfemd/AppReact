@@ -78,7 +78,7 @@ class PostNotePage extends Component {
         let data = {
             title: this.state.nodeTitle,
             content: this.state.nodeContent,
-            draftPhotos: this.props.nodePhotos.draftPhotos
+            draftPhotos: this.props.notePhotos.draftPhotos
         };
 
         fetch('https://mywebsite.com/endpoint/', {
@@ -127,18 +127,18 @@ class PostNotePage extends Component {
     _renderSelectedPhotos() {
         let morePhoto = (
             <TouchableHighlight key='morePhoto' style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
-                <Icon size={16} name="plus"/>
+                <Icon size={16} name="plus" color={colors.gray} />
             </TouchableHighlight>
         );
 
-        let { draftPhotos } = this.props.notePhotos;
+        let { notePhotos } = this.props.draftNote;
         let photos = [];
         let photoRows = [];
         let photosPerRow = 4;
         let rowIndex = 0;
 
-        if (draftPhotos != null && draftPhotos.length > 0) {
-            draftPhotos.forEach(function(photo, index){
+        if (notePhotos != null && notePhotos.length > 0) {
+            notePhotos.forEach(function(photo, index){
                 let image = <Image key={photo.uri+index} source={photo} style={styles.uploadAvatar} width={80} height={80} />
                 photos.push(image);
             });
@@ -168,25 +168,25 @@ class PostNotePage extends Component {
                     rightImgPress={this._onCancel.bind(this)}
                     />
 
-                <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', padding: 10}}>
+                <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', paddingVertical:10, margin: 15}}>
                     <TextInput placeholder='添加标题' maxLength={30} style={{flex:1}} onEndEtiting={this._onTitleEndEditing.bind(this)}/>
                     <Text>30</Text>
                 </View>
-                <View style={{flexDirection: 'row', padding: 10}}>
+                <View style={{flexDirection: 'row', paddingVertical:10, marginHorizontal: 15}}>
                     <TextInput placeholder='说点你的新得吧' multiline={true} onEndEditing={this._onContentEndEditing.bind(this)}
-                               style={{flex:1, height: 80}}/>
+                               style={{flex:1, height: 180}}/>
                 </View>
-                <View style={[{borderBottomWidth: 1, borderBottomColor: '#ccc', padding: 10}]}>
+                <View style={[{borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical:10, marginHorizontal: 15}]}>
                     {this._renderSelectedPhotos()}
                 </View>
 
-                <View style={{flexDirection: 'row', alignItems: 'center', padding:10}}>
-                    <Image source={locationImg} /><Text>发布于：</Text><Text style={{color: colors.orange}}>{this.state.position}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', padding:10, marginHorizontal: 15}}>
+                    <Image source={locationImg} style={{marginRight: 10}} /><Text>发布于：</Text><Text style={{color: colors.orange}}>{this.state.position}</Text>
                 </View>
 
                 <TouchableHighlight onPress={this._sendNote.bind(this)}
-                    style={{padding: 10, justifyContent:'center', backgroundColor: '#f00', flexDirection: 'row', position: 'absolute', bottom: 0, left: 0, right: 0}}>
-                    <Text style={{color: '#fff'}}>发布</Text>
+                    style={{padding: 15, justifyContent:'center', backgroundColor: colors.orange, flexDirection: 'row', position: 'absolute', bottom: 0, left: 0, right: 0}}>
+                    <Text style={{color: '#fff', fontSize:18}}>发布</Text>
                 </TouchableHighlight>
             </View>
         );
@@ -195,9 +195,9 @@ class PostNotePage extends Component {
 
 // get selected photos from store.state object.
 function mapStateToProps(state) {
-    const { notePhotos } = state;
+    const { draftNote } = state;
     return {
-        notePhotos
+        draftNote
     };
 }
 
