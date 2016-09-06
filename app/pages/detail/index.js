@@ -19,6 +19,7 @@ import PrefetchImage from '../../components/prefetchImage';
 import Flow from '../../components/flow';
 import Share from '../../components/share';
 import CommentPage from '../../pages/comment';
+import CommentListPage from '../../pages/commentList';
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
     'https://hbimg.b0.upaiyun.com/b13d086f8c1a3040ae05637c6cb283d60c1286661f43b-OKqo08_fw658',
@@ -168,6 +169,16 @@ class Detail extends React.Component {
         });
     }
 
+    _jumpToCommentListPage(){
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: CommentListPage,
+                name: 'CommentListPage'
+            });
+        });
+    }
+
     render() {
         return(
             <View style={styles.container}>
@@ -246,7 +257,7 @@ class Detail extends React.Component {
                         <View style={styles.comment}>
                             <View style={styles.blockTitle}>
                                 <Text style={styles.blockTitleText}>评论(100)</Text>
-                                <TouchableOpacity style={styles.rightArrow}>
+                                <TouchableOpacity style={styles.rightArrow} onPress={() => this._jumpToCommentListPage()}>
                                     <Image source={require('../../assets/note/rg_right.png')}/>
                                 </TouchableOpacity>
                             </View>
