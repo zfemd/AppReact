@@ -1,7 +1,8 @@
 /**
  * Created by lyan2 on 16/8/28.
  */
-import keyMirror from 'fbjs/lib/keyMirror';
+
+import keyMirror from '../utils/keyMirror';
 
 export default keyMirror({
     SHOW_HOME_TOOLBAR: null,
