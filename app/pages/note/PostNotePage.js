@@ -20,6 +20,7 @@ import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import Toolbar from '../../components/toolbar';
 import colors from '../../constants/colors';
 import SelectPhotoPage from './index';
+import PhotosReviewPage from './PhotosReviewPage';
 import styles from './style';
 import Home from '../home';
 
@@ -30,12 +31,14 @@ class PostNotePage extends Component {
         super(props);
 
         this.state = {
-            position: '正在获取当前位置...'
+            position: '正在获取当前位置...',
+            draftNote: this.props.draftNote
         };
+
+        console.log('hello');
     }
 
-    _onCancel() {
-
+    componentWillMount() {
     }
 
     componentDidMount() {
@@ -117,21 +120,38 @@ class PostNotePage extends Component {
     _renderPhotosRow(photos, photosPerRow, fromIndex) {
 
         if (photos != null && photos.length > 0) {
-            console.log(photos.slice(fromIndex, fromIndex + photosPerRow));
             return photos.slice(fromIndex, fromIndex + photosPerRow);
         }
 
         return null;
     }
 
+    _callbackFromPreview() {
+        this.setState({remove: true});
+    }
+
+    _onPressPhoto(index) {
+        const { navigator } = this.props;
+
+        if(navigator) {
+            navigator.push({
+                name: 'PhotosReviewPage',
+                component: PhotosReviewPage,
+                params: {index: index},
+                removeCallback: this._callbackFromPreview.bind(this)
+            })
+        }
+    }
+
     _renderSelectedPhotos() {
+        let that = this;
         let morePhoto = (
             <TouchableHighlight key='morePhoto' style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
                 <Icon size={16} name="plus" color={colors.gray} />
             </TouchableHighlight>
         );
 
-        let { notePhotos } = this.props.draftNote;
+        let { notePhotos } = this.state.draftNote;
         let photos = [];
         let photoRows = [];
         let photosPerRow = 4;
@@ -139,7 +159,11 @@ class PostNotePage extends Component {
 
         if (notePhotos != null && notePhotos.length > 0) {
             notePhotos.forEach(function(photo, index){
-                let image = <Image key={photo.uri+index} source={photo} style={styles.uploadAvatar} width={80} height={80} />
+                let image = (
+                    <TouchableHighlight key={photo.uri+index} onPress={() => that._onPressPhoto.call(that, index)} >
+                        <Image source={photo} style={styles.uploadAvatar} width={80} height={80} />
+                    </TouchableHighlight>
+                );
                 photos.push(image);
             });
         }
@@ -165,7 +189,6 @@ class PostNotePage extends Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     rightText='取消'
-                    rightImgPress={this._onCancel.bind(this)}
                     />
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', paddingVertical:10, margin: 15}}>

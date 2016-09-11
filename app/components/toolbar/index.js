@@ -42,7 +42,7 @@ class Toolbar extends React.Component {
     constructor(props) {
         super(props);
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
-        this._onRightIconClicked = this.props.onLeftIconClicked || this._onRightIconClicked.bind(this);
+        this._onRightIconClicked = this.props.onRightIconClicked || this._onRightIconClicked.bind(this);
         this._onTitleClicked = this.props.onTitlePress || this._onArrowClicked.bind(this);
     }
 

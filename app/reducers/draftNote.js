@@ -8,16 +8,20 @@ const initialState = {
 import Actions from '../constants/actions';
 
 const draftNote = function (state = initialState, action) {
-    console.log(state);
     switch (action.type) {
         case Actions.ADD_NOTE_PHOTO:
             if (action.photo) {
                 state.notePhotos.push(action.photo);
             }
-            return state;
+            break;
+        case Actions.REMOVE_NOTE_PHOTO:
+            state.notePhotos.splice(action.index, 1);
+            break;
         default:
             return state;
     }
+
+    return state;
 };
 
 export default draftNote;
