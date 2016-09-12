@@ -20,6 +20,7 @@ import Flow from '../../components/flow';
 import Share from '../../components/share';
 import CommentPage from '../../pages/comment';
 import CommentListPage from '../../pages/commentList';
+import ImageSlider from '../../components/imageSlider';
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
     'https://hbimg.b0.upaiyun.com/b13d086f8c1a3040ae05637c6cb283d60c1286661f43b-OKqo08_fw658',
@@ -111,7 +112,9 @@ class Detail extends React.Component {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds.cloneWithRows(this._genRows({})),
-            showShare: false
+            showShare: false,
+            position: 0,
+            interval: null
         };
     }
 
@@ -179,6 +182,17 @@ class Detail extends React.Component {
         });
     }
 
+    componentWillMount() {
+        //this.setState({interval: setInterval(() => {
+        //    this.setState({position: this.state.position === 2 ? 0 : this.state.position + 1});
+        //    this.setState({height: parseInt(Math.random()*100 + 200)});
+        //}, 3000)});
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
+    }
+
     render() {
         return(
             <View style={styles.container}>
@@ -202,18 +216,30 @@ class Detail extends React.Component {
                             <Image style={styles.follow} source={require('../../assets/note/follow.png')}/>
                         </View>
                         <View style={styles.thumbWarp}>
-                            <PrefetchImage
-                                imageUri={uri[1]}
-                                imageStyle={styles.thumb}
-                                resizeMode="cover"
-                                width={width}
+                            <ImageSlider
+                                images={[
+                                    {
+                                        width: 300,
+                                        height: 700,
+                                        uri: 'https://hbimg.b0.upaiyun.com/21f167d573b123a69b6e7e52f0b68e1a374f13f165462-1CoVG0_fw658'
+                                    },
+                                     {
+                                        width: 478,
+                                        height: 718,
+                                        uri: 'https://hbimg.b0.upaiyun.com/be437a14550ce40dd0967e26bc4dd72dc2acdd88c418-TfAcUn_fw658'
+                                    },
+                                     {
+                                        width: 540,
+                                        height: 960,
+                                        uri: 'https://hbimg.b0.upaiyun.com/3720c87acb331491191a17d077f9b3f0e2705a69240ca-g1GUjG_fw658'
+                                    },
+
+
+                                ]}
+                                position={this.state.position}
+                                onPositionChanged={position => this.setState({position})}
                                 />
-                            <PrefetchImage
-                                imageUri={uri[1]}
-                                imageStyle={styles.thumb}
-                                resizeMode="cover"
-                                width={width}
-                                />
+
                         </View>
                         <View style={styles.description}>
                             <Text style={[styles.dTitle,styles.baseText]}>miya2016夏装新品宽松镂空短袖</Text>

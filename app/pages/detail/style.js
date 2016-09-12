@@ -65,9 +65,9 @@ const styles = StyleSheet.create({
     },
     thumbWarp: {
         marginTop: 10,
-        flexDirection: 'row',
-        overflow: 'visible',
-        flexWrap: 'nowrap',
+        //flexDirection: 'row',
+        //overflow: 'visible',
+        //flexWrap: 'nowrap',
         alignSelf: 'flex-start',
     },
     thumb: {

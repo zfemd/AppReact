@@ -14,9 +14,9 @@ import {
 import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Icon from 'react-native-vector-icons/Ionicons';
-import CommentPage from '../../pages/comment';;
+import CommentPage from '../../pages/comment';
 
-class CommnetList extends React.Component {
+class CommentList extends React.Component {
     constructor(props) {
         super(props);
         this._renderRow = this._renderRow.bind(this);
@@ -96,4 +96,4 @@ class CommnetList extends React.Component {
     }
 }
 
-export default CommnetList;
+export default CommentList;
