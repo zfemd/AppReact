@@ -220,17 +220,17 @@ class Detail extends React.Component {
                                 images={[
                                     {
                                         width: 300,
-                                        height: 700,
+                                        height: 200,
                                         uri: 'https://hbimg.b0.upaiyun.com/21f167d573b123a69b6e7e52f0b68e1a374f13f165462-1CoVG0_fw658'
                                     },
                                      {
                                         width: 478,
-                                        height: 718,
+                                        height: 418,
                                         uri: 'https://hbimg.b0.upaiyun.com/be437a14550ce40dd0967e26bc4dd72dc2acdd88c418-TfAcUn_fw658'
                                     },
                                      {
                                         width: 540,
-                                        height: 960,
+                                        height: 660,
                                         uri: 'https://hbimg.b0.upaiyun.com/3720c87acb331491191a17d077f9b3f0e2705a69240ca-g1GUjG_fw658'
                                     },
 

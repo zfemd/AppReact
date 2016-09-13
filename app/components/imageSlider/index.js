@@ -200,10 +200,10 @@ export default class ImageSlider extends Component {
                     const imageWidth = image.width;
                     const imageHeight = image.height;
                     const scaleH = Dimensions.get('window').width * imageHeight / imageWidth;
-                    const imageComponent = <Image
+                    const imageComponent = <Animated.Image
                         key={index}
                         source={{uri: image.uri}}
-                        style={{height: scaleH, width}}
+                        style={{height: this.state.height, width}}
                         />;
                     if (this.props.onPress) {
                         return (
