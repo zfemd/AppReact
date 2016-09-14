@@ -71,13 +71,13 @@ export default class ImageSlider extends Component {
         if (!this.state.scrolling) {
             return;
         }
-        Animated.timing(this.state.left, {toValue: to, friction: 10, tension: 10, velocity: 1, duration: 2000}).start();
+        Animated.timing(this.state.left, {toValue: to, friction: 10, tension: 10, velocity: 1, duration: 400}).start();
         Animated.timing(this.state.height, {
             toValue: scaleH,
             friction: 10,
             tension: 10,
             velocity: 1,
-            duration: 2000
+            duration: 400
         }).start();
 
         if (this.state.timeout) {
@@ -89,7 +89,7 @@ export default class ImageSlider extends Component {
                 if (this.props.onPositionChanged) {
                     this.props.onPositionChanged(index);
                 }
-            }, 1000)
+            }, 400)
         });
     }
 
@@ -159,6 +159,29 @@ export default class ImageSlider extends Component {
                 if (!this.state.scrolling) {
                     this.setState({scrolling: true});
                 }
+
+                //scale
+                let change = 0;
+
+                if (dx >= 0) {
+                    change = -1;
+                } else if (dx < 0) {
+                    change = 1;
+                }
+                if (position === 0 && change === -1) {
+                    change = 0;
+                } else if (position + change >= this.props.images.length) {
+                    change = (this.props.images.length) - (position + change);
+                }
+                const originH = this._scaleHeight(this.props.images[position]);
+                const scaleH = this._scaleHeight(this.props.images[position + change]);
+                console.log(dx)
+                Animated.timing(this.state.height, {
+                    toValue: (scaleH - originH)*Math.abs(dx/width) + originH,
+                    friction: 10,
+                    tension: 10,
+                    velocity: 1
+                }).start();
             },
             onShouldBlockNativeResponder: () => true
         });
@@ -172,7 +195,7 @@ export default class ImageSlider extends Component {
 
     componentWillUpdate() {
         const CustomLayoutAnimation = {
-            duration: 180,
+            duration: 100,
             create: {
                 type: LayoutAnimation.Types.linear,
                 property: LayoutAnimation.Properties.opacity,
@@ -204,6 +227,7 @@ export default class ImageSlider extends Component {
                         key={index}
                         source={{uri: image.uri}}
                         style={{height: this.state.height, width}}
+                        resizeMode={Image.resizeMode.stretch}
                         />;
                     if (this.props.onPress) {
                         return (
