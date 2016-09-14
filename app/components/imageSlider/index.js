@@ -23,25 +23,22 @@ const styles = StyleSheet.create({
     image: {
         width: Dimensions.get('window').width
     },
-    buttons: {
-        height: 15,
-        marginTop: -15,
+    sequences: {
+        height: 20,
+        width: 45,
+        marginTop: -30,
+        position: 'absolute',
+        right: 15,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        backgroundColor: 'rgba(74,73,74,0.3)',
+        borderRadius: 10
     },
-    button: {
-        margin: 3,
-        width: 8,
-        height: 8,
-        borderRadius: 8 / 2,
-        backgroundColor: '#ccc',
-        opacity: 0.9
-    },
-    buttonSelected: {
-        opacity: 1,
-        backgroundColor: '#fff',
+    sequence: {
+        color: '#fff',
+        fontSize: 12,
     }
 });
 
@@ -212,8 +209,6 @@ export default class ImageSlider extends Component {
     render() {
         const customStyles = this.props.style ? this.props.style : {};
         const width = Dimensions.get('window').width;
-        const height = Dimensions.get('window').width * this.props.images[0].height / this.props.images[0].width;
-        const scale = this.props.height / this.state.height._value;
         const position = this._getPosition();
         return (<View>
             <Animated.View
@@ -247,19 +242,9 @@ export default class ImageSlider extends Component {
                     }
                 })}
             </Animated.View>
-            <View style={styles.buttons}>
-                {this.props.images.map((image, index) => {
-                    return (<TouchableHighlight
-                        key={index}
-                        underlayColor="#ccc"
-                        onPress={() => {
-                            this.setState({scrolling: true});
-                            return this._move(index);
-                        }}
-                        style={[styles.button, position === index && styles.buttonSelected]}>
-                        <View></View>
-                    </TouchableHighlight>);
-                })}
+            <View style={styles.sequences}>
+
+                <Text style={styles.sequence}>{position}/{this.props.images.length}</Text>
             </View>
         </View>);
     }
