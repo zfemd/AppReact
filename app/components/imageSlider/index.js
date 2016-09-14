@@ -244,7 +244,7 @@ export default class ImageSlider extends Component {
             </Animated.View>
             <View style={styles.sequences}>
 
-                <Text style={styles.sequence}>{position}/{this.props.images.length}</Text>
+                <Text style={styles.sequence}>{position+1}/{this.props.images.length}</Text>
             </View>
         </View>);
     }
