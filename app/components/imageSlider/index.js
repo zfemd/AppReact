@@ -180,7 +180,8 @@ export default class ImageSlider extends Component {
                     toValue: (scaleH - originH)*Math.abs(dx/width) + originH,
                     friction: 10,
                     tension: 10,
-                    velocity: 1
+                    velocity: 1,
+                    duration: 0
                 }).start();
             },
             onShouldBlockNativeResponder: () => true
