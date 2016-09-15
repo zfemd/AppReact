@@ -19,9 +19,9 @@ import {
 import Button from '../../components/button/Button';
 import Toolbar from '../../components/toolbar';
 import Tag from '../../components/tag';
-import OptionList from '../../components/optionlist';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import ImageButton from '../../components/toolbar/ImageButton';
+import BrandOptionList from './BrandOptionList';
 import CurrencyOptionList from './CurrencyOptionList';
 import NationOptionList from './NationOptionList';
 import PostNotePage from './PostNotePage';
@@ -278,8 +278,8 @@ class PhotoEditPage extends Component {
                     visible={this.state.optionsModalVisible}
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
-                    <View style={[styles.container, styles.modalContainer, {height: height, marginTop:21}]}>
-                        { this.state.brandOptionsVisible ? <OptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
+                    <View style={[styles.container, {height: height, marginTop:21}]}>
+                        { this.state.brandOptionsVisible ? <BrandOptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
                         { this.state.currencyOptionsVisible ? <CurrencyOptionList onCancel={() => this.showCurrencyModal.call(this, false)} onSelect={(rowData)=> this._onCurrencySelect.call(this, rowData) }/> : null}
                         { this.state.nationOptionsVisible ? <NationOptionList onCancel={() => this.showNationModal.call(this, false)} onSelect={(rowData)=> this._onNationSelect.call(this, rowData) }/> : null}
                     </View>

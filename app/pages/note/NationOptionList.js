@@ -26,9 +26,34 @@ export default class NationOptionList extends Component {
         this.state = {
             dataSource: ds
         };
+
+        this.state.optionsProps = {
+            onSelect: props.onSelect || this._defaultOptionPress,
+            onCancel: props.onCancel,
+            onEditing: props.onEditing || this._defaultOnEditing,
+            renderRow: props.renderRow
+        };
     }
 
-    componentWillMount() {
+    _defaultOnEditing (text) {
+        // fetch('https://mywebsite.com/endpoint/', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         firstParam: 'yourValue',
+        //         secondParam: 'yourOtherValue',
+        //     })
+        // }).then((response) => response.json())
+        //     .then((responseJson) => {
+        //         return responseJson.movies;
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
+
         let source = {options:
         {"option1":{
             title: '中国'
@@ -51,9 +76,32 @@ export default class NationOptionList extends Component {
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
     }
 
+    _defaultOptionPress() {
+        let source = {options:
+        {"beijing":{
+            title: '北京'
+        },"shanghai":{
+            title: '上海'
+        },"tianjing":{
+            title: '天津'
+        },"hangzhou":{
+            title: '杭州'
+        }, 'changsha': {
+            title: '长沙'
+        }, 'nanjing': {
+            title: '南京'
+        }, 'suzhou': {
+            title: '苏州'
+        }, 'hefei': {
+            title: '合肥'
+        }}};
+
+        this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+    }
+
     render() {
         return (
-            <OptionList dataSource={this.state.dataSource} {...this.props} />
+            <OptionList dataSource={this.state.dataSource} {...this.state.optionsProps} />
         );
     }
 }

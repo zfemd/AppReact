@@ -78,10 +78,14 @@ class PostNotePage extends Component {
     }
 
     _sendNote() {
+        if (this.state.draftNote == null || this.state.draftNote.notePhotos == null) {
+            return;
+        }
+
         let data = {
             title: this.state.nodeTitle,
             content: this.state.nodeContent,
-            draftPhotos: this.props.notePhotos.draftPhotos
+            photos: this.state.draftNote.notePhotos
         };
 
         fetch('https://mywebsite.com/endpoint/', {

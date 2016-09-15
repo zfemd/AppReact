@@ -26,9 +26,38 @@ export default class BrandOptionList extends Component {
         this.state = {
             dataSource: ds
         };
+
+        this.state.optionsProps = {
+            onSelect: props.onSelect,
+            onCancel: props.onCancel,
+            onEditing: props.onEditing || this._defaultOnEditing,
+            renderRow: props.renderRow
+        };
     }
 
     componentWillMount() {
+
+    }
+
+    _defaultOnEditing (text) {
+        // fetch('https://mywebsite.com/endpoint/', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         firstParam: 'yourValue',
+        //         secondParam: 'yourOtherValue',
+        //     })
+        // }).then((response) => response.json())
+        //     .then((responseJson) => {
+        //         return responseJson.movies;
+        //     })
+        //     .catch((error) => {
+        //         console.error(error);
+        //     });
+
         let source = {options:
         {"option1":{
             title: '苹果'
@@ -40,14 +69,14 @@ export default class BrandOptionList extends Component {
             title: '李宁'
         },"option5":{
             title: '特步'
-        }}}
+        }}};
 
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
     }
 
     render() {
         return (
-            <OptionList dataSource={this.state.dataSource} {...this.props} />
+            <OptionList dataSource={this.state.dataSource} {...this.state.optionsProps} />
         );
     }
 }

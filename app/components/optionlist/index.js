@@ -33,21 +33,6 @@ class OptionList extends React.Component {
             sectionHeaderHasChanged: (s1, s2) => s1 != s2
         });
 
-        let source = {options:
-        {"option1":{
-            title: '苹果'
-        },"option2":{
-            title: 'Dell'
-        },"option3":{
-            title: '美特斯邦威'
-        },"option4":{
-            title: '李宁'
-        },"option5":{
-            title: '特步'
-        }}}
-
-        ds = ds.cloneWithRowsAndSections(source);
-
         if (this.props.dataSource) {
             ds = this.props.dataSource;
         }
@@ -56,46 +41,13 @@ class OptionList extends React.Component {
             dataSource: ds
         }
 
-        this._renderRow = this._defaultRenderRow;
+        this._renderRow = this.props.renderRow || this._defaultRenderRow;
     }
 
-    componentDidMount() {
-    }
-
-    componentWillMount() {
-    }
-
-    _updateFromServer(text) {
-        // fetch('https://mywebsite.com/endpoint/', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         firstParam: 'yourValue',
-        //         secondParam: 'yourOtherValue',
-        //     })
-        // }).then((response) => response.json())
-        //     .then((responseJson) => {
-        //         return responseJson.movies;
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
-
-        let source = {options:
-        {"option1":{
-            title: '美元'
-        },"option2":{
-            title: '人民币'
-        },"option3":{
-            title: '澳元'
-        },"option4":{
-            title: '英镑'
-        }}};
-
-        this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+    _defaultOnEditing(text) {
+        if (typeof this.props.onEditing == 'function') {
+            this.props.onEditing.call(this, text);
+        }
     }
 
     _onPressOption(rowData) {
@@ -108,20 +60,6 @@ class OptionList extends React.Component {
         if (typeof this.props.onCancel == 'function') {
             this.props.onCancel.call(this);
         }
-    }
-
-    _renderSectionHeader(sectionData, sectionID) {
-        return (
-            <View style={styles.optionsHeader}>
-                <View style={styles.richTextInput}>
-                    {searchIcon}
-                    <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={false} style={styles.textInput} onEndEditing={(text) => this._updateFromServer(text)}/>
-                </View>
-                <TouchableHighlight onPress={this._onCancel.bind(this)}>
-                    <Text style={[styles.text, styles.cancelText]}>取消</Text>
-                </TouchableHighlight>
-            </View>
-        );
     }
 
     _defaultRenderRow(rowData, sectionID, rowID, highlightRow) {
@@ -143,11 +81,22 @@ class OptionList extends React.Component {
 
     render() {
         return (
-            <ListView dataSource={this.state.dataSource}
-                  renderSectionHeader={this._renderSectionHeader.bind(this)}
-                  renderRow={this._renderRow.bind(this)}
-                  renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-                  renderSeparator={this._renderSeparator}/>
+            <View>
+                <View style={styles.optionsHeader}>
+                    <View style={styles.richTextInput}>
+                        {searchIcon}
+                        <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={false} style={styles.textInput} onEndEditing={(text) => this._defaultOnEditing(text)}/>
+                    </View>
+                    <TouchableHighlight onPress={this._onCancel.bind(this)}>
+                        <Text style={[styles.text, styles.cancelText]}>取消</Text>
+                    </TouchableHighlight>
+                </View>
+
+                <ListView dataSource={this.state.dataSource}
+                          renderRow={this._renderRow.bind(this)}
+                          renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+                          renderSeparator={this._renderSeparator}/>
+            </View>
         )
     }
 

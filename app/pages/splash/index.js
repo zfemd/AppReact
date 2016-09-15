@@ -30,6 +30,19 @@ class Splash extends React.Component {
                 });
             });
         }, 2000);
+
+        fetch('http://facebook.github.io/react-native/movies.json', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => response.json()).then((responseJson) => {
+            console.log(responseJson);
+            return responseJson.movies;
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     componentWillUnmount() {
