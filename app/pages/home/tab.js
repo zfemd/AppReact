@@ -53,10 +53,18 @@ class TabBar extends React.Component {
         return `rgb(${red}, ${green}, ${blue})`;
     }
 
+    _onIconPress(i) {
+        if(i !== 2) {
+            this.props.goToPage(i);
+        }else{
+            const { navigator } = this.props;
+            this.props.cameraPress(navigator);
+        }
+    }
     render() {
         return (<View style={[styles.tabs, this.props.style, ]}>
             {this.props.tabs.map((tab, i) => {
-                return <TouchableOpacity key={tab} onPress={() => this.props.goToPage(i)} style={styles.tab}>
+                return <TouchableOpacity key={tab} onPress={() => this._onIconPress(i)} style={styles.tab}>
                     <Icon
                         name={tab}
                         size={i===2 ? 44 : 26}

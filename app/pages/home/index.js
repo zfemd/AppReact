@@ -44,6 +44,16 @@ class Home extends React.Component {
             2: '',
             3: '消息',
             4: '我的'
+        },
+        cameraPress: (navigator)=> {
+
+            InteractionManager.runAfterInteractions(() => {
+                navigator.push({
+                    component: CreateNotePage,
+                    name: 'CreateNotePage',
+                    sceneConfigs: Navigator.SceneConfigs.HorizontalSwipeJumpFromRight
+                });
+            });
         }
 
     };
@@ -66,17 +76,7 @@ class Home extends React.Component {
      * @private
      */
     _onChangeTab(data) {
-        const { navigator } = this.props;
-        if (data.i == 2) {
-            // take photo
-            InteractionManager.runAfterInteractions(() => {
-                navigator.push({
-                    component: CreateNotePage,
-                    name: 'CreateNotePage',
-                    sceneConfigs: Navigator.SceneConfigs.HorizontalSwipeJumpFromRight
-                });
-            });
-        } else if (data.i == 3 || data.i == 4) {
+        if (data.i == 3 || data.i == 4) {
             this.setState({showToolbar: false});
         } else {
             this.setState({showToolbar: true});

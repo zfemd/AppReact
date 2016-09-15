@@ -194,10 +194,10 @@ export default class ImageSlider extends Component {
     componentWillUpdate() {
         const CustomLayoutAnimation = {
             duration: 100,
-            create: {
-                type: LayoutAnimation.Types.linear,
-                property: LayoutAnimation.Properties.opacity,
-            },
+            //create: {
+            //    type: LayoutAnimation.Types.linear,
+            //    property: LayoutAnimation.Properties.opacity,
+            //},
             update: {
                 type: LayoutAnimation.Types.linear
             }
