@@ -160,7 +160,7 @@ class SelectPhotoPage extends Component {
             navigator.push({
                 name: 'PhotoEditPage',
                 component: PhotoEditPage,
-                params: {selectedPhoto:this.state.avatarSource}
+                params: {photo:this.state.avatarSource}
             })
         }
     }

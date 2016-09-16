@@ -17,6 +17,7 @@ import {
 import Geolocation from 'react-native/Libraries/Geolocation/Geolocation';
 import { connect } from 'react-redux';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
+import StoreActions from '../../constants/actions';
 import Toolbar from '../../components/toolbar';
 import colors from '../../constants/colors';
 import SelectPhotoPage from './index';
@@ -103,7 +104,9 @@ class PostNotePage extends Component {
                 console.error(error);
             });
 
-        const { navigator } = this.props;
+        const { navigator, dispatch } = this.props;
+        // remove draft note
+        dispatch({type:StoreActions.RESET_DRAFT_NOTE});
 
         if(navigator) {
             navigator.push({
@@ -148,6 +151,7 @@ class PostNotePage extends Component {
     }
 
     _renderSelectedPhotos() {
+        let {height, width} = Dimensions.get('window');
         let that = this;
         let morePhoto = (
             <TouchableHighlight key='morePhoto' style={styles.morePhotoBox} onPress={this._addMorePhoto.bind(this)}>
@@ -160,12 +164,13 @@ class PostNotePage extends Component {
         let photoRows = [];
         let photosPerRow = 4;
         let rowIndex = 0;
+        let {imageWidth, imageHeight} = {imageWidth: (width - 60) / photosPerRow, imageHeight:80};
 
         if (notePhotos != null && notePhotos.length > 0) {
             notePhotos.forEach(function(photo, index){
                 let image = (
                     <TouchableHighlight key={photo.uri+index} onPress={() => that._onPressPhoto.call(that, index)} >
-                        <Image source={photo} style={styles.uploadAvatar} width={80} height={80} />
+                        <Image source={photo} style={styles.uploadAvatar} width={imageWidth} height={imageHeight} />
                     </TouchableHighlight>
                 );
                 photos.push(image);

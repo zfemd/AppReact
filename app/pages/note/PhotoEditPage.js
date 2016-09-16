@@ -16,9 +16,11 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
+import { connect } from 'react-redux';
 import Button from '../../components/button/Button';
 import Toolbar from '../../components/toolbar';
 import Tag from '../../components/tag';
+import StoreActions from '../../constants/actions';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import ImageButton from '../../components/toolbar/ImageButton';
 import BrandOptionList from './BrandOptionList';
@@ -33,7 +35,7 @@ class PhotoEditPage extends Component {
         super(props);
 
         this.state = {
-            avatarSource: this.props.selectedPhoto,
+            avatarSource: this.props.photo,
             imageClickable: false,
             optionsModalVisible:false,
             currencyOptionsVisible: false,
@@ -46,6 +48,12 @@ class PhotoEditPage extends Component {
             clickedPos: {x:0, y:0}
         };
 
+        if (props.draftNote) {
+            let {currentPhotoIndex, notePhotos} = props.draftNote;
+            if (notePhotos && notePhotos.length > currentPhotoIndex) {
+                this.state.avatarSource = notePhotos[currentPhotoIndex];
+            }
+        }
     }
 
     _onCancel() {
@@ -58,13 +66,14 @@ class PhotoEditPage extends Component {
     }
 
     _onContinue() {
-        const { navigator } = this.props;
+        const { navigator, dispatch } = this.props;
+
+        dispatch({type:StoreActions.ADD_TAGS, tags: this.state.tagData.slice()});
 
         if(navigator) {
             navigator.push({
                 name: 'PostNotePage',
-                component: PostNotePage,
-                params: {selectedPhoto:this.state.avatarSource}
+                component: PostNotePage
             })
         }
     }
@@ -167,9 +176,16 @@ class PhotoEditPage extends Component {
         let {tagData, tags} = this.state;
 
         let data = {
+            name: this.state.name,
             nation: this.state.nation,
             currency: this.state.currency,
-            brand: this.state.brand
+            brand: this.state.brand,
+            price: this.state.price,
+            address: this.state.address,
+            position: {
+                left: this.state.clickedPos.x,
+                top: this.state.clickedPos.y
+            }
         }
 
         tagData.push(data);
@@ -192,7 +208,6 @@ class PhotoEditPage extends Component {
         tags.push(tag);
         this.state.tags = tags;
         this.state.tagData = tagData;
-        //this.setState({tags: tags, tagData: tagData});
         this.setState({tagOverlayVisible: false});
     }
 
@@ -200,7 +215,7 @@ class PhotoEditPage extends Component {
         let {height, width} = Dimensions.get('window');
 
         var modalBackgroundStyle = {
-            backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#f5fcff',
+            backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#F5FCFF',
         };
         var innerContainerTransparentStyle = this.state.transparent
             ? {backgroundColor: '#fff', padding: 20}
@@ -221,8 +236,8 @@ class PhotoEditPage extends Component {
 
                 <View style={styles.selectedPhotoContainer}>
                     <TouchableHighlight onPress={this._onPressImage.bind(this)}>
-                        <Image source={this.state.avatarSource} style={styles.selectedPhoto} width={width} height={300}
-                        resizeMode='contain' onLoad={this._onImageLoad.bind(this)}/>
+                        <Image source={this.state.avatarSource} style={[styles.selectedPhoto, {width:width, height:300}]}
+                            resizeMode='contain' onLoad={this._onImageLoad.bind(this)} />
                     </TouchableHighlight>
                     {this.state.tags}
                 </View>
@@ -289,4 +304,11 @@ class PhotoEditPage extends Component {
     }
 }
 
-export default PhotoEditPage;
+function mapStateToProps(state) {
+    const { draftNote } = state;
+    return {
+        draftNote
+    };
+}
+
+export default connect(mapStateToProps)(PhotoEditPage);

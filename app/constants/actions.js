@@ -8,7 +8,11 @@ export default keyMirror({
     SHOW_HOME_TOOLBAR: null,
     HIDE_HOME_TOOLBAR: null,
     ADD_NOTE_PHOTO: null,
-    REMOVE_NOTE_PHOTO: null
+    EDIT_NOTE_PHOTO: null,
+    REMOVE_NOTE_PHOTO: null,
+    ADD_TAGS: null,
+    POST_DRAFT_NOTE: null,
+    RESET_DRAFT_NOTE: null
 });
 
 // export const ADD_NOTE_PHOTO = 'ADD_NOTE_PHOTO';
