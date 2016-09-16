@@ -167,10 +167,10 @@ class PostNotePage extends Component {
         let {imageWidth, imageHeight} = {imageWidth: (width - 60) / photosPerRow, imageHeight:80};
 
         if (notePhotos != null && notePhotos.length > 0) {
-            notePhotos.forEach(function(photo, index){
+            notePhotos.forEach(function(notePhoto, index){
                 let image = (
-                    <TouchableHighlight key={photo.uri+index} onPress={() => that._onPressPhoto.call(that, index)} >
-                        <Image source={photo} style={styles.uploadAvatar} width={imageWidth} height={imageHeight} />
+                    <TouchableHighlight key={notePhoto.photo.uri+index} onPress={() => that._onPressPhoto.call(that, index)} >
+                        <Image source={notePhoto.photo} style={styles.uploadAvatar} width={imageWidth} height={imageHeight} />
                     </TouchableHighlight>
                 );
                 photos.push(image);

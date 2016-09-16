@@ -51,7 +51,7 @@ class PhotoEditPage extends Component {
         if (props.draftNote) {
             let {currentPhotoIndex, notePhotos} = props.draftNote;
             if (notePhotos && notePhotos.length > currentPhotoIndex) {
-                this.state.avatarSource = notePhotos[currentPhotoIndex];
+                this.state.avatarSource = notePhotos[currentPhotoIndex].photo;
             }
         }
     }

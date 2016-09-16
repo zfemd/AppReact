@@ -12,7 +12,7 @@ const draftNote = function (state = initialState, action = {}) {
     switch (action.type) {
         case Actions.ADD_NOTE_PHOTO:
             if (action.photo) {
-                state.notePhotos.push(action.photo);
+                state.notePhotos.push({photo:action.photo});
                 state.currentPhotoIndex = state.notePhotos.length - 1;
             }
             break;
@@ -22,10 +22,15 @@ const draftNote = function (state = initialState, action = {}) {
             }
             break;
         case Actions.REMOVE_NOTE_PHOTO:
-            state.notePhotos.splice(action.index, 1);
+            if (action.index >= 0) {
+                state.notePhotos.splice(action.index, 1);
+            }
             break;
         case Actions.ADD_TAGS:
-            state.notePhotos[state.currentPhotoIndex].tags = action.tags;
+            if (state.currentPhotoIndex >= 0) {
+                state.notePhotos[state.currentPhotoIndex].tags = action.tags;
+                console.log(state.notePhotos[state.currentPhotoIndex]);
+            }
             break;
         case Actions.RESET_DRAFT_NOTE:
             state.notePhotos = []; // empty photos
