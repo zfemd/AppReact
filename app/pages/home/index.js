@@ -21,6 +21,7 @@ import MyPage from '../my';
 import MessagesPage from '../messages';
 import CreateNotePage from '../note';
 import Channel from '../channel';
+import AddFriends from '../addFriends';
 
 const addImg = require('../../assets/header/add.png');
 const searchImg = require('../../assets/header/search.png');
@@ -30,6 +31,7 @@ class Home extends React.Component {
         super(props);
         this._showFilter = this._showFilter.bind(this);
         this._onFilterClicked = this._onFilterClicked.bind(this);
+        this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
         this.state = {
             showToolbar: this.props.home.showToolbar,
             showFilter: false,
@@ -81,8 +83,17 @@ class Home extends React.Component {
         } else {
             this.setState({showToolbar: true});
         }
+    }
 
-        console.log(this);
+    _onLeftIconClicked() {
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: AddFriends,
+                name: 'AddFriends',
+                sceneConfigs: Navigator.SceneConfigs.HorizontalSwipeJumpFromRight
+            });
+        });
     }
 
     render() {
@@ -96,6 +107,7 @@ class Home extends React.Component {
                             showFilter={this._showFilter}
                             leftImg={addImg}
                             rightImg={searchImg}
+                            onLeftIconClicked={this._onLeftIconClicked}
                             />
                     ) : null
                 }

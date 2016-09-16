@@ -118,10 +118,6 @@ class Detail extends React.Component {
         };
     }
 
-    _onLeftIconClicked() {
-
-    }
-
     _renderRow(rowData:string, sectionID:number, rowID:number) {
         var rowHash = Math.abs(hashCode(rowData));
         var imgSource = thumbs[(rowHash - 2) % thumbs.length];
@@ -200,7 +196,6 @@ class Detail extends React.Component {
                     title="笔记详情"
                     navigator={this.props.navigator}
                     hideDrop={true}
-                    onLeftIconClicked={this._onLeftIconClicked(0)}
                     rightImg={shareImg}
                     rightImgPress={this._onSharePress}
                     />

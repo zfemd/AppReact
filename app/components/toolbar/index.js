@@ -48,14 +48,24 @@ class Toolbar extends React.Component {
 
     _onLeftIconClicked() {
         const { navigator } = this.props;
-
-        if (navigator) {
-            naviGoBack(navigator);
+        if (this.props.onLeftIconClicked) {
+            this.props.onLeftIconClicked();
+        } else {
+            if (navigator) {
+                naviGoBack(navigator);
+            }
         }
     }
 
     _onRightIconClicked() {
         this.props.rightImgPress();
+    }
+
+    _onArrowClicked() {
+        if(!this.props.hideDrop){
+            this.props.home.showFilter = !this.props.home.showFilter;
+            this.props.showFilter();
+        }
     }
 
     _renderToolbarAndroid() {
@@ -64,13 +74,6 @@ class Toolbar extends React.Component {
                 title={this.props.title}
                 />
         );
-    }
-
-    _onArrowClicked() {
-        if(!this.props.hideDrop){
-            this.props.home.showFilter = !this.props.home.showFilter;
-            this.props.showFilter();
-        }
     }
 
     _renderToolbarIOS() {
