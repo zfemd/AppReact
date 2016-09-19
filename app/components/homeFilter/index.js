@@ -53,7 +53,7 @@ class HomeFilter extends React.Component {
                             <Text style={styles.cateFont}>关注</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.cateItem}>
-                            <Text style={styles.cateFont}>附件</Text>
+                            <Text style={styles.cateFont}>附近</Text>
                         </TouchableOpacity>
                     </Animated.View>
                     <Animated.View  style={[styles.cateShadow, {opacity: this.state.fadeAnim}]}>

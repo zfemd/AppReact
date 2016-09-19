@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         height: 50,
         backgroundColor: '#fff',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         flexDirection: 'row'
     },
     addressText: {
@@ -82,6 +82,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#fff',
         alignSelf: 'center'
+    },
+    trueSwitchIsOn: {
+        alignSelf: 'center',
+        right: 10,
     }
 });
 

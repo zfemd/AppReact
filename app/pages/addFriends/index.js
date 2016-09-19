@@ -6,7 +6,8 @@ import {
     Text,
     TouchableOpacity,
     TextInput,
-    Image
+    Image,
+    Switch
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -19,6 +20,9 @@ class Friends extends React.Component {
     constructor(props) {
         super(props);
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
+        this.state = {
+            trueSwitchIsOn: true
+        };
     }
 
     _onLeftIconClicked() {
@@ -47,6 +51,11 @@ class Friends extends React.Component {
                 </View>
                 <View style={styles.addressBook}>
                     <Text style={[styles.baseText,styles.addressText]}>允许通过手机通讯录加好友</Text>
+                    <Switch
+                        onValueChange={(value) => this.setState({trueSwitchIsOn: value})}
+                        style={styles.trueSwitchIsOn}
+                        value={this.state.trueSwitchIsOn}
+                        />
                 </View>
                 <View style={styles.friendsList}>
                 </View>
@@ -54,7 +63,7 @@ class Friends extends React.Component {
                 <TouchableOpacity style={styles.float}>
                     <View >
                         <Text style={[styles.baseText,styles.floatText]} >
-                            邀请所以人
+                            邀请所有人
                         </Text>
                     </View>
                 </TouchableOpacity>
