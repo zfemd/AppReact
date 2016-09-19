@@ -49,6 +49,39 @@ const styles = StyleSheet.create({
         position: 'absolute',
         marginTop: 14,
         marginLeft: 72 - width
+    },
+    addressBook: {
+        marginTop: 10,
+        height: 50,
+        backgroundColor: '#fff',
+        justifyContent: 'flex-start',
+        flexDirection: 'row'
+    },
+    addressText: {
+        fontSize: 16,
+        paddingLeft: 10,
+        alignSelf: 'center'
+    },
+    friendsList: {
+        marginTop: 10,
+        height: 350,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+    },
+    float: {
+        position: 'absolute',
+        width: width,
+        height: 40,
+        bottom: 0,
+        backgroundColor: '#4cd864',
+        borderTopWidth: 1,
+        borderColor: 'rgba(155,155,155,0.1)',
+        justifyContent: 'center'
+    },
+    floatText: {
+        fontSize: 16,
+        color: '#fff',
+        alignSelf: 'center'
     }
 });
 

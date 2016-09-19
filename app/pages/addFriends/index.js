@@ -45,6 +45,19 @@ class Friends extends React.Component {
                         />
                     <Image style={styles.magnifier} source={require('../../assets/invite/search.png')}/>
                 </View>
+                <View style={styles.addressBook}>
+                    <Text style={[styles.baseText,styles.addressText]}>允许通过手机通讯录加好友</Text>
+                </View>
+                <View style={styles.friendsList}>
+                </View>
+
+                <TouchableOpacity style={styles.float}>
+                    <View >
+                        <Text style={[styles.baseText,styles.floatText]} >
+                            邀请所以人
+                        </Text>
+                    </View>
+                </TouchableOpacity>
             </View>
         )
 
