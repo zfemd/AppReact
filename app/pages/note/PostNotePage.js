@@ -105,7 +105,7 @@ class PostNotePage extends Component {
             });
 
         const { navigator, dispatch } = this.props;
-        // remove draft note
+        // remove draft note since it has been post to server.
         dispatch({type:StoreActions.RESET_DRAFT_NOTE});
 
         if(navigator) {

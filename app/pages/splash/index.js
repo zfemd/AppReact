@@ -4,8 +4,11 @@ import {
     Image,
     InteractionManager
 } from 'react-native';
-
+import {
+    Token
+} from '../../utils/common';
 import Home from '../home';
+import LoginPage from '../login/LoginPage';
 
 const maxHeight = Dimensions.get('window').height;
 const maxWidth = Dimensions.get('window').width;
@@ -19,30 +22,42 @@ class Splash extends React.Component {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { navigator } = this.props;
+        let isTokenValid = false;
+
         this.timer = setTimeout(() => {
-            InteractionManager.runAfterInteractions(() => {
+            if (isTokenValid) {
+                InteractionManager.runAfterInteractions(() => {
+                    navigator.resetTo({
+                        component: Home,
+                        name: 'Home',
+                        params: {store: this.props.store}
+                    });
+                });
+            } else {
                 navigator.resetTo({
-                    component: Home,
-                    name: 'Home',
+                    component: LoginPage,
+                    name: 'LoginPage',
                     params: {store: this.props.store}
                 });
-            });
+            }
         }, 2000);
 
-        fetch('http://facebook.github.io/react-native/movies.json', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => response.json()).then((responseJson) => {
-            console.log(responseJson);
-            return responseJson.movies;
-        }).catch((error) => {
-            console.error(error);
-        });
+        isTokenValid = await Token.isTokenValid();
+
+        //fetch('http://facebook.github.io/react-native/movies.json', {
+        //    method: 'GET',
+        //    headers: {
+        //        'Accept': 'application/json',
+        //        'Content-Type': 'application/json'
+        //    }
+        //}).then((response) => response.json()).then((responseJson) => {
+        //    console.log(responseJson);
+        //    return responseJson.movies;
+        //}).catch((error) => {
+        //    console.error(error);
+        //});
     }
 
     componentWillUnmount() {

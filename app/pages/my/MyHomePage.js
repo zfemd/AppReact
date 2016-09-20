@@ -22,7 +22,7 @@ import styles from './styles';
 import StorageKeys from '../../constants/StorageKeys';
 import {
     getToken
-} from '../../utils/common'
+} from '../../utils/common';
 
 var womanIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="venus"/>;
 var manIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="mars"/>;
@@ -36,6 +36,7 @@ var THUMB_URLS = [
     require('../../assets/test/test.png'),
     require('../../assets/test/test1.png')
 ];
+
 
 const addImg = require('../../assets/header/add.png');
 const settingImg = require('../../assets/personal/setting.png');
@@ -74,7 +75,7 @@ export default class MyHomePage extends Component {
 
     async _loadInitialState() {
         try {
-            await _getToken();
+            await getToken();
 
             let meDetail = await AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY);
             if (meDetail !== null){
