@@ -13,7 +13,8 @@ const {
 import { connect } from 'react-redux';
 import styles from './style';
 import Flow from '../../components/flow';
-import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
+import ScrollableTabView  from 'react-native-scrollable-tab-view';
+import ChannelTabBar from '../../components/channelTabBar';
 
 class Channel extends React.Component {
     constructor(props) {
@@ -29,10 +30,10 @@ class Channel extends React.Component {
                 scrollWithoutAnimation={true}
                 tabBarPosition="top"
                 renderTabBar={() =>
-                          <DefaultTabBar
+                          <ChannelTabBar
                             underlineHeight={2}
                             textStyle={{ fontSize: 14, marginTop: 8 }}
-                            style={{height:38}}
+                            style={styles.toolbar}
                           />
                         }
                 tabBarBackgroundColor="rgba(255,255,255,0.9)"
@@ -64,6 +65,41 @@ class Channel extends React.Component {
                 <View
                     key={'4'}
                     tabLabel={'宝贝货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'5'}
+                    tabLabel={'宝贝2货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'6'}
+                    tabLabel={'宝贝1货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'7'}
+                    tabLabel={'宝贝3货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'8'}
+                    tabLabel={'宝贝4货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'9'}
+                    tabLabel={'宝贝5货'}
                     style={{ flex: 1 }}
                     >
                     <Flow navigator={this.props.navigator}/>
