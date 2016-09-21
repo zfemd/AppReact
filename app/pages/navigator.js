@@ -21,6 +21,7 @@ class Nav extends React.Component {
         console.log(context); // get react native store object
         this._renderScene = this._renderScene.bind(this);
         this._goBack = this._goBack.bind(this);
+
         BackAndroid.addEventListener('hardwareBackPress', this._goBack);
         this.state = {
             animated: true,

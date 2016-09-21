@@ -14,6 +14,7 @@ import {
     ActivityIndicatorIOS
 } from 'react-native';
 
+import Home from '../home';
 import Button from '../..//components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import ForgetPasswordPage from './ForgetPasswordPage';
@@ -28,7 +29,8 @@ export default class LoginPage extends Component {
             region: 'China'
         };
     }
-    _pressButton() {
+
+    _onPressForgetLink() {
         const { navigator } = this.props;
         //为什么这里可以取得 props.navigator?请看上文:
         //<Component {...route.params} navigator={navigator} />
@@ -40,6 +42,37 @@ export default class LoginPage extends Component {
             })
         }
     }
+
+    _onPressLoginButton() {
+        const { navigator } = this.props;
+        let {phone, password} = this.state;
+
+        //fetch('http://facebook.github.io/react-native/movies.json', {
+        //  method: 'POST',
+        //  headers: {
+        //    'Accept': 'application/json',
+        //        'Content-Type': 'application/json'
+        //  },
+        //  body: JSON.stringify({
+        //    phone: phone,
+        //    password: password,
+        //  })
+        //}).then((response) => response.json()).then((responseJson) => {
+        //    console.log(responseJson);
+        //    return responseJson.movies;
+        //}).catch((error) => {
+        //    console.error(error);
+        //});
+
+        navigator.resetTo({
+            component: Home,
+            name: 'Home',
+            params: {store: this.props.store}
+        });
+
+        //console.log(phone, password);
+    }
+
     validate() {
         if (!this.state.phone || this.state.phone.length < 11) {
             this.setState({validForm:false});
@@ -53,12 +86,13 @@ export default class LoginPage extends Component {
 
         this.setState({validForm:true});
     }
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.navigator}>
                     <Text style={{fontSize:24, flex:1, color:'#4a4a4a'}}>登陆</Text>
-                    <TouchableOpacity onPress={this._pressButton.bind(this)}>
+                    <TouchableOpacity onPress={this._onPressForgetLink.bind(this)}>
                         <Text style={{fontSize:24, flex:1, color:'#4a4a4a', textAlign:'right'}}>注册</Text>
                     </TouchableOpacity>
                 </View>
@@ -82,11 +116,12 @@ export default class LoginPage extends Component {
 
                 <View style={{justifyContent:'flex-end', flexDirection:'row'}}>
                     <Button style={{textAlign:'right', fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
-                            onPress={this._pressButton.bind(this)} >忘记密码</Button>
+                            onPress={this._onPressForgetLink.bind(this)} >忘记密码</Button>
                 </View>
 
                 <View style={{marginTop:40, flexDirection:'row'}}>
-                    <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}>登陆</Button>
+                    <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
+                        onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
                 </View>
 
                 <View style={{marginTop:60, flexDirection:'row'}}>

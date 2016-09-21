@@ -14,6 +14,7 @@ import {
     ActivityIndicatorIOS
 } from 'react-native';
 
+import Home from '../home';
 import Button from '../../../app/components/button/Button';
 import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
@@ -29,7 +30,7 @@ export default class ForgetPasswordPage extends Component {
             region: 'China'
         };
     }
-    _pressButton() {
+    _onPasswordLoginLink() {
         const { navigator } = this.props;
 
         if(navigator) {
@@ -41,7 +42,53 @@ export default class ForgetPasswordPage extends Component {
     }
     _sendCode() {
         this.codeBtn.state('codeBtnText', '59秒');
-        // this.codeBtn.setState({codeBtn:null});
+
+        //fetch('http://facebook.github.io/react-native/movies.json', {
+        //  method: 'POST',
+        //  headers: {
+        //    'Accept': 'application/json',
+        //        'Content-Type': 'application/json'
+        //  },
+        //  body: JSON.stringify({
+        //    phone: phone,
+        //    password: password,
+        //  })
+        //}).then((response) => response.json()).then((responseJson) => {
+        //    console.log(responseJson);
+        //    return responseJson.movies;
+        //}).catch((error) => {
+        //    console.error(error);
+        //});
+    }
+
+    _onPressLoginButton() {
+        const { navigator } = this.props;
+        let {phone, code} = this.state;
+
+        //fetch('http://facebook.github.io/react-native/movies.json', {
+        //  method: 'POST',
+        //  headers: {
+        //    'Accept': 'application/json',
+        //        'Content-Type': 'application/json'
+        //  },
+        //  body: JSON.stringify({
+        //    phone: phone,
+        //    password: password,
+        //  })
+        //}).then((response) => response.json()).then((responseJson) => {
+        //    console.log(responseJson);
+        //    return responseJson.movies;
+        //}).catch((error) => {
+        //    console.error(error);
+        //});
+
+        navigator.resetTo({
+            component: Home,
+            name: 'Home',
+            params: {store: this.props.store}
+        });
+
+        //console.log(phone, code);
     }
 
     validate() {
@@ -63,7 +110,7 @@ export default class ForgetPasswordPage extends Component {
             <View style={styles.container}>
 
                 <View style={styles.navigator}>
-                    <Icon.Button name="angle-left" size={32} color="#4a4a4a" backgroundColor="transparent" onPress={this._pressButton.bind(this)}>
+                    <Icon.Button name="angle-left" size={32} color="#4a4a4a" backgroundColor="transparent" onPress={this._onPasswordLoginLink.bind(this)}>
                         <Text style={{fontSize:24, color:'#4a4a4a'}}>返回密码登陆</Text>
                     </Icon.Button>
                 </View>
@@ -89,11 +136,12 @@ export default class ForgetPasswordPage extends Component {
 
                 <View style={{justifyContent:'flex-end', flexDirection:'row'}}>
                     <Button style={{textAlign:'right', fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
-                            onPress={this._pressButton.bind(this)} >密码登陆</Button>
+                            onPress={this._onPasswordLoginLink.bind(this)} >密码登陆</Button>
                 </View>
 
                 <View style={{marginTop:40, flexDirection:'row'}}>
-                    <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}>登陆</Button>
+                    <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
+                        onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
                 </View>
 
             </View>
