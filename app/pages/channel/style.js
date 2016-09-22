@@ -8,7 +8,6 @@ var {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
     toolbar: {
         height: 38,
-        width: width*2
     }
 });
 

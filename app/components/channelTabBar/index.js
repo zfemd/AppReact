@@ -51,7 +51,7 @@ const ChannelTabBar = React.createClass({
         const fontWeight = isTabActive ? 'bold' : 'normal';
 
         return <Button
-            style={{flex: 1}}
+            style={{flex: name.length}}
             key={name}
             accessible={true}
             accessibilityLabel={name}
@@ -59,7 +59,7 @@ const ChannelTabBar = React.createClass({
             onPress={() => this.props.goToPage(page)}
             >
             <View style={[styles.tab, this.props.tabStyle]}>
-                <Text style={[{color: textColor, fontWeight, }, textStyle, ]}>
+                <Text style={[styles.textStyle, {color: textColor, fontWeight, }, textStyle, ]}>
                     {name}
                 </Text>
             </View>
@@ -86,7 +86,7 @@ const ChannelTabBar = React.createClass({
         });
 
         return (
-            <View style={[ {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
+            <View style={[styles.tabView, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
                 <ListView
                     contentContainerStyle={styles.tabs}
                     dataSource={this.state.dataSource}
@@ -101,23 +101,29 @@ const ChannelTabBar = React.createClass({
 });
 
 const styles = StyleSheet.create({
+    tabView: {
+        width: width,
+    },
     tab: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
         paddingBottom: 10,
+        marginRight: 10
     },
     tabs: {
-        height: 50,
-        width: width*2,
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'flex-start',
         borderWidth: 1,
         borderTopWidth: 0,
         borderLeftWidth: 0,
         borderRightWidth: 0,
         borderBottomColor: '#ccc',
     },
+    textStyle: {
+        minWidth: 10,
+        writingDirection: 'ltr',
+        textAlign: 'center'
+    }
 });
 
 module.exports = ChannelTabBar;

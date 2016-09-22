@@ -71,7 +71,7 @@ class Channel extends React.Component {
                 </View>
                 <View
                     key={'5'}
-                    tabLabel={'宝贝2货'}
+                    tabLabel={'宝贝货好hh宝贝货好hh宝贝货好hh'}
                     style={{ flex: 1 }}
                     >
                     <Flow navigator={this.props.navigator}/>
@@ -98,12 +98,55 @@ class Channel extends React.Component {
                     <Flow navigator={this.props.navigator}/>
                 </View>
                 <View
-                    key={'9'}
+                    key={'10'}
                     tabLabel={'宝贝5货'}
                     style={{ flex: 1 }}
                     >
                     <Flow navigator={this.props.navigator}/>
                 </View>
+                <View
+                    key={'11'}
+                    tabLabel={'宝贝6货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'12'}
+                    tabLabel={'宝贝7货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'13'}
+                    tabLabel={'宝贝8货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'14'}
+                    tabLabel={'宝贝9货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'15'}
+                    tabLabel={'宝贝11货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+                <View
+                    key={'16'}
+                    tabLabel={'宝贝10货'}
+                    style={{ flex: 1 }}
+                    >
+                    <Flow navigator={this.props.navigator}/>
+                </View>
+
 
             </ScrollableTabView>
 
