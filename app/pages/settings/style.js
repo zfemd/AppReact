@@ -20,6 +20,14 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:'#686868',
         flex:1
+    },
+    phoneText: {
+        color:'#ccc',
+        marginRight: 10
+    },
+    boundText: {
+        color:'#FC4D30',
+        marginRight: 10
     }
 });
 

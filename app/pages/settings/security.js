@@ -1,5 +1,5 @@
 /**
- * Created by lyan2 on 16/9/22.
+ * Created by lyan2 on 16/9/23.
  */
 import React  from 'react';
 import {
@@ -10,45 +10,27 @@ import {
 import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
-import SecurityPage from './security';
 
 var chevronRightIcon = <Icon style={[styles.messageLinkIcon]} size={16} name="angle-right"/>;
 
-class SettingPage extends React.Component {
+class SecurityPage extends React.Component {
     constructor(props) {
         super(props);
-    }
-
-    _onPressSecurity() {
-        const { navigator } = this.props;
-        if(navigator) {
-            navigator.push({
-                name: 'SecurityPage',
-                component: SecurityPage
-            })
-        }
     }
 
     render() {
         return(
             <View style={{backgroundColor: '#f5f5f5', flex: 1}}>
                 <Toolbar
-                    title="设置"
+                    title="账号与安全"
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />
 
                 <TouchableHighlight>
                     <View style={styles.row}>
-                        <Text style={styles.text}>个人资料</Text>
-                        {chevronRightIcon}
-                    </View>
-                </TouchableHighlight>
-                <View style={styles.separatorHorizontal} />
-
-                <TouchableHighlight onPress={this._onPressSecurity.bind(this)}>
-                    <View style={styles.row}>
-                        <Text style={styles.text}>账户与安全</Text>
+                        <Text style={styles.text}>手机号</Text>
+                        <Text style={styles.phoneText}>13585979772</Text>
                         {chevronRightIcon}
                     </View>
                 </TouchableHighlight>
@@ -56,7 +38,8 @@ class SettingPage extends React.Component {
 
                 <TouchableHighlight>
                     <View style={styles.row}>
-                        <Text style={styles.text}>关于我们</Text>
+                        <Text style={styles.text}>微信账号</Text>
+                        <Text style={styles.boundText}>已绑定</Text>
                         {chevronRightIcon}
                     </View>
                 </TouchableHighlight>
@@ -64,7 +47,8 @@ class SettingPage extends React.Component {
 
                 <TouchableHighlight>
                     <View style={styles.row}>
-                        <Text style={styles.text}>功能说明</Text>
+                        <Text style={styles.text}>新浪微博</Text>
+                        <Text style={styles.boundText}>已绑定</Text>
                         {chevronRightIcon}
                     </View>
                 </TouchableHighlight>
@@ -72,7 +56,26 @@ class SettingPage extends React.Component {
 
                 <TouchableHighlight>
                     <View style={styles.row}>
-                        <Text style={styles.text}>登出</Text>
+                        <Text style={styles.text}>QQ账号</Text>
+                        <Text style={styles.boundText}>已绑定</Text>
+                        {chevronRightIcon}
+                    </View>
+                </TouchableHighlight>
+                <View style={styles.separatorHorizontal} />
+
+                <TouchableHighlight>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>淘宝账号</Text>
+                        <Text style={styles.boundText}>已绑定</Text>
+                        {chevronRightIcon}
+                    </View>
+                </TouchableHighlight>
+                <View style={styles.separatorHorizontal} />
+
+                <TouchableHighlight>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>支付宝账号</Text>
+                        <Text style={styles.boundText}>已绑定</Text>
                         {chevronRightIcon}
                     </View>
                 </TouchableHighlight>
@@ -82,4 +85,4 @@ class SettingPage extends React.Component {
     }
 }
 
-export default SettingPage;
+export default SecurityPage;
