@@ -5,14 +5,12 @@ const {
     Text,
     View,
     Animated,
-    ListView,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    ScrollView
     } = ReactNative;
 const Button = require('./Button');
 var {height, width} = Dimensions.get('window');
-
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 const ChannelTabBar = React.createClass({
     propTypes: {
@@ -40,7 +38,7 @@ const ChannelTabBar = React.createClass({
 
     getInitialState() {
         return {
-            dataSource: ds.cloneWithRows(this.props.tabs),
+
         };
     },
 
@@ -51,7 +49,7 @@ const ChannelTabBar = React.createClass({
         const fontWeight = isTabActive ? 'bold' : 'normal';
 
         return <Button
-            style={{flex: name.length}}
+            style={{flex: 1}}
             key={name}
             accessible={true}
             accessibilityLabel={name}
@@ -59,15 +57,11 @@ const ChannelTabBar = React.createClass({
             onPress={() => this.props.goToPage(page)}
             >
             <View style={[styles.tab, this.props.tabStyle]}>
-                <Text style={[styles.textStyle, {color: textColor, fontWeight, }, textStyle, ]}>
+                <Text style={[styles.textStyle, {color: textColor, fontWeight, }, textStyle, ]} ellipsizeMode="tail" numberOfLines={1}>
                     {name}
                 </Text>
             </View>
         </Button>;
-    },
-
-    _renderRow(rowData:string, sectionID:number, rowID:number) {
-        return this.renderTabOption(rowData, parseInt(rowID));
     },
 
     render() {
@@ -87,13 +81,14 @@ const ChannelTabBar = React.createClass({
 
         return (
             <View style={[styles.tabView, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
-                <ListView
+                <ScrollView
                     contentContainerStyle={styles.tabs}
-                    dataSource={this.state.dataSource}
-                    renderRow={this._renderRow}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
-                    />
+                    >
+                    {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+                </ScrollView>
+
                 <Animated.View style={[tabUnderlineStyle, { left, }, ]} />
             </View>
         );
@@ -118,10 +113,10 @@ const styles = StyleSheet.create({
         borderLeftWidth: 0,
         borderRightWidth: 0,
         borderBottomColor: '#ccc',
+        minWidth: width
     },
     textStyle: {
         minWidth: 10,
-        writingDirection: 'ltr',
         textAlign: 'center'
     }
 });
