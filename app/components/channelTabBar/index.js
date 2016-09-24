@@ -7,7 +7,8 @@ const {
     Animated,
     TouchableOpacity,
     Dimensions,
-    ScrollView
+    ScrollView,
+    Image
     } = ReactNative;
 const Button = require('./Button');
 var {height, width} = Dimensions.get('window');
@@ -38,8 +39,13 @@ const ChannelTabBar = React.createClass({
 
     getInitialState() {
         return {
-
+            barLeft : 0
         };
+    },
+
+    goToPage(page) {
+        this.props.goToPage(page);
+        this.setState({barLeft: (width/ 5-1)*page});
     },
 
     renderTabOption(name, page) {
@@ -54,7 +60,7 @@ const ChannelTabBar = React.createClass({
             accessible={true}
             accessibilityLabel={name}
             accessibilityTraits='button'
-            onPress={() => this.props.goToPage(page)}
+            onPress={() => this.goToPage(page)}
             >
             <View style={[styles.tab, this.props.tabStyle]}>
                 <Text style={[styles.textStyle, {color: textColor, fontWeight, }, textStyle, ]} ellipsizeMode="tail" numberOfLines={1}>
@@ -64,32 +70,47 @@ const ChannelTabBar = React.createClass({
         </Button>;
     },
 
+    _scrollTo(_scrollView ) {
+        let left = this.state.barLeft;
+        this.setState({barLeft: left + width/ 5});
+        _scrollView.scrollTo({x: this.state.barLeft});
+    },
+
     render() {
         const containerWidth = this.props.containerWidth;
         const numberOfTabs = this.props.tabs.length;
+        const tabLength = Math.ceil(numberOfTabs/5) * width;
         const tabUnderlineStyle = {
             position: 'absolute',
-            width: containerWidth / numberOfTabs,
+            width: tabLength / numberOfTabs,
             height: this.props.underlineHeight,
             backgroundColor: this.props.underlineColor,
             bottom: 0,
         };
 
         const left = this.props.scrollValue.interpolate({
-            inputRange: [0, 1, ], outputRange: [0,  containerWidth / numberOfTabs, ],
+            inputRange: [0, 1, ], outputRange: [0,  tabLength / numberOfTabs, ],
         });
 
+        let _scrollView =  ScrollView;
         return (
             <View style={[styles.tabView, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
                 <ScrollView
-                    contentContainerStyle={styles.tabs}
+                    ref={(scrollView) => { _scrollView = scrollView; }}
+                    contentContainerStyle={[styles.tabs, {width: tabLength + 38}]}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     >
                     {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+                    <Animated.View style={[tabUnderlineStyle, { left, }, styles.tabUnderline ]} />
                 </ScrollView>
 
-                <Animated.View style={[tabUnderlineStyle, { left, }, ]} />
+                <Button
+                    style={styles.arrow}
+                    onPress={() => this._scrollTo(_scrollView)}
+                    >
+                    <Image style={styles.magnifier} source={require('../../assets/channel/channel_more.png')}/>
+                </Button>
             </View>
         );
     },
@@ -113,11 +134,24 @@ const styles = StyleSheet.create({
         borderLeftWidth: 0,
         borderRightWidth: 0,
         borderBottomColor: '#ccc',
-        minWidth: width
+        minWidth: width,
+        paddingRight: 38
     },
     textStyle: {
         minWidth: 10,
         textAlign: 'center'
+    },
+    arrow: {
+        backgroundColor: '#fff',
+        borderLeftWidth: 1,
+        borderColor: '#f4f4f4',
+        position: 'absolute',
+        width: 38,
+        height: 38,
+        marginTop: -38,
+        right: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 
