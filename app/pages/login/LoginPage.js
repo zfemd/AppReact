@@ -18,6 +18,7 @@ import Home from '../home';
 import Button from '../..//components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import ForgetPasswordPage from './ForgetPasswordPage';
+import WeixinLoginPage from './WeixinLoginPage';
 
 const myIcon = (<Icon name="rocket" size={30} color="#900" />)
 
@@ -71,6 +72,15 @@ export default class LoginPage extends Component {
         });
 
         //console.log(phone, password);
+    }
+
+    _onPressWeixinIcon() {
+        const { navigator } = this.props;
+        navigator.push({
+            component: WeixinLoginPage,
+            name: 'WeixinLoginPage',
+            params: {store: this.props.store}
+        });
     }
 
     validate() {
@@ -131,7 +141,7 @@ export default class LoginPage extends Component {
                 </View>
 
                 <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:20}}>
-                    <Icon.Button name="weixin" size={28} color="#21b384" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc',height:48, width:48}}/>
+                    <Icon.Button name="weixin" onPress={this._onPressWeixinIcon.bind(this)} size={28} color="#21b384" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc',height:48, width:48}}/>
                     <Icon.Button name="weibo" size={32} color="#900" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc'}}/>
                     <Icon.Button name="qq" size={32} color="#007AFF" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc'}}/>
                 </View>

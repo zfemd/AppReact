@@ -11,7 +11,10 @@ const StorageKeys = {
     MY_NOTES_STORAGE_KEY: '@duoshouji:mynotes',
 
     // token to interact with server
-    TOKEN_STORAGE_KEY: '@duoshouji:token'
+    TOKEN_STORAGE_KEY: '@duoshouji:token',
+
+    // weixin ///////////////////////////////////////////
+    TOKEN_WEIXIN_PUBLIC_STORAGE_KEY: '@duoshouji:weixinpublictoken'
 };
 
 module.exports = StorageKeys;

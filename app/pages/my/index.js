@@ -41,6 +41,11 @@ var THUMB_URLS = [
 
 const addImg = require('../../assets/header/add.png');
 const settingImg = require('../../assets/personal/setting.png');
+const womanImg = require('../../assets/personal/female.png');
+const manImg = require('../../assets/personal/male.png');
+const zanImg = require('../../assets/personal/heart.png');
+const commentImg = require('../../assets/personal/comment.png');
+const shoppingCartImg = require('../../assets/personal/shopping_cart.png');
 
 export default class MyHomePage extends Component {
     constructor(props) {
@@ -291,17 +296,17 @@ export default class MyHomePage extends Component {
                     <Text style={styles.noteTitle}>{rowData.detail.title}</Text>
                     <View style={styles.noteAssets}>
                         <View style={styles.noteAsset}>
-                            {zanIcon}
+                            <Image source={zanImg} />
                             <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.zanNum}</Text>
                         </View>
                         <View style={styles.separatorVertical}></View>
                         <View style={styles.noteAsset}>
-                            {commentIcon}
+                            <Image source={commentImg} />
                             <Text style={[styles.text, {marginLeft:5}]}>{rowData.summary.commentNum}</Text>
                         </View>
                         <View style={styles.separatorVertical}></View>
                         <View style={styles.noteAsset}>
-                            {shoppingCartIcon}
+                            <Image source={shoppingCartImg} />
                             <Text style={[styles.text, {marginLeft:5}]}>({rmbIcon} {rowData.summary.income})</Text>
                         </View>
                         <View style={styles.separatorVertical}></View>
@@ -355,7 +360,8 @@ export default class MyHomePage extends Component {
                     </View>
                     <View style={styles.user}>
                         <Text style={{fontSize:16}}>{this.user.name}</Text>
-                        { this.user.gender == 'women' ? womanIcon : manIcon }
+                        <Image source={ this.user.gender == 'women' ? womanImg : manImg } />
+
                     </View>
                     <View style={styles.income}>
                         <Text style={{fontSize:12}}>总收益:</Text>
