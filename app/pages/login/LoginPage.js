@@ -15,10 +15,11 @@ import {
 } from 'react-native';
 
 import Home from '../home';
-import Button from '../..//components/button/Button';
+import Button from '../../components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import ForgetPasswordPage from './ForgetPasswordPage';
 import WeixinLoginPage from './WeixinLoginPage';
+import configs from '../../constants/configs';
 
 const myIcon = (<Icon name="rocket" size={30} color="#900" />)
 
@@ -48,7 +49,7 @@ export default class LoginPage extends Component {
         const { navigator } = this.props;
         let {phone, password} = this.state;
 
-        //fetch('http://facebook.github.io/react-native/movies.json', {
+        //fetch(configs.serviceUrl + '/react-native/movies.json', {
         //  method: 'POST',
         //  headers: {
         //    'Accept': 'application/json',

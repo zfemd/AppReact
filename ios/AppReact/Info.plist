@@ -49,11 +49,16 @@
           <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
           <true/>
         </dict>
+        <key>restapi.share68.com</key>
+        <dict>
+          <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+          <true/>
+        </dict>
         <key>facebook.github.io</key>
-          <dict>
-            <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-            <true/>
-          </dict>
+        <dict>
+          <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+          <true/>
+        </dict>
       </dict>
     </dict>
     <key>UIAppFonts</key>

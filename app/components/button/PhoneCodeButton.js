@@ -23,10 +23,12 @@ export default class PhoneCodeButton extends Component {
 
     }
 
-    _sendCode() {
+    onPressBtn() {
         if (this.state.hasSent) return;
 
-        console.log(this.props.phone);
+        if (this.props.onPress) {
+            this.props.onPress();
+        }
 
         this.setState({'hasSent': true});
         this.props.disabled = true;
@@ -36,7 +38,7 @@ export default class PhoneCodeButton extends Component {
             this.setState({text:timeLeft-- + '秒'})
 
             if (timeLeft <= 0) {
-                cancelAnimationFrame(timerId);
+                clearInterval(timerId);
                 this.state.hasSent = false;
                 this.setState({text:'发送验证码'});
             }
@@ -46,7 +48,7 @@ export default class PhoneCodeButton extends Component {
     render() {
         return (
             <Button ref={(component) => this.codeBtn = component}
-                    onPress={this._sendCode.bind(this)}
+                    onPress={this.onPressBtn.bind(this)}
                     style={styles.button}>
                 {this.state.text}
             </Button>

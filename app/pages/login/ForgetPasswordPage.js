@@ -19,6 +19,7 @@ import Button from '../../../app/components/button/Button';
 import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import LoginPage from './LoginPage';
+import configs from '../../constants/configs';
 
 const myIcon = (<Icon name="rocket" size={30} color="#900" />)
 
@@ -41,46 +42,51 @@ export default class ForgetPasswordPage extends Component {
         }
     }
     _sendCode() {
-        this.codeBtn.state('codeBtnText', '59秒');
-
-        //fetch('http://facebook.github.io/react-native/movies.json', {
-        //  method: 'POST',
-        //  headers: {
-        //    'Accept': 'application/json',
-        //        'Content-Type': 'application/json'
-        //  },
-        //  body: JSON.stringify({
-        //    phone: phone,
-        //    password: password,
-        //  })
-        //}).then((response) => response.json()).then((responseJson) => {
-        //    console.log(responseJson);
-        //    return responseJson.movies;
-        //}).catch((error) => {
-        //    console.error(error);
-        //});
+        fetch(configs.serviceUrl + 'accounts/' + this.state.phone + '/message/verification-code/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                mobile: this.state.phone
+            })
+        }).then((response) => {
+            if (response.status == 200) {
+                return response.json()
+            }
+        }).then((responseJson) => {
+            return responseJson.resultCode;
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     _onPressLoginButton() {
         const { navigator } = this.props;
         let {phone, code} = this.state;
 
-        //fetch('http://facebook.github.io/react-native/movies.json', {
-        //  method: 'POST',
-        //  headers: {
-        //    'Accept': 'application/json',
-        //        'Content-Type': 'application/json'
-        //  },
-        //  body: JSON.stringify({
-        //    phone: phone,
-        //    password: password,
-        //  })
-        //}).then((response) => response.json()).then((responseJson) => {
-        //    console.log(responseJson);
-        //    return responseJson.movies;
-        //}).catch((error) => {
-        //    console.error(error);
-        //});
+        fetch(configs.serviceUrl + 'accounts/' + this.state.phone + '/login/verification-code', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+                'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            phone: phone,
+            code: code,
+          })
+        }).then((response) => {
+            if (response.status == 200) {
+                return response.json()
+            }
+        }).then((responseJson) => {
+            console.log(responseJson);
+
+            return responseJson.movies;
+        }).catch((error) => {
+            console.error(error);
+        });
 
         navigator.resetTo({
             component: Home,
@@ -131,7 +137,7 @@ export default class ForgetPasswordPage extends Component {
                                onChangeText={(text) => {this.state.code=text, this.validate()}}
                                value={this.state.text}
                                onFocus={(e) => this.setState({focus:'code'})}/>
-                    <PhoneCodeButton phone={123456789}>发送验证码</PhoneCodeButton>
+                    <PhoneCodeButton onPress={this._sendCode.bind(this)}>发送验证码</PhoneCodeButton>
                 </View>
 
                 <View style={{justifyContent:'flex-end', flexDirection:'row'}}>
