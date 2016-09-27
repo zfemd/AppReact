@@ -4,6 +4,7 @@ import {
     AsyncStorage
 } from 'react-native';
 import StorageKeys from '../constants/StorageKeys';
+import configs from '../constants/configs';
 
 export function naviGoBack(navigator) {
     if (navigator && navigator.getCurrentRoutes().length > 1) {
@@ -13,9 +14,11 @@ export function naviGoBack(navigator) {
     return false;
 };
 
-export class Token {};
+export class Token {
+}
+;
 
-Token.getToken = async function() {
+Token.getToken = async function () {
     var token = null;
 
     try {
@@ -82,3 +85,32 @@ Token.isTokenValid = async function () {
 
     return false;
 };
+
+export function request(url, method, body) {
+    let success;
+    return new Promise((resolve, reject) => {
+        fetch(configs.serviceUrl + url, {
+            method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body
+        }).then((response) => {
+            if (response.status == 200) {
+                success = true;
+            } else {
+                success = false;
+            }
+            return response.json();
+        }).then((responseData) => {
+            if (success) {
+                resolve(responseData);
+            } else {
+                reject(responseData);
+            }
+        }).catch((error) => {
+            reject(error);
+        });
+    });
+}

@@ -12,7 +12,10 @@ export default keyMirror({
     REMOVE_NOTE_PHOTO: null,
     ADD_TAGS: null,
     POST_DRAFT_NOTE: null,
-    RESET_DRAFT_NOTE: null
+    RESET_DRAFT_NOTE: null,
+    FETCH_FLOW_LIST: null,
+    RECEIVE_FLOW_LIST: null
 });
+
 
 // export const ADD_NOTE_PHOTO = 'ADD_NOTE_PHOTO';

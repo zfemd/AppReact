@@ -22,6 +22,7 @@ import {
 import PrefetchImage from '../prefetchImage';
 import DetailPage from '../../pages/detail';
 import UserPage from '../../pages/user';
+import fetchList from '../../actions/flow'
 
 const {height, width} = Dimensions.get('window');
 const thumbs = [
@@ -111,8 +112,13 @@ class Flow extends React.Component {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             dataSource: ds.cloneWithRows(this._genRows({})),
-            refreshing: false,
+            refreshing: false
         };
+    }
+
+    componentDidMount() {
+        const { dispatch } = this.props;
+        //dispatch(fetchList());
     }
 
     _onRefresh() {
