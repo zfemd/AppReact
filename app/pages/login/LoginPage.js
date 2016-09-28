@@ -18,7 +18,7 @@ import Home from '../home';
 import Button from '../../components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import ForgetPasswordPage from './ForgetPasswordPage';
-import WeixinLoginPage from './WeixinLoginPage';
+import WeiXinLoginPage from './WeiXinLoginPage';
 import configs from '../../constants/configs';
 
 const myIcon = (<Icon name="rocket" size={30} color="#900" />)

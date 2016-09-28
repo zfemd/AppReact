@@ -90,7 +90,7 @@ class PhotosReviewPage extends Component {
         if (notePhotos != null && notePhotos.length > 0) {
             notePhotos.forEach(function(photo, index){
                 let key = "" + index;
-                let image = <Image key={key} tabLabel={key} source={photo} resizeMode='contain' style={{height:height, width:width}}/>
+                let image = <Image key={key} tabLabel={key} source={photo.photo} resizeMode='contain' style={{height:height, width:width}}/>
                 photos.push(image);
                 console.log(index);
             });
