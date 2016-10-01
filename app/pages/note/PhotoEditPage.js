@@ -45,7 +45,8 @@ class PhotoEditPage extends Component {
             tagOverlayVisible: false,
             tags: [],
             tagData: [],
-            clickedPos: {x:0, y:0}
+            clickedPos: {x:0, y:0},
+            beautify: 'default'
         };
 
         if (props.draftNote) {
@@ -211,6 +212,14 @@ class PhotoEditPage extends Component {
         this.setState({tagOverlayVisible: false});
     }
 
+    _onPressBrightness() {
+        this.setState({beautify: 'brightness'});
+    }
+
+    _onPressContrast() {
+        this.setState({beautify: 'contrast'});
+    }
+
     render() {
         let {height, width} = Dimensions.get('window');
 
@@ -250,7 +259,38 @@ class PhotoEditPage extends Component {
                     renderTabBar={() => <DefaultTabBar {...this.props}/>}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
-                    <ScrollView navigator={this.props.navigator}  tabLabel="美化"  />
+                    <ScrollView navigator={this.props.navigator}  tabLabel="美化">
+                        <ScrollableTabView
+                            style={{marginTop: 0, }}
+                            tabBarPosition='top'
+                            initialPage={0}
+                            renderTabBar={() => <DefaultTabBar {...this.props}/>}
+                            onChangeTab={this._onChangeTab.bind(this)}
+                            >
+                            <ScrollView navigator={this.props.navigator}  tabLabel="滤镜库">
+
+                            </ScrollView>
+                            <ScrollView navigator={this.props.navigator}  tabLabel="美化照片">
+                                {
+                                    this.state.beautify == 'default' ? (<View style={{flexDirection: 'row'}}>
+                                        <TouchableHighlight onPress={this._onPressBrightness.bind(this)}>
+                                            <Text>亮度</Text>
+                                        </TouchableHighlight>
+                                        <TouchableHighlight onPress={this._onPressContrast.bind(this)}>
+                                            <Text>对比度</Text>
+                                        </TouchableHighlight>
+                                    </View>) : null
+                                }
+
+                                {
+                                    this.state.beautify == 'brightness' ? (<View>
+                                        <Text>hello</Text>
+                                        
+                                    </View>) : null
+                                }
+                            </ScrollView>
+                        </ScrollableTabView>
+                    </ScrollView>
 
                     <ScrollView tabLabel="标签" >
                         <View style={[styles.tabView, {height:100}]}>

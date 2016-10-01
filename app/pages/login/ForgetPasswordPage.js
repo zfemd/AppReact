@@ -1,6 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import {
+    Alert,
     Flex,
     StyleSheet,
     Text,
@@ -9,6 +10,7 @@ import {
     TouchableHighlight,
     TouchableOpacity,
     Image,
+    Modal,
     NavigatorIOS,
     Picker,
     ActivityIndicatorIOS
@@ -28,7 +30,7 @@ export default class ForgetPasswordPage extends Component {
         super(props);
 
         this.state = {
-            region: 'China'
+            modalVisible: true
         };
     }
     _onPasswordLoginLink() {
@@ -52,10 +54,11 @@ export default class ForgetPasswordPage extends Component {
                 mobile: this.state.phone
             })
         }).then((response) => {
-            if (response.status == 200) {
+            if (response.ok) {
                 return response.json()
             }
         }).then((responseJson) => {
+            console.log(responseJson);
             return responseJson.resultCode;
         }).catch((error) => {
             console.error(error);
@@ -66,35 +69,43 @@ export default class ForgetPasswordPage extends Component {
         const { navigator } = this.props;
         let {phone, code} = this.state;
 
+        //let formData = new FormData();
+        //formData.append("code", "1234");
+
+        //let request = new Request(configs.serviceUrl + 'accounts/' + this.state.phone + '/login/verification-code', {
+        //    method: 'POST',
+        //    headers: {},
+        //    body: formData
+        //});
+
         fetch(configs.serviceUrl + 'accounts/' + this.state.phone + '/login/verification-code', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-                'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            phone: phone,
-            code: code,
-          })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: "code=" + code
         }).then((response) => {
-            if (response.status == 200) {
+            if (response.ok) {
                 return response.json()
             }
         }).then((responseJson) => {
             console.log(responseJson);
+            if (responseJson && responseJson.resultCode == 0) {
+                if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
+                    navigator.resetTo({
+                        component: Home,
+                        name: 'Home',
+                        params: {store: this.props.store}
+                    });
 
-            return responseJson.movies;
+                    return;
+                }
+            }
+
+            Alert.alert('登陆', "验证码登陆失败");
         }).catch((error) => {
-            console.error(error);
+            Alert.alert('登陆', "网络连接失败：" + error);
         });
-
-        navigator.resetTo({
-            component: Home,
-            name: 'Home',
-            params: {store: this.props.store}
-        });
-
-        //console.log(phone, code);
     }
 
     validate() {
@@ -103,7 +114,7 @@ export default class ForgetPasswordPage extends Component {
             return;
         }
 
-        if (!this.state.code || this.state.code.length < 6) {
+        if (!this.state.code || this.state.code.length < 4) {
             this.setState({validForm:false});
             return;
         }
@@ -134,7 +145,7 @@ export default class ForgetPasswordPage extends Component {
                     <TextInput placeholder="请输入验证码" maxLength={6}
                                style={[styles.textInput]}
                                keyboardType="numeric"
-                               onChangeText={(text) => {this.state.code=text, this.validate()}}
+                               onChangeText={(text) => {this.state.code=text; this.validate();}}
                                value={this.state.text}
                                onFocus={(e) => this.setState({focus:'code'})}/>
                     <PhoneCodeButton onPress={this._sendCode.bind(this)}>发送验证码</PhoneCodeButton>
@@ -149,6 +160,8 @@ export default class ForgetPasswordPage extends Component {
                     <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
                         onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
                 </View>
+
+
 
             </View>
         );
