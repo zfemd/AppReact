@@ -86,7 +86,7 @@ export default class ForgetPasswordPage extends Component {
             body: "code=" + code
         }).then((response) => {
             if (response.ok) {
-                return response.json()
+                return response.json();
             }
         }).then((responseJson) => {
             console.log(responseJson);
@@ -97,8 +97,6 @@ export default class ForgetPasswordPage extends Component {
                         name: 'Home',
                         params: {store: this.props.store}
                     });
-
-                    return;
                 }
             }
 

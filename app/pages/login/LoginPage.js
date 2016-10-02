@@ -41,7 +41,7 @@ export default class LoginPage extends Component {
         if(navigator) {
             navigator.push({
                 name: 'ForgetPasswordPage',
-                component: ForgetPasswordPage,
+                component: ForgetPasswordPage
             })
         }
     }
@@ -57,6 +57,7 @@ export default class LoginPage extends Component {
           },
           body: 'password=' + password
         }).then((response) => response.json()).then((responseJson) => {
+            console.log(responseJson);
             if (responseJson && responseJson.resultCode == 0) {
                 if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
                     navigator.resetTo({
@@ -64,23 +65,12 @@ export default class LoginPage extends Component {
                         name: 'Home',
                         params: {store: this.props.store}
                     });
-
-                    return;
                 }
             }
-
             Alert.alert('登陆失败', "密码登陆失败");
         }).catch((error) => {
             Alert.alert('登陆失败', "网络连接失败：" + error);
         });
-
-        navigator.resetTo({
-            component: Home,
-            name: 'Home',
-            params: {store: this.props.store}
-        });
-
-        //console.log(phone, password);
     }
 
     _onPressWeixinIcon() {

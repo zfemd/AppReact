@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import StorageKeys from '../constants/StorageKeys';
 import configs from '../constants/configs';
+import LoginPage from '../pages/login/LoginPage';
 
 export function naviGoBack(navigator) {
     if (navigator && navigator.getCurrentRoutes().length > 1) {
@@ -18,7 +19,7 @@ export class Token {
 }
 ;
 
-Token.getToken = async function () {
+Token.getToken = async function (navigator) {
     var token = null;
 
     try {
@@ -29,21 +30,12 @@ Token.getToken = async function () {
         });
 
         if (token == null) {
-            console.log(token);
-            // fetch('https://duoshouji.com/endpoint/token', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Accept': 'application/json',
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({
-            //         uid: '1111111111'
-            //     })
-            // }).then(response => response.json()).then((responseJson) => {
-            //     AsyncStorage.setItem(TOKEN_STORAGE_KEY, responseJson.token);
-            // }).catch((error) => {
-            //     console.error(error);
-            // });
+            if (navigator) {
+                navigator.resetTo({
+                    component: LoginPage,
+                    name: 'LoginPage'
+                });
+            }
         }
     } catch (error) {
         console.log('Failed to get token from server, AsyncStorage error: ' + error.message);
@@ -66,24 +58,29 @@ Token.isTokenValid = async function () {
     let token = await Token.getToken();
 
     if (token) {
-        // fetch('https://duoshouji.com/endpoint/token', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         uid: '1111111111'
-        //     })
-        // }).then(response => response.json()).then((responseJson) => {
-        //     AsyncStorage.setItem(TOKEN_STORAGE_KEY, responseJson.token);
-        // }).catch((error) => {
-        //     console.error(error);
-        // });
-        return true;
+         fetch(configs.serviceUrl + 'login/authenticate/token', {
+             method: 'POST',
+             headers: {
+                 'X-App-Token': token
+             }
+         }).then(response => {
+             if (response.ok) {
+                 return response.json()
+             }
+         }).then((responseJson) => {
+             if (responseJson && responseJson.resultCode == 0) {
+                 if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
+                     AsyncStorage.setItem(TOKEN_STORAGE_KEY, responseJson.token);
+                     return true;
+                 }
+             }
+         }).catch((error) => {
+             Alert.alert('登陆失败', "网络连接失败：" + error);
+         });
+        //return false;
     }
 
-    return false;
+    return true;
 };
 
 export function request(url, method, body) {
