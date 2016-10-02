@@ -102,9 +102,9 @@ export default class ForgetPasswordPage extends Component {
                 }
             }
 
-            Alert.alert('登陆', "验证码登陆失败");
+            Alert.alert('登陆失败', "验证码登陆失败");
         }).catch((error) => {
-            Alert.alert('登陆', "网络连接失败：" + error);
+            Alert.alert('登陆失败', "网络连接失败：" + error);
         });
     }
 
@@ -160,8 +160,6 @@ export default class ForgetPasswordPage extends Component {
                     <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
                         onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
                 </View>
-
-
 
             </View>
         );

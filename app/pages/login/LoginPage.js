@@ -1,6 +1,7 @@
 'use strict';
 import React, { Component } from 'react';
 import {
+    Alert,
     Flex,
     StyleSheet,
     Text,
@@ -49,22 +50,29 @@ export default class LoginPage extends Component {
         const { navigator } = this.props;
         let {phone, password} = this.state;
 
-        //fetch(configs.serviceUrl + '/react-native/movies.json', {
-        //  method: 'POST',
-        //  headers: {
-        //    'Accept': 'application/json',
-        //        'Content-Type': 'application/json'
-        //  },
-        //  body: JSON.stringify({
-        //    phone: phone,
-        //    password: password,
-        //  })
-        //}).then((response) => response.json()).then((responseJson) => {
-        //    console.log(responseJson);
-        //    return responseJson.movies;
-        //}).catch((error) => {
-        //    console.error(error);
-        //});
+        fetch(configs.serviceUrl + 'accounts/' + phone + '/login/credential', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: 'password=' + password
+        }).then((response) => response.json()).then((responseJson) => {
+            if (responseJson && responseJson.resultCode == 0) {
+                if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
+                    navigator.resetTo({
+                        component: Home,
+                        name: 'Home',
+                        params: {store: this.props.store}
+                    });
+
+                    return;
+                }
+            }
+
+            Alert.alert('登陆失败', "密码登陆失败");
+        }).catch((error) => {
+            Alert.alert('登陆失败', "网络连接失败：" + error);
+        });
 
         navigator.resetTo({
             component: Home,
