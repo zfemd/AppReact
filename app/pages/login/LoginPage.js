@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import {
     Alert,
     Flex,
+    InteractionManager,
     StyleSheet,
     Text,
     TextInput,
@@ -60,11 +61,15 @@ export default class LoginPage extends Component {
             console.log(responseJson);
             if (responseJson && responseJson.resultCode == 0) {
                 if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
-                    navigator.resetTo({
-                        component: Home,
-                        name: 'Home',
-                        params: {store: this.props.store}
+                    InteractionManager.runAfterInteractions(() => {
+                        navigator.resetTo({
+                            component: Home,
+                            name: 'Home',
+                            params: {store: this.props.store}
+                        });
                     });
+
+                    return;
                 }
             }
             Alert.alert('登陆失败', "密码登陆失败");
@@ -148,13 +153,6 @@ export default class LoginPage extends Component {
         );
     }
 }
-
-/*
- <Picker style={{width:80,height:26}}
- selectedValue={this.state.region}
- onValueChange={(lang) => this.setState({region: lang})}>
- <Picker.Item label="+86" value="China" />
- </Picker>*/
 
 var styles = StyleSheet.create({
     description: {

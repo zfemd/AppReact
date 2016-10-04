@@ -31,9 +31,11 @@ Token.getToken = async function (navigator) {
 
         if (token == null) {
             if (navigator) {
-                navigator.resetTo({
-                    component: LoginPage,
-                    name: 'LoginPage'
+                InteractionManager.runAfterInteractions(() => {
+                    navigator.resetTo({
+                        component: LoginPage,
+                        name: 'LoginPage'
+                    });
                 });
             }
         }
@@ -56,14 +58,14 @@ Token.setToken = function (token) {
 
 Token.isTokenValid = async function () {
     let token = await Token.getToken();
-
     if (token) {
-         fetch(configs.serviceUrl + 'login/authenticate/token', {
+         await fetch(configs.serviceUrl + 'login/authenticate/token', {
              method: 'POST',
              headers: {
                  'X-App-Token': token
              }
          }).then(response => {
+             console.log(response);
              if (response.ok) {
                  return response.json()
              }
@@ -77,10 +79,9 @@ Token.isTokenValid = async function () {
          }).catch((error) => {
              Alert.alert('登陆失败', "网络连接失败：" + error);
          });
-        //return false;
     }
 
-    return true;
+    return false;
 };
 
 export function request(url, method, body) {

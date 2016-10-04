@@ -17,6 +17,9 @@ import {
 } from 'react-native';
 
 import Home from '../home';
+import {
+    Token
+} from '../../utils/common';
 import Button from '../../../app/components/button/Button';
 import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
@@ -92,11 +95,16 @@ export default class ForgetPasswordPage extends Component {
             console.log(responseJson);
             if (responseJson && responseJson.resultCode == 0) {
                 if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
-                    navigator.resetTo({
+
+                    navigator.push({
                         component: Home,
                         name: 'Home',
                         params: {store: this.props.store}
                     });
+
+                    Token.setToken(responseJson.resultValues.token);
+
+                    return;
                 }
             }
 
