@@ -9,6 +9,12 @@ import {
     View
 } from 'react-native';
 
+const propTypes = {
+    disabled: PropTypes.bool,
+    style: Text.propTypes.style,
+    size: PropTypes.number
+};
+
 export default class Circle extends Component {
     constructor(props) {
         super(props);
@@ -22,17 +28,26 @@ export default class Circle extends Component {
             touchableProps.onPressIn = this.props.onPressIn;
             touchableProps.onPressOut = this.props.onPressOut;
             touchableProps.onLongPress = this.props.onLongPress;
+            touchableProps.onResponderTerminate = this.props.onResponderTerminate;
+            touchableProps.onResponderGrant = this.props.onResponderGrant;
+            touchableProps.onResponderMove = this.props.onResponderMove;
+            touchableProps.onResponderRelease = this.props.onResponderRelease;
         }
 
         let size = this.props.size ? this.props.size : 12;
 
         return (
-            <TouchableOpacity {...touchableProps} testID={this.props.testID} style={[{height: size, width: size}]}>
-                <View style={[{backgroundColor: '#fff', height: size, width: size, borderRadius: size}]}>
-                </View>
-            </TouchableOpacity>
+            <View {...touchableProps} testID={this.props.testID} style={[{height: size, width: size, borderRadius: size}, this.props.style]}>
+            </View>
         );
     }
+};
+
+Circle.propTypes = propTypes;
+
+Circle.defaultProps = {
+    style:{backgroundColor: '#fff'},
+    disabled: false
 };
 
 const styles = StyleSheet.create({

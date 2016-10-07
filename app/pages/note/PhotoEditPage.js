@@ -3,13 +3,15 @@
  */
 import React, { Component } from 'react';
 import {
-    CameraRoll,
     Dimensions,
     Image,
+    ImageEditor,
+    ImageStore,
     Modal,
     Navigator,
     Platform,
     ScrollView,
+    Slider,
     StyleSheet,
     Text,
     TextInput,
@@ -17,9 +19,10 @@ import {
     View
 } from 'react-native';
 import { connect } from 'react-redux';
+import WebViewBridge from 'react-native-webview-bridge';
 import Button from '../../components/button/Button';
 import Toolbar from '../../components/toolbar';
-import Tag from '../../components/tag';
+import ConfirmBar from '../../components/bar/ConfirmBar';
 import StoreActions from '../../constants/actions';
 import ScrollableTabView, { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import ImageButton from '../../components/toolbar/ImageButton';
@@ -35,8 +38,14 @@ class PhotoEditPage extends Component {
         super(props);
 
         this.state = {
+            bShowTabsBar: true,
+            oTabsBar: null,
+            oDefaultTabsBar: <DefaultTabBar {...this.props}/>,
+            dBrightness: 0.5,
+            sBase64Data: null,
+            oImageTag: null,
+            sImageBase64Data: null,
             avatarSource: this.props.photo,
-            imageClickable: false,
             optionsModalVisible:false,
             currencyOptionsVisible: false,
             brandOptionsVisible: false,
@@ -48,11 +57,28 @@ class PhotoEditPage extends Component {
             clickedPos: {x:0, y:0},
             beautify: 'default'
         };
+    }
 
-        if (props.draftNote) {
-            let {currentPhotoIndex, notePhotos} = props.draftNote;
+    _onWebViewLoadEnd() {
+        if (this.props.draftNote) {
+            let {currentPhotoIndex, notePhotos} = this.props.draftNote;
             if (notePhotos && notePhotos.length > currentPhotoIndex) {
                 this.state.avatarSource = notePhotos[currentPhotoIndex].photo;
+                let imageProps = {uri,width,height} = this.state.avatarSource;
+
+                // get base64data of image
+                ImageEditor.cropImage(imageProps.uri, {offset:{x:0, y:0},size:{width: imageProps.width, height: imageProps.height}}, (url) => {
+                    ImageStore.getBase64ForTag(url, (base64Data) => {
+                        const { webviewbridge } = this.refs;
+                        let {height, width} = Dimensions.get('window');
+                        let sImageBase64Data = 'data:image/jpg;base64,' + base64Data;
+                        webviewbridge.sendToBridge(JSON.stringify({type:"imageLoaded", window:{width:width, height:height}, image:imageProps, data: sImageBase64Data}));
+                    }, (error) => {
+                        console.log(error);
+                    });
+                }, (error) => {
+                    console.log(error);
+                });
             }
         }
     }
@@ -84,36 +110,8 @@ class PhotoEditPage extends Component {
      * @private
      */
     _onChangeTab(args) {
-        this.state.imageClickable = (args.i == 1);
-    }
-
-    _onPressImage(event) {
-        if (!this.state.imageClickable) return;
-
-        let point = {locationX, locationY} = event.nativeEvent;
-        let scope = this.state.imageScope;
-
-        if (point.locationX < scope.left || point.locationX > scope.left + scope.width
-            || point.locationY < scope.top || point.locationY > scope.top + scope.height) {
-            console.log("not in image");
-        } else {
-            this.state.clickedPos = {x: point.locationX - scope.left, y: point.locationY - scope.top};
-            this.setState({tagOverlayVisible: true});
-        }
-    }
-
-    _onImageLoad() {
-        let windowSize = {height, width} = Dimensions.get('window');
-        let containerSize = {width: windowSize.width, height: 300};
-        let imageSize = {height, width} =this.state.avatarSource;
-
-        let ratio = imageSize.width > 0 ? imageSize.height / imageSize.width : 1;
-        let scale = ratio > 1 ? containerSize.height / imageSize.height : windowSize.width / imageSize.width;
-        let actualSize = {width: imageSize.width * scale, height: imageSize.height * scale};
-
-        // left and top is the let top corner position of image in image container.
-        this.state.imageScope = {left: (containerSize.width - actualSize.width) / 2, top: (containerSize.height - actualSize.height) / 2,
-            width: actualSize.width, height: actualSize.height};
+        const { webviewbridge } = this.refs;
+        webviewbridge.sendToBridge(JSON.stringify({type:'changeTab', imageClickable: (args.i == 1)}));
     }
 
     _onBrandInputFocus() {
@@ -213,11 +211,69 @@ class PhotoEditPage extends Component {
     }
 
     _onPressBrightness() {
+        this.state.bShowTabsBar = false;
+        this._resetTabBars();
         this.setState({beautify: 'brightness'});
     }
 
     _onPressContrast() {
+        this.state.bShowTabsBar = false;
+        this._resetTabBars();
         this.setState({beautify: 'contrast'});
+    }
+
+    _resetTabBars() {
+        this.state.oTabsBar = this.state.bShowTabsBar ? this.state.oDefaultTabsBar : false;
+    }
+
+    _adjustImageBrightness(dBrightness) {
+        const { webviewbridge } = this.refs;
+        webviewbridge.sendToBridge(JSON.stringify({type:'brightness', value: dBrightness}));
+
+        //let imageFilter = ImageFilter({imageData:base64.toByteArray(this.state.sBase64Data)});
+        //imageFilter.brightness({adjustment:dBrightness});
+
+    }
+
+    _createImageSource() {
+        let obj = {
+            html: '<html><head><meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/><script src="http://fabricjs.com/build/files/text,gestures,easing,parser,freedrawing,interaction,serialization,image_filters,gradient,pattern,shadow,node.min.js"></script></head>' +
+            '<body style="margin: 0;padding:0;border:1px solid #f00;background:#000;flex-direction:column;align-items:center;justify-content:center;">' +
+            '<div style="display:flex;flex-direction:row;align-items:center;justify-content:center;height:300px;"><canvas id="c" style="border:1px solid #fff;flex:1"></canvas></div>' +
+            //'<image id="image" style="max-width:100%;max-height:100%" src="' + this.state.sImageBase64Data + '" />' +
+            '<image id="image" style="max-width:100%;max-height:100%" />' +
+            '</body></html>'
+        };
+
+        return obj;
+    }
+
+    _onBridgeMessage(message) {
+        const { webviewbridge } = this.refs;
+
+        if (message.startsWith("{")) {
+            message = JSON.parse(message);
+            switch(message.type) {
+                case "clickImage":
+                    let tag = {x:message.x, y:message.y};
+                    this.setState({tagOverlayVisible:true});
+                    break;
+                case "imageUpdated":
+                    //this.setState({sImageBase64Data: message.data});
+                    break;
+
+            }
+        }
+        console.log(message);
+
+        switch (message) {
+            case "hello from webview":
+                webviewbridge.sendToBridge("hello from react-native");
+                break;
+            case "got the message inside webview":
+                console.log("we have got a message from webview! yeah");
+                break;
+        }
     }
 
     render() {
@@ -244,11 +300,9 @@ class PhotoEditPage extends Component {
                     />
 
                 <View style={styles.selectedPhotoContainer}>
-                    <TouchableHighlight onPress={this._onPressImage.bind(this)}>
-                        <Image source={this.state.avatarSource} style={[styles.selectedPhoto, {width:width, height:300}]}
-                            resizeMode='contain' onLoad={this._onImageLoad.bind(this)} />
-                    </TouchableHighlight>
-                    {this.state.tags}
+                    <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)} scrollEnabled={false}
+                        injectedJavaScript={injectScript} source={this._createImageSource()} style={[{height:300, padding: 0}]} onLoadEnd={this._onWebViewLoadEnd.bind(this)}>
+                    </WebViewBridge>
                 </View>
 
 
@@ -256,7 +310,7 @@ class PhotoEditPage extends Component {
                     style={{marginTop: 0, }}
                     tabBarPosition='overlayBottom'
                     initialPage={0}
-                    renderTabBar={() => <DefaultTabBar {...this.props}/>}
+                    renderTabBar={this.state.oTabsBar}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
                     <ScrollView navigator={this.props.navigator}  tabLabel="美化">
@@ -283,9 +337,9 @@ class PhotoEditPage extends Component {
                                 }
 
                                 {
-                                    this.state.beautify == 'brightness' ? (<View>
-                                        <Text>hello</Text>
-                                        
+                                    this.state.beautify == 'brightness' ? (<View style={{flex:1}}>
+                                        <Slider value={0.5} onValueChange={(value) => this._adjustImageBrightness(value)}></Slider>
+                                        <ConfirmBar style={styles.confirmBar} title='亮度'></ConfirmBar>
                                     </View>) : null
                                 }
                             </ScrollView>
@@ -352,3 +406,67 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(PhotoEditPage);
+
+const injectScript = `
+(function () {
+    if (!WebViewBridge) return;
+
+    if (WebViewBridge) {
+        var imageClickable = false;
+
+        WebViewBridge.onMessage = function (message) {
+            if (message && message.startsWith("{")) {
+                message = JSON.parse(message);
+                if (message.type === 'brightness') {
+                    WebViewBridge.send('Filter loadding');
+                    var filter = new fabric.Image.filters.Brightness({
+                      brightness: 200
+                    });
+                    WebViewBridge.send('Filter loadded');
+                    //filter.apply();
+                } else if (message.type === 'imageLoaded') {
+                    WebViewBridge.send('Image loading');
+                    var canvasFab = new fabric.Canvas('c', {isDrawingMode:false});
+                    var tags = [];
+
+                    var imgElement = document.getElementById('image');
+                    imgElement.addEventListener('load', function(){
+                        var imgFab = new fabric.Image(imgElement, {left: 0, top: 0, angle: 0, opacity: 1, meetOrSlice: "meet", selectable:false});
+                        canvasFab.setDimensions({width:imgElement.width, height:imgElement.height});
+                        canvasFab.add(imgFab);
+                        canvasFab.centerObject(imgFab);
+
+                        document.getElementById("c").nextElementSibling.addEventListener("click", function(e){
+                            if (imageClickable) {
+                                var notTag = tags.every(function(tag, index){
+                                    return !canvasFab.containsPoint(e, tag);
+                                });
+
+                                if (notTag) {
+                                    var circle = new fabric.Circle({radius: 6,fill:"#fff", left:(e.offsetX-6), top:(e.offsetY-6), evented:false});
+                                    canvasFab.add(circle);
+                                    tags.push(circle);
+                                }
+                                WebViewBridge.send(JSON.stringify({type:"clickImage", x:e.x, y:e.y}));
+                            }
+                        }, false);
+                    });
+                    if (message.data) {
+                        imgElement.src = message.data;
+                    }
+
+                    WebViewBridge.send(JSON.stringify({type:"imageUpdated",data:message.data}));
+                } else if (message.type === "changeTab") {
+                    imageClickable = !!message.imageClickable;
+                }
+            } else {
+                if (message === "hello from react-native") {
+                  WebViewBridge.send("got the message inside webview");
+                }
+            }
+        };
+
+        WebViewBridge.send("hello from webview");
+    }
+}());
+`;

@@ -20,16 +20,31 @@ var checkIcon = <Icon style={{color:'#9b9b9b'}} size={16} name="check" />;
 export default class ConfirmBar extends Component {
     constructor(props) {
         super(props);
+
+        this._onCancelPressed = this.props.onCancel || this._onCancelPressed;
+        this._onConfirmPressed = this.props.onConfirm || this._onConfirmPressed;
+
+        this.state = {
+            title: props.title
+        }
+    }
+
+    _onCancelPressed() {
+
+    }
+
+    _onConfirmPressed() {
+
     }
 
     render() {
         return (
             <View style={styles.bar}>
-                <TouchableHighlight>
+                <TouchableHighlight onPress={this._onCancelPressed}>
                     {closeIcon}
                 </TouchableHighlight>
-                <Text>fsfd</Text>
-                <TouchableHighlight>
+                <Text style={styles.barTitle}>{this.state.title}</Text>
+                <TouchableHighlight onPress={this._onConfirmPressed}>
                     {checkIcon}
                 </TouchableHighlight>
             </View>
@@ -40,9 +55,13 @@ export default class ConfirmBar extends Component {
 const styles = {
     bar : {
         flexDirection: 'row',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0
+        backgroundColor: '#ccc',
+        height: 30,
+        alignItems: 'center',
+        paddingHorizontal: 10
+    },
+    barTitle: {
+        flex: 1,
+        textAlign: 'center'
     }
 }
