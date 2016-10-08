@@ -28,7 +28,7 @@ class Splash extends React.Component {
         Token.getToken(navigator).then((token) => {
                 console.log(token);
 
-                if (token) {
+                if (!token) {
                     InteractionManager.runAfterInteractions(() => {
                         navigator.resetTo({
                             component: Home,

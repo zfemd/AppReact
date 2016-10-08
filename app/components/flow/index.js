@@ -22,7 +22,9 @@ import {
 import PrefetchImage from '../prefetchImage';
 import DetailPage from '../../pages/detail';
 import UserPage from '../../pages/user';
-import fetchList from '../../actions/flow'
+import {fetchList} from '../../actions/flow';
+import { connect } from 'react-redux';
+
 
 const {height, width} = Dimensions.get('window');
 const thumbs = [
@@ -109,16 +111,17 @@ class Flow extends React.Component {
         this._onRefresh = this._onRefresh.bind(this);
         this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
         this._renderFooter = this._renderFooter.bind(this);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds.cloneWithRows(this._genRows({})),
-            refreshing: false
+            dataSource: new ListView.DataSource({
+                rowHasChanged: (row1, row2) => row1 !== row2,
+            }),
+            refreshing: false,
         };
     }
 
     componentDidMount() {
         const { dispatch } = this.props;
-        //dispatch(fetchList());
+        dispatch(fetchList());
     }
 
     _onRefresh() {
@@ -162,14 +165,12 @@ class Flow extends React.Component {
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
-        var rowHash = Math.abs(hashCode(rowData));
-        var imgSource = thumbs[(rowHash) % thumbs.length];
         return (
             <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.row}>
                         <PrefetchImage
-                            imageUri={imgSource.uri}
+                            imageUri={rowData.image}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
                             width={(width/100)*47}
@@ -180,12 +181,12 @@ class Flow extends React.Component {
                         <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
                             <View style={styles.portrait}>
                                 <Image
-                                    source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 30, height: 30}}/>
+                                    source={{uri: rowData.portrait , width: 30, height: 30}}/>
                             </View>
                         </TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.text} lineBreakMode={'middle'}>
-                                miya2016夏装新品宽松镂空短袖蕾丝衫女韩系显瘦性感度假上衣潮
+                                {rowData.title}
                             </Text>
                         </View>
                         <View style={styles.interaction}>
@@ -212,14 +213,12 @@ class Flow extends React.Component {
     }
 
     _renderRow1(rowData:string, sectionID:number, rowID:number) {
-        var rowHash = Math.abs(hashCode(rowData));
-        var imgSource = thumbs[(rowHash - 2) % thumbs.length];
         return (
             <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.row}>
                         <PrefetchImage
-                            imageUri={imgSource.uri}
+                            imageUri={rowData.image}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
                             width={(width/100)*47}
@@ -230,12 +229,12 @@ class Flow extends React.Component {
                         <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
                             <View style={styles.portrait}>
                                 <Image
-                                    source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 30, height: 30}}/>
+                                    source={{uri: rowData.portrait , width: 30, height: 30}}/>
                             </View>
                         </TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.text} lineBreakMode={'middle'}>
-                                miya2016夏装新品宽松镂空短袖蕾丝衫女韩系显瘦性感度假上衣潮
+                                {rowData.title}
                             </Text>
                         </View>
                         <View style={styles.interaction}>
@@ -261,14 +260,14 @@ class Flow extends React.Component {
         );
     }
 
-    _genRows(pressData) {
-        var dataBlob = [];
-        for (var i = 0; i < 10; i++) {
-            var pressedText = pressData[i] ? ' (X)' : '';
-            dataBlob.push('Cell ' + i + pressedText);
-        }
-        return dataBlob;
-    }
+    //_genRows(pressData) {
+    //    var dataBlob = [];
+    //    for (var i = 0; i < 10; i++) {
+    //        var pressedText = pressData[i] ? ' (X)' : '';
+    //        dataBlob.push('Cell ' + i + pressedText);
+    //    }
+    //    return dataBlob;
+    //}
 
     render() {
         if(0==0){
@@ -284,19 +283,21 @@ class Flow extends React.Component {
                     <View style={styles.container}>
                         <ListView
                             contentContainerStyle={styles.list}
-                            dataSource={this.state.dataSource}
+                            dataSource={this.state.dataSource.cloneWithRows(this.props.flow.flowList)}
                             initialListSize={21}
                             pageSize={3} // should be a multiple of the no. of visible cells per row
                             scrollRenderAheadDistance={500}
                             renderRow={this._renderRow}
+                            enableEmptySections={true}
                             />
                         <ListView
                             contentContainerStyle={[styles.list, {paddingLeft: width/100*1}]}
-                            dataSource={this.state.dataSource}
+                            dataSource={this.state.dataSource.cloneWithRows(this.props.flow.flowList)}
                             initialListSize={21}
                             pageSize={3} // should be a multiple of the no. of visible cells per row
                             scrollRenderAheadDistance={500}
                             renderRow={this._renderRow1}
+                            enableEmptySections={true}
                             />
                     </View>
                 </ScrollView>
@@ -418,4 +419,11 @@ var styles = StyleSheet.create({
     }
 });
 
-export default Flow;
+function mapStateToProps(state) {
+    const { flow } = state;
+    return {
+        flow
+    };
+}
+
+export default connect(mapStateToProps)(Flow);

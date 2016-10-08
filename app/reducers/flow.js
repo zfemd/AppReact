@@ -3,7 +3,7 @@ import types from '../constants/actions';
 
 const initialState = {
     loading: false,
-    list: {}
+    flowList: []
 };
 
 
@@ -16,7 +16,7 @@ const flow = function (state = initialState, action = {}) {
         case types.RECEIVE_FLOW_LIST:
             return Object.assign({}, state, {
                 loading: false,
-                typeList: action.typeList
+                flowList: action.list
             });
         default:
             return state;

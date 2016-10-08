@@ -120,7 +120,7 @@ class Home extends React.Component {
                     renderTabBar={() => <TabBar {...this.props}/>}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
-                    <Flow navigator={this.props.navigator}  tabLabel="ios-home-outline" style={styles.tabView}/>
+                    <Flow navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
 
                     <Channel navigator={this.props.navigator} tabLabel="ios-compass-outline" style={styles.tabView}></Channel>
 
