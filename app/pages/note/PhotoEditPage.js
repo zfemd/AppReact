@@ -30,6 +30,7 @@ import BrandOptionList from './BrandOptionList';
 import CurrencyOptionList from './CurrencyOptionList';
 import NationOptionList from './NationOptionList';
 import PostNotePage from './PostNotePage';
+import {fabrics} from '../../constants/fabrics';
 const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
@@ -172,7 +173,8 @@ class PhotoEditPage extends Component {
     }
 
     _onAddTag() {
-        let {tagData, tags} = this.state;
+        const { webviewbridge } = this.refs;
+        let {tagData} = this.state;
 
         let data = {
             name: this.state.name,
@@ -182,30 +184,15 @@ class PhotoEditPage extends Component {
             price: this.state.price,
             address: this.state.address,
             position: {
-                left: this.state.clickedPos.x,
-                top: this.state.clickedPos.y
+                offsetX: this.state.clickedPos.x,
+                offsetY: this.state.clickedPos.y
             }
         }
 
+        console.log(data);
         tagData.push(data);
+        webviewbridge.sendToBridge(JSON.stringify({type:'addTag', data: data}));
 
-        let labels = [];
-        data.nation && labels.push(data.nation);
-        data.currency && labels.push(data.currency);
-        data.brand && labels.push(data.brand);
-
-        let position = {left: this.state.imageScope.left + this.state.clickedPos.x,
-            top: this.state.imageScope.top + this.state.clickedPos.y};
-
-        // position doesn't work here
-        let tag = (
-            <Tag key={position.left + '_' + position.top} labels={labels} position={position} style={{position: 'absolute', left: position.left, top: position.top}}/>
-        );
-
-        console.log(position);
-
-        tags.push(tag);
-        this.state.tags = tags;
         this.state.tagData = tagData;
         this.setState({tagOverlayVisible: false});
     }
@@ -237,7 +224,7 @@ class PhotoEditPage extends Component {
 
     _createImageSource() {
         let obj = {
-            html: '<html><head><meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/><script src="http://fabricjs.com/build/files/text,gestures,easing,parser,freedrawing,interaction,serialization,image_filters,gradient,pattern,shadow,node.min.js"></script></head>' +
+            html: '<html><head><meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/></head>' +
             '<body style="margin: 0;padding:0;border:1px solid #f00;background:#000;flex-direction:column;align-items:center;justify-content:center;">' +
             '<div style="display:flex;flex-direction:row;align-items:center;justify-content:center;height:300px;"><canvas id="c" style="border:1px solid #fff;flex:1"></canvas></div>' +
             //'<image id="image" style="max-width:100%;max-height:100%" src="' + this.state.sImageBase64Data + '" />' +
@@ -256,7 +243,7 @@ class PhotoEditPage extends Component {
             switch(message.type) {
                 case "clickImage":
                     let tag = {x:message.x, y:message.y};
-                    this.setState({tagOverlayVisible:true});
+                    this.setState({tagOverlayVisible:true, clickedPos:tag});
                     break;
                 case "imageUpdated":
                     //this.setState({sImageBase64Data: message.data});
@@ -264,8 +251,8 @@ class PhotoEditPage extends Component {
 
             }
         }
-        console.log(message);
 
+        console.log(message);
         switch (message) {
             case "hello from webview":
                 webviewbridge.sendToBridge("hello from react-native");
@@ -360,15 +347,15 @@ class PhotoEditPage extends Component {
                     (<View style={[styles.overlay]}>
                         <View style={styles.formRow}>
                             <TextInput value={this.state.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
-                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} />
+                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} onEndEditing={(event) => {this.state.name = event.nativeEvent.text;}} />
                         </View>
                         <View style={styles.formRow}>
                             <TextInput value={this.state.currency} placeholder='币种' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onCurrencyInputFocus.bind(this)}/>
-                            <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput}/>
+                            <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput} onEndEditing={(event) => {this.state.price = event.nativeEvent.text;}}/>
                         </View>
                         <View style={styles.formRow}>
                             <TextInput value={this.state.nation} placeholder='国家' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onNationInputFocus.bind(this)} />
-                            <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput}/>
+                            <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput} onEndEditing={(event) => {this.state.address = event.nativeEvent.text;}}/>
                         </View>
                         <View style={{marginHorizontal: 20}}>
                             <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onAddTag.call(this)}>
@@ -407,12 +394,51 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(PhotoEditPage);
 
-const injectScript = `
+var injectScript = fabrics + `
 (function () {
     if (!WebViewBridge) return;
 
     if (WebViewBridge) {
         var imageClickable = false;
+        var canvas = document.getElementById('c');
+        var canvasFab = new fabric.Canvas('c', {isDrawingMode:false, renderOnAddRemove: true});
+        var canvasParent = canvas.parentElement;
+        var tags = {};
+        var padding = 10;
+        var activeTag = null;
+        var tagUID = 0;
+
+        var getPosSet1 = function(textWidth, textHeight){
+            return {
+                textPositions: [
+                    {left: padding,                top: - textHeight * 0.5},
+                    {left: -(textWidth + padding), top: - textHeight * 0.5},
+                    {left: padding,                top: - textHeight * 1.5},
+                    {left: -(textWidth + padding), top: - textHeight * 1.5}],
+                polylines : [
+                    [{ x: 0, y: 0 }, { x: padding, y: textHeight * 0.5 }, { x: textWidth + padding, y: textHeight * 0.5}],
+                    [{ x: 0, y: 0 }, { x: -padding, y: textHeight * 0.5 }, { x: -(textWidth + padding), y: textHeight * 0.5 }],
+                    [{ x: 0, y: 0 }, { x: padding, y: -textHeight * 0.5 },{ x: textWidth + padding, y: -textHeight * 0.5}],
+                    [{ x: 0, y: 0 }, { x: -padding, y: -textHeight * 0.5 }, { x: -(textWidth + padding), y: -textHeight * 0.5}]],
+                polylinePositions: [
+                    {left: 0, top: 0},
+                    {left: -(textWidth + padding), top: 0},
+                    {left: 0, top:  - textHeight * 0.5},
+                    {left: -(textWidth + padding), top: - textHeight * 0.5}]
+            };
+        };
+
+        var addTagLabel = function(text, e, group, index){
+            var textFab = new fabric.Text(text, {selectable:false, fill:"#fff", fontSize:12, evented:true});
+            var posSet = getPosSet1(textFab.getWidth(), textFab.getHeight());
+            textFab.setLeft(e.offsetX + posSet.textPositions[index].left);
+            textFab.setTop(e.offsetY + posSet.textPositions[index].top);
+
+            var poly = new fabric.Polyline(posSet.polylines[index], {selectable:false,stroke: 'white',fill:null});
+            poly.setLeft(e.offsetX + posSet.polylinePositions[index].left);
+            poly.setTop(e.offsetY + posSet.polylinePositions[index].top);
+            group.add(textFab, poly);
+        };
 
         WebViewBridge.onMessage = function (message) {
             if (message && message.startsWith("{")) {
@@ -426,30 +452,44 @@ const injectScript = `
                     //filter.apply();
                 } else if (message.type === 'imageLoaded') {
                     WebViewBridge.send('Image loading');
-                    var canvasFab = new fabric.Canvas('c', {isDrawingMode:false});
-                    var tags = [];
 
                     var imgElement = document.getElementById('image');
                     imgElement.addEventListener('load', function(){
-                        var imgFab = new fabric.Image(imgElement, {left: 0, top: 0, angle: 0, opacity: 1, meetOrSlice: "meet", selectable:false});
+                        var imgFab = new fabric.Image(imgElement, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
                         canvasFab.setDimensions({width:imgElement.width, height:imgElement.height});
                         canvasFab.add(imgFab);
-                        canvasFab.centerObject(imgFab);
 
-                        document.getElementById("c").nextElementSibling.addEventListener("click", function(e){
-                            if (imageClickable) {
-                                var notTag = tags.every(function(tag, index){
-                                    return !canvasFab.containsPoint(e, tag);
-                                });
+                        canvasFab.on("mouse:up", function(data){
+                            if (!imageClickable) {return}
 
-                                if (notTag) {
-                                    var circle = new fabric.Circle({radius: 6,fill:"#fff", left:(e.offsetX-6), top:(e.offsetY-6), evented:false});
-                                    canvasFab.add(circle);
-                                    tags.push(circle);
-                                }
-                                WebViewBridge.send(JSON.stringify({type:"clickImage", x:e.x, y:e.y}));
+                            var target = data.target, e = data.e, position = {offsetX : e.pageX - canvasParent.offsetLeft, offsetY : e.pageY - canvasParent.offsetTop};
+
+                            if (target == null) {
+                                WebViewBridge.send(JSON.stringify({type:"clickImage", x:position.offsetX, y:position.offsetY}));
+                            } else {
+                               activeTag = null;
                             }
-                        }, false);
+                        });
+
+                        canvasFab.on("mouse:down", function(data){
+                            var target = data.target, e = data.e;
+                            if (target != null && target.type == 'circle' && target.id){
+                                var group = tags[target.id].group;
+                                activeTag = {tag: target, group: group, downEvent: e, groupOriginPos: {left: group.getLeft(), top: group.getTop()}};
+                            } else {
+                                activeTag = null;
+                            }
+                        });
+
+                        canvasFab.on("mouse:move", function(data){
+                            if (activeTag != null) {
+                                var target = data.target, e = data.e, group = activeTag.group, downEvent = activeTag.downEvent, groupOriginPos = activeTag.groupOriginPos;
+                                if (group != null)    {
+                                    group.setLeft(groupOriginPos.left + e.offsetX - downEvent.offsetX);
+                                    group.setTop(groupOriginPos.top + e.offsetY - downEvent.offsetY);
+                                }
+                            }
+                        });
                     });
                     if (message.data) {
                         imgElement.src = message.data;
@@ -458,6 +498,28 @@ const injectScript = `
                     WebViewBridge.send(JSON.stringify({type:"imageUpdated",data:message.data}));
                 } else if (message.type === "changeTab") {
                     imageClickable = !!message.imageClickable;
+                } else if (message.type === "addTag") {
+                    WebViewBridge.send(JSON.stringify(message));
+                    var position = message.data.position || {offsetX:100, offsetY:100};
+                    var circle = new fabric.Circle({radius: 6,fill:"#fff", left:(position.offsetX-6), top:(position.offsetY-6), selectable:true, evented:true, hasControls:false});
+                    circle.id = ++tagUID;
+
+                    var group = new fabric.Group(null,{subTargetCheck:true, evented:true, selectable:true}, false);
+
+                    //group.setOriginX(e.offsetX);
+                    //group.setOriginY(e.offsetY);
+
+                    addTagLabel(message.data.brand + message.data.name, position, group, 0);
+                    addTagLabel(message.data.nation, position, group, 1);
+                    addTagLabel(message.data.price + message.data.currency, position, group, 2);
+                    addTagLabel(message.data.address, position, group, 3);
+
+                    canvasFab.add(circle);
+                    canvasFab.add(group);
+
+                    tags[circle.id] = {circle: circle, group:group};
+                    //var textFab = new fabric.Text(message.data.name, {left: message.data.position.left, top: message.data.position.top, selectable:false});
+                    //canvasFab.add(textFab);
                 }
             } else {
                 if (message === "hello from react-native") {
@@ -470,3 +532,4 @@ const injectScript = `
     }
 }());
 `;
+//console.log(injectScript);
