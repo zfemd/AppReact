@@ -27,81 +27,6 @@ import { connect } from 'react-redux';
 
 
 const {height, width} = Dimensions.get('window');
-const thumbs = [
-
-    {
-        uri: 'http://hbimg.b0.upaiyun.com/fd7af3c379c8888a1ede4ea1046efea1fe953c63db770-sUI89w_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/0e343198bc21f4bfb6208dbb8e6d7d4358cffb3f2336c-M90TeP_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/be437a14550ce40dd0967e26bc4dd72dc2acdd88c418-TfAcUn_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/9944373939d4afd9b8c393973c3875f91ebf6c1d26d0e-lAUGG4_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/27e37520133ada3bde5c20d28bee40a5042f671711574-uM60Kq_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/3bfa27a07f27ab9a88493ca06cc21c001e3c943271027-VYWzdp_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/783b504aba16ddbc54e572d243ce70796c3bacd169828-uqStAZ_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/81329d6d0911921db04ee65f3df9d62aa6763b5f266fa-4kXDrj_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/cedb001478d5ad0dfe54a5af1797ad655efccd851d7d9-F0bnZJ_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/f065d8ce338b6f07a6b80471739c6739bb2c18979ada4-XKfULg_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/3720c87acb331491191a17d077f9b3f0e2705a69240ca-g1GUjG_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/7bb5cb03ac44b15d1dd5d2b9f20fc300c8d61252cf0f-BJ4TZf_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/21f167d573b123a69b6e7e52f0b68e1a374f13f165462-1CoVG0_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-    {
-        uri: 'https://hbimg.b0.upaiyun.com/e5a9ab3f0ed21b2ad8758138b6f8c1f5f238c96ee506-FqVv3B_fw658',
-        width: (width / 100) * 47,
-        height: 200
-    },
-
-
-];
 
 class Flow extends React.Component {
     constructor(props) {
@@ -114,8 +39,7 @@ class Flow extends React.Component {
         this.state = {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
-            }),
-            refreshing: false,
+            })
         };
     }
 
@@ -125,7 +49,8 @@ class Flow extends React.Component {
     }
 
     _onRefresh() {
-        this.setState({refreshing: true});
+        const { dispatch } = this.props;
+        dispatch(fetchList(true,false));
     }
 
     _jumpToDetailPage() {
@@ -260,17 +185,43 @@ class Flow extends React.Component {
         );
     }
 
-    //_genRows(pressData) {
-    //    var dataBlob = [];
-    //    for (var i = 0; i < 10; i++) {
-    //        var pressedText = pressData[i] ? ' (X)' : '';
-    //        dataBlob.push('Cell ' + i + pressedText);
-    //    }
-    //    return dataBlob;
-    //}
-
     render() {
-        if(0==0){
+        const {flow} = this.props;
+        let list = null;
+        if (flow.loading && !flow.refreshing) {
+            return (
+                <View style={styles.center}>
+                    <Text>loading</Text>
+                </View>
+            )
+        } else {
+            list = flow.flowList;
+        }
+
+        if (list.length === 0) {
+            return (
+                <ScrollView
+                    automaticallyAdjustContentInsets={false}
+                    horizontal={false}
+                    contentContainerStyle={styles.dataEmpty}
+                    refreshControl={
+                        <RefreshControl
+                          refreshing={flow.refreshing}
+                          onRefresh={this._onRefresh}
+                          title="努力加载中..."
+                          colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
+                        />
+                      }
+                    >
+                    <View style={styles.center} >
+                        <Text style={{ fontSize: 16 }}>
+                            目前没有数据，请刷新重试……
+                        </Text>
+                    </View>
+                </ScrollView>
+            )
+        }
+        if(this.state.dataSource.rowIdentities.length === 0){
             return(
                 <ScrollView
                     refreshControl={
@@ -416,7 +367,15 @@ var styles = StyleSheet.create({
         paddingLeft: 4,
         paddingRight: 4,
         color: '#9b9b9b'
-    }
+    },
+    center: {
+        alignItems: 'center'
+    },
+    dataEmpty: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });
 
 function mapStateToProps(state) {
