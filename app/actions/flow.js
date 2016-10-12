@@ -2,31 +2,32 @@
 import types from '../constants/actions';
 import { request } from '../utils/common';
 
-export function fetchList(refreshing = false, loadingMore = false) {
+export function fetchList(refreshing = false, loadingMore = false, flowRefreshing = false) {
     return dispatch => {
-        dispatch(fetchFlowList(refreshing, loadingMore));
+        dispatch(fetchFlowList(refreshing, loadingMore, flowRefreshing));
         const timestamp = (new Date()).getTime();
-        const pageSize = 0;
+        const pageSize = 10;
         let loadedSize = 0;
         return request('/notes?timestamp='+ timestamp + '&pageSize='+ pageSize + '&loadedSize='+ loadedSize, 'get')
             .then((list) => {
                 dispatch(receiveFlowList(list.resultValues));
             }, function(error){
-                dispatch(receiveTypeList([]));
+                dispatch(receiveFlowList([]));
                 console.log(error);
             })
             .catch(() => {
-                dispatch(receiveTypeList([]));
+                dispatch(receiveFlowList([]));
                 console.log('network error');
             });
     };
 }
 
-function fetchFlowList(refreshing, loadingMore) {
+function fetchFlowList(refreshing, loadingMore, flowRefreshing) {
     return {
         type: types.FETCH_FLOW_LIST,
         refreshing,
-        loadingMore
+        loadingMore,
+        flowRefreshing
     };
 }
 

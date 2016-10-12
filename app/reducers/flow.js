@@ -5,6 +5,7 @@ const initialState = {
     loading: false,
     refreshing: false,
     loadingMore: false,
+    flowRefreshing: false,
     flowList: []
 };
 
@@ -15,13 +16,15 @@ const flow = function (state = initialState, action = {}) {
             return Object.assign({}, state, {
                 loading: true,
                 refreshing: action.refreshing,
-                loadingMore: action.loadingMore
+                loadingMore: action.loadingMore,
+                flowRefreshing: action.flowRefreshing,
             });
         case types.RECEIVE_FLOW_LIST:
             return Object.assign({}, state, {
                 loading: false,
                 refreshing: false,
                 loadingMore: false,
+                flowRefreshing: false,
                 flowList: action.list
             });
         default:

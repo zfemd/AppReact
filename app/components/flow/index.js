@@ -19,12 +19,12 @@ import {
     ActivityIndicator
 } from 'react-native';
 
+import AutoResponsive from '../autoResponsive';
 import PrefetchImage from '../prefetchImage';
 import DetailPage from '../../pages/detail';
 import UserPage from '../../pages/user';
 import {fetchList} from '../../actions/flow';
 import { connect } from 'react-redux';
-
 
 const {height, width} = Dimensions.get('window');
 
@@ -32,14 +32,15 @@ class Flow extends React.Component {
     constructor(props) {
         super(props);
         this._renderRow = this._renderRow.bind(this);
-        this._renderRow1 = this._renderRow1.bind(this);
         this._onRefresh = this._onRefresh.bind(this);
         this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
         this._renderFooter = this._renderFooter.bind(this);
+        this._renderChildren = this._renderChildren.bind(this);
         this.state = {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
-            })
+            }),
+            array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         };
     }
 
@@ -48,9 +49,12 @@ class Flow extends React.Component {
         dispatch(fetchList());
     }
 
-    _onRefresh() {
+    _onRefresh(isFlow) {
         const { dispatch } = this.props;
-        dispatch(fetchList(true,false));
+        if (isFlow)
+            dispatch(fetchList(true, false, false));
+        else
+            dispatch(fetchList(true, false, true));
     }
 
     _jumpToDetailPage() {
@@ -137,52 +141,72 @@ class Flow extends React.Component {
         );
     }
 
-    _renderRow1(rowData:string, sectionID:number, rowID:number) {
-        return (
-            <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
-                <View>
-                    <View style={styles.row}>
-                        <PrefetchImage
-                            imageUri={rowData.image}
-                            imageStyle={styles.thumb}
-                            resizeMode="cover"
-                            width={(width/100)*47}
-                            />
-                        <View style={styles.price}>
-                            <Text style={styles.priceText}>￥100</Text>
+    _renderChildren(){
+        return this.props.flow.flowList.map((val, key) => {
+            let height = val.imageHeight / val.imageWidth * ((width/100)*47);
+            return (
+
+                <View key={key} style={this._getChildrenStyle(height)}>
+                    <PrefetchImage
+                        imageUri={val.image}
+                        imageStyle={styles.thumb}
+                        resizeMode="cover"
+                        width={(width/100)*47}
+                        />
+                    <View style={styles.price}>
+                        <Text style={styles.priceText}>￥100</Text>
+                    </View>
+                    <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
+                        <View style={styles.portrait}>
+                            <Image
+                                source={{uri: val.portrait , width: 30, height: 30}}/>
                         </View>
-                        <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
-                            <View style={styles.portrait}>
-                                <Image
-                                    source={{uri: rowData.portrait , width: 30, height: 30}}/>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <View>
-                            <Text style={styles.text} lineBreakMode={'middle'}>
-                                {rowData.title}
-                            </Text>
+                    </TouchableWithoutFeedback>
+                    <View>
+                        <Text style={styles.text} lineBreakMode={'middle'}>
+                            {val.title}
+                        </Text>
+                    </View>
+                    <View style={styles.interaction}>
+                        <View style={styles.star}>
+                            <Image source={require('../../assets/flow/star_filled.png')}/>
+                            <Image source={require('../../assets/flow/star_filled.png')}/>
+                            <Image source={require('../../assets/flow/star_filled.png')}/>
+                            <Image source={require('../../assets/flow/star_filled.png')}/>
+                            <Image source={require('../../assets/flow/star_unfilled.png')}/>
                         </View>
-                        <View style={styles.interaction}>
-                            <View style={styles.star}>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_unfilled.png')}/>
-                            </View>
-                            <View style={styles.like}>
-                                <Image source={require('../../assets/flow/heart.png')}/>
-                                <Text style={styles.interText}>11</Text>
-                            </View>
-                            <View style={styles.like}>
-                                <Image source={require('../../assets/flow/comment.png')}/>
-                                <Text style={styles.interText}>34</Text>
-                            </View>
+                        <View style={styles.like}>
+                            <Image source={require('../../assets/flow/heart.png')}/>
+                            <Text style={styles.interText}>11</Text>
+                        </View>
+                        <View style={styles.like}>
+                            <Image source={require('../../assets/flow/comment.png')}/>
+                            <Text style={styles.interText}>34</Text>
                         </View>
                     </View>
                 </View>
-            </TouchableOpacity>
-        );
+
+                //<View style={this._getChildrenStyle()} key={key}>
+                //    <Text style={styles.text}>{val.title}</Text>
+                //</View>
+            );
+        }, this);
+    }
+
+
+    _getAutoResponsiveProps() {
+        return {
+            itemMargin: 8,
+        };
+    }
+
+    _getChildrenStyle(height) {
+        return {
+            width: (width / 100) * 47,
+            marginLeft: width / 100 * 2,
+            backgroundColor: '#fff',
+            height: height + 70
+        };
     }
 
     render() {
@@ -191,7 +215,7 @@ class Flow extends React.Component {
         if (flow.loading && !flow.refreshing) {
             return (
                 <View style={styles.center}>
-                    <Text>loading</Text>
+                    <Text>loading...</Text>
                 </View>
             )
         } else {
@@ -207,13 +231,15 @@ class Flow extends React.Component {
                     refreshControl={
                         <RefreshControl
                           refreshing={flow.refreshing}
-                          onRefresh={this._onRefresh}
+                          onRefresh={() => this._onRefresh(true)}
                           title="努力加载中..."
-                          colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
+                          titleColor="#fc7d30"
+                          colors={['#fc7d30']}
+                          tintColor={['#fc7d30']}
                         />
                       }
                     >
-                    <View style={styles.center} >
+                    <View style={styles.center}>
                         <Text style={{ fontSize: 16 }}>
                             目前没有数据，请刷新重试……
                         </Text>
@@ -221,56 +247,28 @@ class Flow extends React.Component {
                 </ScrollView>
             )
         }
-        if(this.state.dataSource.rowIdentities.length === 0){
-            return(
-                <ScrollView
-                    refreshControl={
+
+        return (
+            <ScrollView
+                automaticallyAdjustContentInsets={false}
+                horizontal={false}
+                refreshControl={
                           <RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={this._onRefresh}
+                            refreshing={flow.flowRefreshing}
+                            onRefresh={() => this._onRefresh(true)}
+                            colors={['#fc7d30']}
+                            tintColor={['#fc7d30']}
                           />
                       }
-                    >
-                    <View style={styles.container}>
-                        <ListView
-                            contentContainerStyle={styles.list}
-                            dataSource={this.state.dataSource.cloneWithRows(this.props.flow.flowList)}
-                            initialListSize={21}
-                            pageSize={3} // should be a multiple of the no. of visible cells per row
-                            scrollRenderAheadDistance={500}
-                            renderRow={this._renderRow}
-                            enableEmptySections={true}
-                            />
-                        <ListView
-                            contentContainerStyle={[styles.list, {paddingLeft: width/100*1}]}
-                            dataSource={this.state.dataSource.cloneWithRows(this.props.flow.flowList)}
-                            initialListSize={21}
-                            pageSize={3} // should be a multiple of the no. of visible cells per row
-                            scrollRenderAheadDistance={500}
-                            renderRow={this._renderRow1}
-                            enableEmptySections={true}
-                            />
-                    </View>
-                </ScrollView>
+                style={styles.container}
+                >
 
-            )
-        } else {
-            return (
-                <ScrollView
-                    refreshControl={
-                          <RefreshControl
-                            refreshing={this.state.refreshing}
-                            onRefresh={this._onRefresh}
-                          />
-                      }
-                    >
+                    <AutoResponsive {...this._getAutoResponsiveProps()} >
+                        {this._renderChildren()}
+                    </AutoResponsive>
+            </ScrollView>
 
-                </ScrollView>
-
-
-            );
-        }
-
+        )
     }
 }
 
@@ -293,9 +291,9 @@ var styles = StyleSheet.create({
     },
     row: {
         flex: 1,
+        width: (width / 100) * 47,
         marginTop: 8,
         marginBottom: 0,
-        width: (width / 100) * 47,
         backgroundColor: '#fff',
         alignItems: 'center',
     },
@@ -312,10 +310,8 @@ var styles = StyleSheet.create({
         lineHeight: 13,
     },
     container: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignSelf: 'flex-start',
         marginBottom: 60,
+        flex: 1
     },
     portrait: {
         backgroundColor: '#d8d8d8',
