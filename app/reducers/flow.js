@@ -6,8 +6,8 @@ const initialState = {
     refreshing: false,
     loadingMore: false,
     flowRefreshing: false,
-    flowList: [],
-    timestamp: null,
+    flowList: {},
+    timestamp: {},
     noMoreData: false
 };
 
@@ -15,12 +15,13 @@ const initialState = {
 const flow = function (state = initialState, action = {}) {
     switch (action.type) {
         case types.FETCH_FLOW_LIST:
+            state.timestamp[action.tag] = action.timestamp;
             return Object.assign({}, state, {
                 loading: true,
                 refreshing: action.refreshing,
                 loadingMore: action.loadingMore,
                 flowRefreshing: action.flowRefreshing,
-                timestamp: action.timestamp
+                timestamp: state.timestamp
             });
         case types.RECEIVE_FLOW_LIST:
             return Object.assign({}, state, {
@@ -29,11 +30,20 @@ const flow = function (state = initialState, action = {}) {
                 loadingMore: false,
                 flowRefreshing: false,
                 noMoreData: action.noMoreData,
-                flowList: !state.loadingMore ?  action.list: state.flowList.concat(action.list)
+                flowList: state.loadingMore ?  loadMore(state, action) : init(state, action)
             });
         default:
             return state;
     }
 };
 
+function init(state, action) {
+    state.flowList[action.tag] = action.list;
+    return state.flowList;
+}
+
+function loadMore(state, action) {
+    state.flowList[action.tag] = state.flowList[action.tag].concat(action.list);
+    return state.flowList;
+}
 export default flow;

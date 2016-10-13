@@ -44,16 +44,16 @@ class Flow extends React.Component {
     }
 
     componentDidMount() {
-        const { dispatch } = this.props;
-        dispatch(fetchList());
+        const { dispatch ,tag} = this.props;
+        dispatch(fetchList(false, false, false, tag));
     }
 
     _onRefresh(isFlow) {
-        const { dispatch } = this.props;
+        const { dispatch ,tag } = this.props;
         if (isFlow)
-            dispatch(fetchList(true, false, false));
+            dispatch(fetchList(true, false, false, tag));
         else
-            dispatch(fetchList(true, false, true));
+            dispatch(fetchList(true, false, true, tag));
     }
 
     _jumpToDetailPage() {
@@ -103,8 +103,8 @@ class Flow extends React.Component {
         );
     }
 
-    _renderChildren(){
-        return this.props.flow.flowList.map((val, key) => {
+    _renderChildren(tag){
+        return this.props.flow.flowList[tag].map((val, key) => {
             let height = val.imageHeight / val.imageWidth * ((width/100)*47);
             return (
                 <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
@@ -174,17 +174,17 @@ class Flow extends React.Component {
     }
 
     _onScroll(event) {
-        const { dispatch } = this.props;
-        const loadedSize = this.props.flow.flowList.length;
-        const timestamp = this.props.flow.timestamp;
+        const { dispatch, tag } = this.props;
+        const loadedSize = this.props.flow.flowList[tag].length;
+        const timestamp = this.props.flow.timestamp[tag];
         let maxOffset = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height;
         let offset = event.nativeEvent.contentOffset.y;
         if ((maxOffset - offset) < 0 && !this.props.flow.loadingMore) {
-            dispatch(fetchList(true, true, false, loadedSize, timestamp));
+            dispatch(fetchList(true, true, false, tag, loadedSize, timestamp));
         }
     }
     render() {
-        const {flow} = this.props;
+        const {flow, tag} = this.props;
         let list = null;
         if (flow.loading && !flow.refreshing) {
             return (
@@ -193,10 +193,10 @@ class Flow extends React.Component {
                 </View>
             )
         } else {
-            list = flow.flowList;
+            list = flow.flowList[tag];
         }
 
-        if (list.length === 0) {
+        if (!list || list.length === 0) {
             return (
                 <ScrollView
                     automaticallyAdjustContentInsets={false}
@@ -242,7 +242,7 @@ class Flow extends React.Component {
                         onLayout={this._onLayout }
                         >
                         <AutoResponsive {...this._getAutoResponsiveProps()} >
-                            {this._renderChildren()}
+                            {this._renderChildren(tag)}
                         </AutoResponsive>
                         {this.props.flow.noMoreData ? this._renderFooter(true) : (this.props.flow.loadingMore ? this._renderFooter() : null) }
                     </View>

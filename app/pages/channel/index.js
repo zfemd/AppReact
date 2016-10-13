@@ -46,105 +46,91 @@ class Channel extends React.Component {
                     tabLabel={'全部'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='all1' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'2'}
                     tabLabel={'美人志'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='m' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'3'}
                     tabLabel={'男人装'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='n' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'4'}
                     tabLabel={'宝贝货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'5'}
                     tabLabel={'宝贝货好hh宝贝货好hh宝贝货好hh'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='bb' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'6'}
                     tabLabel={'宝贝1货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b1' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'7'}
                     tabLabel={'宝贝3货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b3' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'8'}
                     tabLabel={'宝贝4货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b4' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'10'}
                     tabLabel={'宝贝5货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b5' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'11'}
                     tabLabel={'宝贝6货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b6' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'12'}
                     tabLabel={'宝贝7货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b7' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'13'}
                     tabLabel={'宝贝8货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b8' navigator={this.props.navigator}/>
                 </View>
                 <View
                     key={'14'}
                     tabLabel={'宝贝9货'}
                     style={{ flex: 1 }}
                     >
-                    <Flow navigator={this.props.navigator}/>
-                </View>
-                <View
-                    key={'15'}
-                    tabLabel={'宝贝11货'}
-                    style={{ flex: 1 }}
-                    >
-                    <Flow navigator={this.props.navigator}/>
-                </View>
-                <View
-                    key={'16'}
-                    tabLabel={'宝贝10货'}
-                    style={{ flex: 1 }}
-                    >
-                    <Flow navigator={this.props.navigator}/>
+                    <Flow tag='b9' navigator={this.props.navigator}/>
                 </View>
 
 
