@@ -31,16 +31,15 @@ const {height, width} = Dimensions.get('window');
 class Flow extends React.Component {
     constructor(props) {
         super(props);
-        this._renderRow = this._renderRow.bind(this);
         this._onRefresh = this._onRefresh.bind(this);
         this._jumpToDetailPage = this._jumpToDetailPage.bind(this);
         this._renderFooter = this._renderFooter.bind(this);
         this._renderChildren = this._renderChildren.bind(this);
+        this._onScroll = this._onScroll.bind(this);
         this.state = {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
             }),
-            array: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         };
     }
 
@@ -79,27 +78,39 @@ class Flow extends React.Component {
         });
     }
 
-    _renderFooter() {
+    _renderFooter( noMoreData ) {
+        if(noMoreData){
+            return(
+                <View
+                    style={styles.loadingFooter }
+                    >
+                    <Text style={styles.footerText }>
+                        到底了！
+                    </Text>
+                </View>
+            )
+        }
+
         return (
             <View
-                style={{ flex: 1, flexDirection: 'row', justifyContent: 'center',
-            alignItems: 'center', padding: 5, width: width, marginTop: 10 , position: 'absolute', bottom: 0, }}
+                style={styles.loadingFooter }
                 >
-                <ActivityIndicator size="small" color="#3e9ce9"/>
-                <Text style={{ textAlign: 'center', fontSize: 16, marginLeft: 10 }}>
+                <ActivityIndicator size="small" color="#fc7d30"/>
+                <Text style={styles.footerText }>
                     数据加载中……
                 </Text>
             </View>
         );
     }
 
-    _renderRow(rowData:string, sectionID:number, rowID:number) {
-        return (
-            <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
-                <View>
-                    <View style={styles.row}>
+    _renderChildren(){
+        return this.props.flow.flowList.map((val, key) => {
+            let height = val.imageHeight / val.imageWidth * ((width/100)*47);
+            return (
+                <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
+                    <View>
                         <PrefetchImage
-                            imageUri={rowData.image}
+                            imageUri={val.image}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
                             width={(width/100)*47}
@@ -110,12 +121,12 @@ class Flow extends React.Component {
                         <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
                             <View style={styles.portrait}>
                                 <Image
-                                    source={{uri: rowData.portrait , width: 30, height: 30}}/>
+                                    source={{uri: val.portrait , width: 30, height: 30}}/>
                             </View>
                         </TouchableWithoutFeedback>
                         <View>
                             <Text style={styles.text} lineBreakMode={'middle'}>
-                                {rowData.title}
+                                {val.title}
                             </Text>
                         </View>
                         <View style={styles.interaction}>
@@ -136,59 +147,8 @@ class Flow extends React.Component {
                             </View>
                         </View>
                     </View>
-                </View>
-            </TouchableOpacity>
-        );
-    }
+                </TouchableOpacity>
 
-    _renderChildren(){
-        return this.props.flow.flowList.map((val, key) => {
-            let height = val.imageHeight / val.imageWidth * ((width/100)*47);
-            return (
-
-                <View key={key} style={this._getChildrenStyle(height)}>
-                    <PrefetchImage
-                        imageUri={val.image}
-                        imageStyle={styles.thumb}
-                        resizeMode="cover"
-                        width={(width/100)*47}
-                        />
-                    <View style={styles.price}>
-                        <Text style={styles.priceText}>￥100</Text>
-                    </View>
-                    <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
-                        <View style={styles.portrait}>
-                            <Image
-                                source={{uri: val.portrait , width: 30, height: 30}}/>
-                        </View>
-                    </TouchableWithoutFeedback>
-                    <View>
-                        <Text style={styles.text} lineBreakMode={'middle'}>
-                            {val.title}
-                        </Text>
-                    </View>
-                    <View style={styles.interaction}>
-                        <View style={styles.star}>
-                            <Image source={require('../../assets/flow/star_filled.png')}/>
-                            <Image source={require('../../assets/flow/star_filled.png')}/>
-                            <Image source={require('../../assets/flow/star_filled.png')}/>
-                            <Image source={require('../../assets/flow/star_filled.png')}/>
-                            <Image source={require('../../assets/flow/star_unfilled.png')}/>
-                        </View>
-                        <View style={styles.like}>
-                            <Image source={require('../../assets/flow/heart.png')}/>
-                            <Text style={styles.interText}>11</Text>
-                        </View>
-                        <View style={styles.like}>
-                            <Image source={require('../../assets/flow/comment.png')}/>
-                            <Text style={styles.interText}>34</Text>
-                        </View>
-                    </View>
-                </View>
-
-                //<View style={this._getChildrenStyle()} key={key}>
-                //    <Text style={styles.text}>{val.title}</Text>
-                //</View>
             );
         }, this);
     }
@@ -196,7 +156,7 @@ class Flow extends React.Component {
 
     _getAutoResponsiveProps() {
         return {
-            itemMargin: 8,
+            itemMargin: width / 100 * 2,
         };
     }
 
@@ -209,6 +169,20 @@ class Flow extends React.Component {
         };
     }
 
+    _onLayout(event) {
+        console.log(event.nativeEvent.layout.height)
+    }
+
+    _onScroll(event) {
+        const { dispatch } = this.props;
+        const loadedSize = this.props.flow.flowList.length;
+        const timestamp = this.props.flow.timestamp;
+        let maxOffset = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height;
+        let offset = event.nativeEvent.contentOffset.y;
+        if ((maxOffset - offset) < 0 && !this.props.flow.loadingMore) {
+            dispatch(fetchList(true, true, false, loadedSize, timestamp));
+        }
+    }
     render() {
         const {flow} = this.props;
         let list = null;
@@ -250,8 +224,7 @@ class Flow extends React.Component {
 
         return (
             <ScrollView
-                automaticallyAdjustContentInsets={false}
-                horizontal={false}
+                showsVerticalScrollIndicator={false}
                 refreshControl={
                           <RefreshControl
                             refreshing={flow.flowRefreshing}
@@ -260,25 +233,25 @@ class Flow extends React.Component {
                             tintColor={['#fc7d30']}
                           />
                       }
+                onScroll={this._onScroll}
+                scrollEventThrottle={200}
                 style={styles.container}
                 >
+                    <View
+                        style={styles.row}
+                        onLayout={this._onLayout }
+                        >
+                        <AutoResponsive {...this._getAutoResponsiveProps()} >
+                            {this._renderChildren()}
+                        </AutoResponsive>
+                        {this.props.flow.noMoreData ? this._renderFooter(true) : (this.props.flow.loadingMore ? this._renderFooter() : null) }
+                    </View>
 
-                    <AutoResponsive {...this._getAutoResponsiveProps()} >
-                        {this._renderChildren()}
-                    </AutoResponsive>
             </ScrollView>
 
         )
     }
 }
-
-var hashCode = function (str) {
-    var hash = 8;
-    for (var ii = str.length - 1; ii >= 0; ii--) {
-        hash = ((hash << 5) - hash) + str.charCodeAt(ii);
-    }
-    return hash;
-};
 
 var styles = StyleSheet.create({
     list: {
@@ -290,12 +263,10 @@ var styles = StyleSheet.create({
         paddingLeft: width / 100 * 2,
     },
     row: {
-        flex: 1,
-        width: (width / 100) * 47,
-        marginTop: 8,
         marginBottom: 0,
-        backgroundColor: '#fff',
-        alignItems: 'center',
+        paddingTop: 10,
+        backgroundColor: '#f1f1f1',
+        alignItems: 'flex-start',
     },
     thumb: {
         width: (width / 100) * 47,
@@ -310,7 +281,8 @@ var styles = StyleSheet.create({
         lineHeight: 13,
     },
     container: {
-        marginBottom: 60,
+        paddingTop: 0,
+        marginBottom: 50,
         flex: 1
     },
     portrait: {
@@ -372,6 +344,20 @@ var styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    loadingFooter: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: width,
+        marginTop: 10 ,
+        bottom: 10
+    },
+    footerText: {
+        textAlign: 'center',
+        fontSize: 14,
+        marginLeft: 10
+    }
 });
 
 function mapStateToProps(state) {

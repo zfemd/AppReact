@@ -6,7 +6,9 @@ const initialState = {
     refreshing: false,
     loadingMore: false,
     flowRefreshing: false,
-    flowList: []
+    flowList: [],
+    timestamp: null,
+    noMoreData: false
 };
 
 
@@ -18,6 +20,7 @@ const flow = function (state = initialState, action = {}) {
                 refreshing: action.refreshing,
                 loadingMore: action.loadingMore,
                 flowRefreshing: action.flowRefreshing,
+                timestamp: action.timestamp
             });
         case types.RECEIVE_FLOW_LIST:
             return Object.assign({}, state, {
@@ -25,7 +28,8 @@ const flow = function (state = initialState, action = {}) {
                 refreshing: false,
                 loadingMore: false,
                 flowRefreshing: false,
-                flowList: action.list
+                noMoreData: action.noMoreData,
+                flowList: !state.loadingMore ?  action.list: state.flowList.concat(action.list)
             });
         default:
             return state;

@@ -1,17 +1,24 @@
-
 import types from '../constants/actions';
 import { request } from '../utils/common';
 
-export function fetchList(refreshing = false, loadingMore = false, flowRefreshing = false) {
+export function fetchList(refreshing = false, loadingMore = false, flowRefreshing = false, loadedSize = 0, timestamp = 0) {
     return dispatch => {
-        dispatch(fetchFlowList(refreshing, loadingMore, flowRefreshing));
-        const timestamp = (new Date()).getTime();
-        const pageSize = 10;
-        let loadedSize = 0;
-        return request('/notes?timestamp='+ timestamp + '&pageSize='+ pageSize + '&loadedSize='+ loadedSize, 'get')
+        if (!loadingMore) {
+            timestamp = (new Date()).getTime();
+        }
+        dispatch(fetchFlowList(refreshing, loadingMore, flowRefreshing, timestamp));
+
+        const pageSize = 5;
+        loadedSize = loadedSize ? loadedSize : 0;
+        return request('/notes?timestamp=' + timestamp + '&pageSize=' + pageSize + '&loadedSize=' + loadedSize, 'get')
             .then((list) => {
-                dispatch(receiveFlowList(list.resultValues));
-            }, function(error){
+                if(list.resultValues.length > 0){
+                    dispatch(receiveFlowList(list.resultValues, false));
+                } else {
+                    dispatch(receiveFlowList(list.resultValues, true));
+                }
+
+            }, function (error) {
                 dispatch(receiveFlowList([]));
                 console.log(error);
             })
@@ -22,18 +29,20 @@ export function fetchList(refreshing = false, loadingMore = false, flowRefreshin
     };
 }
 
-function fetchFlowList(refreshing, loadingMore, flowRefreshing) {
+function fetchFlowList(refreshing, loadingMore, flowRefreshing, timestamp) {
     return {
         type: types.FETCH_FLOW_LIST,
         refreshing,
         loadingMore,
-        flowRefreshing
+        flowRefreshing,
+        timestamp
     };
 }
 
-function receiveFlowList(list) {
+function receiveFlowList(list, noMoreData) {
     return {
         type: types.RECEIVE_FLOW_LIST,
+        noMoreData,
         list
     };
 }
