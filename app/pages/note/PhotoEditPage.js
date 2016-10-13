@@ -54,8 +54,7 @@ class PhotoEditPage extends Component {
             transparent:true,
             tagOverlayVisible: false,
             tags: [],
-            tagData: [],
-            clickedPos: {x:0, y:0},
+            currentTag: null,
             beautify: 'default'
         };
     }
@@ -96,7 +95,7 @@ class PhotoEditPage extends Component {
     _onContinue() {
         const { navigator, dispatch } = this.props;
 
-        dispatch({type:StoreActions.ADD_TAGS, tags: this.state.tagData.slice()});
+        dispatch({type:StoreActions.ADD_TAGS, tags: this.state.tags.slice()});
 
         if(navigator) {
             navigator.push({
@@ -128,17 +127,17 @@ class PhotoEditPage extends Component {
     }
 
     _onBrandSelect(rowData) {
-        this.setState({brand:rowData.title});
+        this.state.currentTag.brand = rowData.title;
         this.showBrandModal(false);
     }
 
     _onCurrencySelect(rowData) {
-        this.setState({currency:rowData.title});
+        this.state.currentTag.currency = rowData.title;
         this.showCurrencyModal(false);
     }
 
     _onNationSelect(rowData) {
-        this.setState({nation:rowData.title});
+        this.state.currentTag.nation = rowData.title;
         this.showCurrencyModal(false);
     }
 
@@ -174,26 +173,14 @@ class PhotoEditPage extends Component {
 
     _onAddTag() {
         const { webviewbridge } = this.refs;
-        let {tagData} = this.state;
+        let {tags} = this.state;
 
-        let data = {
-            name: this.state.name,
-            nation: this.state.nation,
-            currency: this.state.currency,
-            brand: this.state.brand,
-            price: this.state.price,
-            address: this.state.address,
-            position: {
-                offsetX: this.state.clickedPos.x,
-                offsetY: this.state.clickedPos.y
-            }
-        }
+        let data = {name, nation, currency, brand, price, address, x, y} = this.state.currentTag;
 
-        console.log(data);
-        tagData.push(data);
+        tags.push(data);
         webviewbridge.sendToBridge(JSON.stringify({type:'addTag', data: data}));
 
-        this.state.tagData = tagData;
+        this.state.tags = tags;
         this.setState({tagOverlayVisible: false});
     }
 
@@ -242,8 +229,7 @@ class PhotoEditPage extends Component {
             message = JSON.parse(message);
             switch(message.type) {
                 case "clickImage":
-                    let tag = {x:message.x, y:message.y};
-                    this.setState({tagOverlayVisible:true, clickedPos:tag});
+                    this.setState({tagOverlayVisible:true, currentTag: {x:message.x, y:message.y}});
                     break;
                 case "imageUpdated":
                     //this.setState({sImageBase64Data: message.data});
@@ -346,16 +332,16 @@ class PhotoEditPage extends Component {
                 {this.state.tagOverlayVisible ?
                     (<View style={[styles.overlay]}>
                         <View style={styles.formRow}>
-                            <TextInput value={this.state.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
-                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} onEndEditing={(event) => {this.state.name = event.nativeEvent.text;}} />
+                            <TextInput value={this.state.currentTag.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
+                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} onSubmitEditing={(event) => {this.state.currentTag.name = event.nativeEvent.text;}} />
                         </View>
                         <View style={styles.formRow}>
-                            <TextInput value={this.state.currency} placeholder='币种' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onCurrencyInputFocus.bind(this)}/>
-                            <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput} onEndEditing={(event) => {this.state.price = event.nativeEvent.text;}}/>
+                            <TextInput value={this.state.currentTag.currency} placeholder='币种' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onCurrencyInputFocus.bind(this)}/>
+                            <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput} onSubmitEditing={(event) => {this.state.currentTag.price = event.nativeEvent.text;}}/>
                         </View>
                         <View style={styles.formRow}>
-                            <TextInput value={this.state.nation} placeholder='国家' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onNationInputFocus.bind(this)} />
-                            <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput} onEndEditing={(event) => {this.state.address = event.nativeEvent.text;}}/>
+                            <TextInput value={this.state.currentTag.nation} placeholder='国家' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onNationInputFocus.bind(this)} />
+                            <TextInput placeholder='具体地址' placeholderTextColor='#fff' style={styles.textInput} onSubmitEditing={(event) => {this.state.currentTag.address = event.nativeEvent.text;}}/>
                         </View>
                         <View style={{marginHorizontal: 20}}>
                             <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onAddTag.call(this)}>
@@ -429,6 +415,8 @@ var injectScript = fabrics + `
         };
 
         var addTagLabel = function(text, e, group, index){
+            if (!text || !e) {return}
+
             var textFab = new fabric.Text(text, {selectable:false, fill:"#fff", fontSize:12, evented:true});
             var posSet = getPosSet1(textFab.getWidth(), textFab.getHeight());
             textFab.setLeft(e.offsetX + posSet.textPositions[index].left);
@@ -500,7 +488,7 @@ var injectScript = fabrics + `
                     imageClickable = !!message.imageClickable;
                 } else if (message.type === "addTag") {
                     WebViewBridge.send(JSON.stringify(message));
-                    var position = message.data.position || {offsetX:100, offsetY:100};
+                    var position =  {offsetX:message.data.x, offsetY:message.data.y};
                     var circle = new fabric.Circle({radius: 6,fill:"#fff", left:(position.offsetX-6), top:(position.offsetY-6), selectable:true, evented:true, hasControls:false});
                     circle.id = ++tagUID;
 
@@ -509,9 +497,9 @@ var injectScript = fabrics + `
                     //group.setOriginX(e.offsetX);
                     //group.setOriginY(e.offsetY);
 
-                    addTagLabel(message.data.brand + message.data.name, position, group, 0);
+                    addTagLabel((message.data.brand || '') + (message.data.name || ''), position, group, 0);
                     addTagLabel(message.data.nation, position, group, 1);
-                    addTagLabel(message.data.price + message.data.currency, position, group, 2);
+                    addTagLabel((message.data.price || '') + (message.data.currency || ''), position, group, 2);
                     addTagLabel(message.data.address, position, group, 3);
 
                     canvasFab.add(circle);
