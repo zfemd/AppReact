@@ -389,10 +389,14 @@ var injectScript = fabrics + `
         var canvas = document.getElementById('c');
         var canvasFab = new fabric.Canvas('c', {isDrawingMode:false, renderOnAddRemove: true});
         var canvasParent = canvas.parentElement;
+        var imgFab = null;
         var tags = {};
         var padding = 10;
         var activeTag = null;
         var tagUID = 0;
+        var filterBrightness = new fabric.Image.filters.Brightness({
+            brightness: 0
+        });
 
         var getPosSet1 = function(textWidth, textHeight){
             return {
@@ -432,20 +436,18 @@ var injectScript = fabrics + `
             if (message && message.startsWith("{")) {
                 message = JSON.parse(message);
                 if (message.type === 'brightness') {
-                    WebViewBridge.send('Filter loadding');
-                    var filter = new fabric.Image.filters.Brightness({
-                      brightness: 200
-                    });
-                    WebViewBridge.send('Filter loadded');
-                    //filter.apply();
+                    filterBrightness.setOptions({brightness: message.value * 255});
+                    imgFab.filters[0]=filterBrightness;
+                    imgFab.applyFilters(canvasFab.renderAll.bind(canvasFab));
                 } else if (message.type === 'imageLoaded') {
                     WebViewBridge.send('Image loading');
 
                     var imgElement = document.getElementById('image');
                     imgElement.addEventListener('load', function(){
-                        var imgFab = new fabric.Image(imgElement, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
+                        imgFab = new fabric.Image(imgElement, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
+                        canvasFab.backgroundImage = imgFab;
                         canvasFab.setDimensions({width:imgElement.width, height:imgElement.height});
-                        canvasFab.add(imgFab);
+                        //canvasFab.add(imgFab);
 
                         canvasFab.on("mouse:up", function(data){
                             if (!imageClickable) {return}
