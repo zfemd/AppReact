@@ -10,7 +10,7 @@ export function fetchList(refreshing = false, loadingMore = false, flowRefreshin
 
         const pageSize = 5;
         loadedSize = loadedSize ? loadedSize : 0;
-        return request('/notes?timestamp=' + timestamp + '&pageSize=' + pageSize + '&loadedSize=' + loadedSize, 'get')
+        return request('/notes?timestamp=' + timestamp + '&pageSize=' + pageSize + '&loadedSize=' + loadedSize + '&tag=' + (tag!=='all'?tag: ''), 'get')
             .then((list) => {
                 if(list.resultValues.length > 0){
                     dispatch(receiveFlowList(list.resultValues, tag, false));

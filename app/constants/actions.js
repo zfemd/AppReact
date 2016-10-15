@@ -14,7 +14,8 @@ export default keyMirror({
     POST_DRAFT_NOTE: null,
     RESET_DRAFT_NOTE: null,
     FETCH_FLOW_LIST: null,
-    RECEIVE_FLOW_LIST: null
+    RECEIVE_FLOW_LIST: null,
+    RECEIVE_CHANNEL_LIST: null
 });
 
 
