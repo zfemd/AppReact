@@ -131,19 +131,28 @@ class Flow extends React.Component {
                         </View>
                         <View style={styles.interaction}>
                             <View style={styles.star}>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_filled.png')}/>
-                                <Image source={require('../../assets/flow/star_unfilled.png')}/>
+                                {
+                                    (()=>{
+                                        const rating = Math.ceil(val.rating);
+                                        let stars = [];
+                                        for(let i = 0; i< rating; i++){
+                                            stars.push(<Image key={i} source={require('../../assets/flow/star_filled.png')}/>);
+
+                                        }
+                                        for(let i = 5; i > rating; i--){
+                                            stars.push(<Image key={i} source={require('../../assets/flow/star_unfilled.png')}/>);
+                                        }
+                                        return stars;
+                                    })()
+                                }
                             </View>
                             <View style={styles.like}>
                                 <Image source={require('../../assets/flow/heart.png')}/>
-                                <Text style={styles.interText}>11</Text>
+                                <Text style={styles.interText}>{val.likeCount}</Text>
                             </View>
                             <View style={styles.like}>
                                 <Image source={require('../../assets/flow/comment.png')}/>
-                                <Text style={styles.interText}>34</Text>
+                                <Text style={styles.interText}>{val.commentCount}</Text>
                             </View>
                         </View>
                     </View>
