@@ -45,7 +45,8 @@ class Flow extends React.Component {
 
     componentDidMount() {
         const { dispatch ,tag} = this.props;
-        dispatch(fetchList(false, false, false, tag));
+        if(typeof tag !== 'undefined')
+            dispatch(fetchList(false, false, false, tag));
     }
 
     _onRefresh(isFlow) {
