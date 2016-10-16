@@ -85,6 +85,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    filterBox: {
+        width: 100,
+        marginHorizontal: 10,
+        //backgroundColor:'#eee',
+        justifyContent: 'center'
+    },
+    filterImageFrame: {
+        alignItems:'center',
+        justifyContent:'center',
+        //backgroundColor:'#f00'
+    },
+    filterImage: {
+        width: 100
     }
 });
 

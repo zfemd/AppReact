@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import WebViewBridge from 'react-native-webview-bridge';
+import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import Button from '../../components/button/Button';
 import Toolbar from '../../components/toolbar';
 import ConfirmBar from '../../components/bar/ConfirmBar';
@@ -33,6 +34,11 @@ import PostNotePage from './PostNotePage';
 import {fabrics} from '../../constants/fabrics';
 const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
+
+const sepia2Img = require('../../assets/photo/sepia2.jpg');
+
+var contrastIcon = <Icon name="adjust" size={30} color="#333" />;
+var brightnessIcon = <Icon name="sun-o" size={30} color="#333" />;
 
 class PhotoEditPage extends Component {
     constructor(props) {
@@ -203,10 +209,16 @@ class PhotoEditPage extends Component {
     _adjustImageBrightness(dBrightness) {
         const { webviewbridge } = this.refs;
         webviewbridge.sendToBridge(JSON.stringify({type:'brightness', value: dBrightness}));
+    }
 
-        //let imageFilter = ImageFilter({imageData:base64.toByteArray(this.state.sBase64Data)});
-        //imageFilter.brightness({adjustment:dBrightness});
+    _adjustImageContrast(dContrast){
+        const { webviewbridge } = this.refs;
+        webviewbridge.sendToBridge(JSON.stringify({type:'contrast', value: dContrast}));
+    }
 
+    _applyImageFilter(filter){
+        const { webviewbridge } = this.refs;
+        webviewbridge.sendToBridge(JSON.stringify({type:'filter', value: filter}));
     }
 
     _createImageSource() {
@@ -280,46 +292,90 @@ class PhotoEditPage extends Component {
 
 
                 <ScrollableTabView
-                    style={{marginTop: 0, }}
-                    tabBarPosition='overlayBottom'
+                    tabBarPosition='bottom'
                     initialPage={0}
                     renderTabBar={this.state.oTabsBar}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
-                    <ScrollView navigator={this.props.navigator}  tabLabel="美化">
+                    <ScrollView navigator={this.props.navigator}  tabLabel="美化" contentContainerStyle={{flex:1}}>
                         <ScrollableTabView
-                            style={{marginTop: 0, }}
                             tabBarPosition='top'
                             initialPage={0}
                             renderTabBar={() => <DefaultTabBar {...this.props}/>}
-                            onChangeTab={this._onChangeTab.bind(this)}
                             >
-                            <ScrollView navigator={this.props.navigator}  tabLabel="滤镜库">
-
+                            <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true}>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'invert');}} style={styles.filterBox}>
+                                    <View style={styles.filterImageFrame}>
+                                        <Text>取反</Text>
+                                    </View>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={styles.filterBox}>
+                                    <View style={styles.filterImageFrame}>
+                                        <Image source={sepia2Img} style={styles.filterImage} resizeMode="contain" />
+                                        <Text>怀旧1</Text>
+                                    </View>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia2');}} style={styles.filterBox}>
+                                    <View style={styles.filterImageFrame}>
+                                        <Image source={sepia2Img} style={styles.filterImage} resizeMode="contain" />
+                                        <Text>怀旧2</Text>
+                                    </View>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'pixelate');}} style={styles.filterBox}>
+                                    <View style={styles.filterImageFrame}>
+                                        {contrastIcon}
+                                        <Text>像素化</Text>
+                                    </View>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'blur');}} style={styles.filterBox}>
+                                    <View style={styles.filterImageFrame}>
+                                        {contrastIcon}
+                                        <Text>模糊</Text>
+                                    </View>
+                                </TouchableHighlight>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={styles.filterBox}>
+                                    <View style={styles.filterImageFrame}>
+                                        {contrastIcon}
+                                        <Text>锐化</Text>
+                                    </View>
+                                </TouchableHighlight>
                             </ScrollView>
-                            <ScrollView navigator={this.props.navigator}  tabLabel="美化照片">
+                            <ScrollView navigator={this.props.navigator}  tabLabel="美化照片" horizontal={true} style={{flex:1}} contentContainerStyle={{flex:1, backgroundColor:'#fff'}}>
                                 {
-                                    this.state.beautify == 'default' ? (<View style={{flexDirection: 'row'}}>
-                                        <TouchableHighlight onPress={this._onPressBrightness.bind(this)}>
-                                            <Text>亮度</Text>
+                                    this.state.beautify == 'default' ? (<View style={{flex:1, flexDirection: 'row', alignItems: 'stretch', justifyContent:'space-between', backgroundColor:'#999'}}>
+                                        <TouchableHighlight onPress={this._onPressBrightness.bind(this)} style={{flex:1}}>
+                                            <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
+                                                {brightnessIcon}
+                                                <Text>亮度</Text>
+                                            </View>
                                         </TouchableHighlight>
-                                        <TouchableHighlight onPress={this._onPressContrast.bind(this)}>
-                                            <Text>对比度</Text>
+                                        <TouchableHighlight onPress={this._onPressContrast.bind(this)} style={{flex:1}}>
+                                            <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
+                                                {contrastIcon}
+                                                <Text>对比度</Text>
+                                            </View>
                                         </TouchableHighlight>
                                     </View>) : null
                                 }
 
                                 {
-                                    this.state.beautify == 'brightness' ? (<View style={{flex:1}}>
-                                        <Slider value={0.5} onValueChange={(value) => this._adjustImageBrightness(value)}></Slider>
-                                        <ConfirmBar style={styles.confirmBar} title='亮度'></ConfirmBar>
+                                    this.state.beautify == 'brightness' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
+                                        <Slider value={0.5} onValueChange={(value) => this._adjustImageBrightness(value)} style={{flex:1}}></Slider>
+                                        <ConfirmBar style={styles.confirmBar} title='亮度' onConfirm={() => this.setState({beautify:'default', oTabsBar:null})}></ConfirmBar>
+                                    </View>) : null
+                                }
+
+                                {
+                                    this.state.beautify == 'contrast' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
+                                        <Slider value={0.5} onValueChange={(value) => this._adjustImageContrast(value)} style={{flex:1}}></Slider>
+                                        <ConfirmBar style={styles.confirmBar} title='亮度' onConfirm={() => this.setState({beautify:'default', oTabsBar:null})}></ConfirmBar>
                                     </View>) : null
                                 }
                             </ScrollView>
                         </ScrollableTabView>
                     </ScrollView>
 
-                    <ScrollView tabLabel="标签" >
+                    <ScrollView tabLabel="标签" contentContainerStyle={{backgroundColor:'#f00', flex:1}}>
                         <View style={[styles.tabView, {height:100}]}>
                             <Text>点击照片</Text>
                             <Text>选择添加相关信息</Text>
@@ -394,9 +450,22 @@ var injectScript = fabrics + `
         var padding = 10;
         var activeTag = null;
         var tagUID = 0;
-        var filterBrightness = new fabric.Image.filters.Brightness({
-            brightness: 0
-        });
+        var imageFilters = {
+            brightness: new fabric.Image.filters.Brightness({brightness: 0}),
+            pixelate: new fabric.Image.filters.Pixelate({blocksize: 4}),
+            invert: new fabric.Image.filters.Invert(),
+            sepia: new fabric.Image.filters.Sepia(),
+            sepia2: new fabric.Image.filters.Sepia2(),
+            tint: new fabric.Image.filters.Tint({color: '#000000', opacity: 0.5}),
+            blur: new fabric.Image.filters.Convolute({matrix: [ 1/9, 1/9, 1/9,
+                1/9, 1/9, 1/9,
+                1/9, 1/9, 1/9 ]
+            }),
+            sharpen: new fabric.Image.filters.Convolute({matrix: [  0, -1,  0,
+                -1,  5, -1,
+                 0, -1,  0 ]
+            })
+        };
 
         var getPosSet1 = function(textWidth, textHeight){
             return {
@@ -432,13 +501,36 @@ var injectScript = fabrics + `
             group.add(textFab, poly);
         };
 
+        var applyFilters = function(){
+            WebViewBridge.send('imageFilters');
+            var appliedFilters = Object.keys(imageFilters).filter(function(filterName){
+                return imageFilters[filterName].checked;
+            }).map(function(filterName){
+                return imageFilters[filterName];
+            });
+
+            imgFab.filters =  appliedFilters;
+            imgFab.applyFilters(canvasFab.renderAll.bind(canvasFab));
+        }
+
         WebViewBridge.onMessage = function (message) {
             if (message && message.startsWith("{")) {
                 message = JSON.parse(message);
                 if (message.type === 'brightness') {
-                    filterBrightness.setOptions({brightness: message.value * 255});
-                    imgFab.filters[0]=filterBrightness;
-                    imgFab.applyFilters(canvasFab.renderAll.bind(canvasFab));
+                    var filterBrightness = imageFilters['brightness'];
+                    var filterTint = imageFilters['tint'];
+                    if (message.value > 0.5) {
+                        filterTint.checked = !(filterBrightness.checked = true);
+                        filterBrightness.setOptions({brightness: (message.value - 0.5) * 255});
+                    } else {
+                        filterBrightness.checked = !(filterTint.checked = true);
+                        filterTint.setOptions({opacity: (0.5 - message.value), color:'#000000'});
+                    }
+                    applyFilters();
+                } else if (message.type === 'filter') {
+                    var filter = imageFilters[message.value];
+                    filter.checked = !filter.checked;
+                    applyFilters();
                 } else if (message.type === 'imageLoaded') {
                     WebViewBridge.send('Image loading');
 

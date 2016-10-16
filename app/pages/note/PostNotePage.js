@@ -17,6 +17,7 @@ import {
 import Geolocation from 'react-native/Libraries/Geolocation/Geolocation';
 import { connect } from 'react-redux';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
+import configs from '../../constants/configs';
 import StoreActions from '../../constants/actions';
 import Toolbar from '../../components/toolbar';
 import colors from '../../constants/colors';
@@ -24,6 +25,9 @@ import SelectPhotoPage from './index';
 import PhotosReviewPage from './PhotosReviewPage';
 import styles from './style';
 import Home from '../home';
+import {
+    Token
+} from '../../utils/common';
 
 const locationImg = require('../../assets/upload/location_bubble.png');
 
@@ -33,10 +37,13 @@ class PostNotePage extends Component {
 
         this.state = {
             position: '正在获取当前位置...',
-            draftNote: this.props.draftNote
+            draftNote: this.props.draftNote,
+            token: null
         };
 
-        console.log('hello');
+        Token.getToken(navigator).then((token) => {
+            this.state.token = token;
+        });
     }
 
     componentWillMount() {
@@ -78,6 +85,45 @@ class PostNotePage extends Component {
         }
     }
 
+    _sendPhotos(noteId) {
+        const { navigator, dispatch } = this.props;
+
+        let data = {
+            images: this.state.draftNote.notePhotos
+        };
+
+        console.log(data);
+        fetch(configs.serviceUrl + 'notes/' + noteId + '/images', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'X-App-Token': this.state.token
+            },
+            body: JSON.stringify(data)
+        }).then((response) => {
+            console.log(response);
+            return response.json();
+        }).then((responseJson) => {
+            console.log(responseJson);
+            if (responseJson.ok) {
+                // remove draft note since it has been post to server.
+                dispatch({type:StoreActions.RESET_DRAFT_NOTE});
+
+                if(navigator) {
+                    navigator.push({
+                        name: 'Home',
+                        component: Home
+                    })
+                }
+            } else {
+                alert(responseJson.resultErrorMessage);
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
     _sendNote() {
         if (this.state.draftNote == null || this.state.draftNote.notePhotos == null) {
             return;
@@ -85,35 +131,29 @@ class PostNotePage extends Component {
 
         let data = {
             title: this.state.nodeTitle,
-            content: this.state.nodeContent,
-            photos: this.state.draftNote.notePhotos
+            content: this.state.nodeContent
         };
 
-        fetch('https://mywebsite.com/endpoint/', {
+        fetch(configs.serviceUrl + 'notes/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'X-App-Token': this.state.token
             },
             body: JSON.stringify(data)
-        }).then((response) => response.json())
-            .then((responseJson) => {
-                return responseJson.movies;
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-
-        const { navigator, dispatch } = this.props;
-        // remove draft note since it has been post to server.
-        dispatch({type:StoreActions.RESET_DRAFT_NOTE});
-
-        if(navigator) {
-            navigator.push({
-                name: 'Home',
-                component: Home
-            })
-        }
+        }).then((response) => {
+            console.log(response);
+            return response.json();
+        }).then((responseJson) => {
+            if (responseJson.ok) {
+                this._sendPhotos(responseJson.noteId);
+            } else {
+                alert(responseJson.resultErrorMessage);
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     _onTitleEndEditing(event) {
