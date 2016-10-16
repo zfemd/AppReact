@@ -36,6 +36,11 @@ const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
 const sepia2Img = require('../../assets/photo/sepia2.jpg');
+const sepiaImg = require('../../assets/photo/sepia.jpg');
+const blurImg = require('../../assets/photo/blur.jpg');
+const sharpenImg = require('../../assets/photo/sharpen.jpg');
+const invertImg = require('../../assets/photo/invert.jpg');
+const pixelateImg = require('../../assets/photo/pixelate.jpg');
 
 var contrastIcon = <Icon name="adjust" size={30} color="#333" />;
 var brightnessIcon = <Icon name="sun-o" size={30} color="#333" />;
@@ -306,12 +311,13 @@ class PhotoEditPage extends Component {
                             <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true}>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'invert');}} style={styles.filterBox}>
                                     <View style={styles.filterImageFrame}>
+                                        <Image source={invertImg} style={styles.filterImage} resizeMode="contain" />
                                         <Text>取反</Text>
                                     </View>
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={styles.filterBox}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={sepia2Img} style={styles.filterImage} resizeMode="contain" />
+                                        <Image source={sepiaImg} style={styles.filterImage} resizeMode="contain" />
                                         <Text>怀旧1</Text>
                                     </View>
                                 </TouchableHighlight>
@@ -323,19 +329,19 @@ class PhotoEditPage extends Component {
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'pixelate');}} style={styles.filterBox}>
                                     <View style={styles.filterImageFrame}>
-                                        {contrastIcon}
+                                        <Image source={pixelateImg} style={styles.filterImage} resizeMode="contain" />
                                         <Text>像素化</Text>
                                     </View>
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'blur');}} style={styles.filterBox}>
                                     <View style={styles.filterImageFrame}>
-                                        {contrastIcon}
+                                        <Image source={blurImg} style={styles.filterImage} resizeMode="contain" />
                                         <Text>模糊</Text>
                                     </View>
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={styles.filterBox}>
                                     <View style={styles.filterImageFrame}>
-                                        {contrastIcon}
+                                        <Image source={sharpenImg} style={styles.filterImage} resizeMode="contain" />
                                         <Text>锐化</Text>
                                     </View>
                                 </TouchableHighlight>
