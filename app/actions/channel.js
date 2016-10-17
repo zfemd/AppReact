@@ -9,7 +9,7 @@ export function fetchList() {
                 if(list.resultValues.length > 0){
                     dispatch(receiveChannelList(list.resultValues));
                 } else {
-                    dispatch(receiveChannelList(list.resultValues));
+                    dispatch(receiveChannelList([]));
                 }
 
             }, function (error) {

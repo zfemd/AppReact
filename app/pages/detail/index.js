@@ -21,6 +21,9 @@ import Share from '../../components/share';
 import CommentPage from '../../pages/comment';
 import CommentListPage from '../../pages/commentList';
 import ImageSlider from '../../components/imageSlider';
+import {fetchDetail} from '../../actions/detail';
+import { connect } from 'react-redux';
+
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
     'https://hbimg.b0.upaiyun.com/b13d086f8c1a3040ae05637c6cb283d60c1286661f43b-OKqo08_fw658',
@@ -113,8 +116,7 @@ class Detail extends React.Component {
         this.state = {
             dataSource: ds.cloneWithRows(this._genRows({})),
             showShare: false,
-            position: 0,
-            interval: null
+            position: 0
         };
     }
 
@@ -178,18 +180,37 @@ class Detail extends React.Component {
         });
     }
 
-    componentWillMount() {
-        //this.setState({interval: setInterval(() => {
-        //    this.setState({position: this.state.position === 2 ? 0 : this.state.position + 1});
-        //    this.setState({height: parseInt(Math.random()*100 + 200)});
-        //}, 3000)});
+    componentDidMount() {
+        const { dispatch, route } = this.props;
+        dispatch(fetchDetail(route.note.noteId));
     }
 
     componentWillUnmount() {
-        clearInterval(this.state.interval);
+
     }
 
     render() {
+        const {detail} = this.props;
+        let images = [];
+        if(detail.note){
+            detail.note.images.map((val, key) => {
+                let image = {
+                    width: val.width,
+                    height: val.height,
+                    uri: val.url
+                };
+
+                images.push(image);
+            }, this);
+        } else {
+            let image = {
+                width: 478,
+                height: 418,
+                uri: 'https://hbimg.b0.upaiyun.com/be437a14550ce40dd0967e26bc4dd72dc2acdd88c418-TfAcUn_fw658'
+            };
+            images.push(image);
+        }
+
         return(
             <View style={styles.container}>
                 <Toolbar
@@ -203,34 +224,17 @@ class Detail extends React.Component {
 
                     <View style={[styles.note,styles.block]}>
                         <View style={styles.user}>
-                            <Image style={styles.portrait} source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 34, height: 34}}/>
+                            <Image style={styles.portrait} source={{uri: (detail.note ? detail.note.portrait : 'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'), width:34, height:34 }}/>
                             <View style={styles.info}>
-                                <Text style={styles.nick}>天才小熊猫</Text>
+                                <Text style={styles.nick}>{detail.note ? detail.note.nickname : '' }</Text>
                                 <Text style={styles.date}>5月26日 11:29</Text>
                             </View>
                             <Image style={styles.follow} source={require('../../assets/note/follow.png')}/>
                         </View>
                         <View style={styles.thumbWarp}>
+
                             <ImageSlider
-                                images={[
-                                    {
-                                        width: 300,
-                                        height: 200,
-                                        uri: 'https://hbimg.b0.upaiyun.com/21f167d573b123a69b6e7e52f0b68e1a374f13f165462-1CoVG0_fw658'
-                                    },
-                                     {
-                                        width: 478,
-                                        height: 418,
-                                        uri: 'https://hbimg.b0.upaiyun.com/be437a14550ce40dd0967e26bc4dd72dc2acdd88c418-TfAcUn_fw658'
-                                    },
-                                     {
-                                        width: 540,
-                                        height: 660,
-                                        uri: 'https://hbimg.b0.upaiyun.com/3720c87acb331491191a17d077f9b3f0e2705a69240ca-g1GUjG_fw658'
-                                    },
-
-
-                                ]}
+                                images={images}
                                 position={this.state.position}
                                 onPositionChanged={position => this.setState({position})}
                                 />
@@ -238,7 +242,7 @@ class Detail extends React.Component {
                         </View>
                         <View style={styles.description}>
                             <Text style={[styles.dTitle,styles.baseText]}>miya2016夏装新品宽松镂空短袖</Text>
-                            <Text style={[styles.dContent,styles.baseText]}>天猫为第三方交易平台及互联网信息服务提供者，天猫（含网站、客户端等）所展示的商品/服务的标题、价格、详情等信息内容系由店铺经营者发布，其真实性、准确性和合法性均由店铺经营者负责。天猫提醒用户购买商品/服务前注意谨慎核实。如用户对商品/服务的标题、价格、详情等任何信息有任何疑问的，请在购买前通过阿里旺旺与店铺经营者沟通确认；天猫存在海量店铺，如用户发现店铺内有任何违法/侵权信息，请立即向天猫举报并提供有效线索。</Text>
+                            <Text style={[styles.dContent,styles.baseText]}>{detail.note ? detail.note.content :'' }</Text>
                         </View>
                         <View style={styles.tags}>
                             <TouchableOpacity style={styles.tag}><Text style={styles.tagText}>美人志</Text></TouchableOpacity>
@@ -415,4 +419,11 @@ var hashCode = function (str) {
     return hash;
 };
 
-export default Detail;
+function mapStateToProps(state) {
+    const { detail } = state;
+    return {
+        detail
+    };
+}
+
+export default connect(mapStateToProps)(Detail);

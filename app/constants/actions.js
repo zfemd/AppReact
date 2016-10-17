@@ -15,7 +15,8 @@ export default keyMirror({
     RESET_DRAFT_NOTE: null,
     FETCH_FLOW_LIST: null,
     RECEIVE_FLOW_LIST: null,
-    RECEIVE_CHANNEL_LIST: null
+    RECEIVE_CHANNEL_LIST: null,
+    RECEIVE_NOTE_DETAIL: null
 });
 
 

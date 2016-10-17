@@ -23,8 +23,10 @@ import AutoResponsive from '../autoResponsive';
 import PrefetchImage from '../prefetchImage';
 import DetailPage from '../../pages/detail';
 import UserPage from '../../pages/user';
+import LoginPage from '../../pages/login/LoginPage';
 import {fetchList} from '../../actions/flow';
 import { connect } from 'react-redux';
+import { Token } from '../../utils/common';
 
 const {height, width} = Dimensions.get('window');
 
@@ -57,26 +59,41 @@ class Flow extends React.Component {
             dispatch(fetchList(true, false, true, tag));
     }
 
-    _jumpToDetailPage() {
+    _jumpToDetailPage(note) {
         const { navigator } = this.props;
         InteractionManager.runAfterInteractions(() => {
             navigator.push({
                 component: DetailPage,
                 name: 'DetailPage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromRight
+                sceneConfigs: Navigator.SceneConfigs.FloatFromRight,
+                note
             });
         });
     }
 
     _jumpToUserPage() {
         const { navigator } = this.props;
-        InteractionManager.runAfterInteractions(() => {
-            navigator.push({
-                component: UserPage,
-                name: 'UserPage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromRight
-            });
-        });
+        Token.getToken(navigator).then((token) => {
+                if (token) {
+                    InteractionManager.runAfterInteractions(() => {
+                        navigator.push({
+                            component: UserPage,
+                            name: 'UserPage',
+                            sceneConfigs: Navigator.SceneConfigs.FloatFromRight
+                        });
+                    });
+                } else {
+                    InteractionManager.runAfterInteractions(() => {
+                        navigator.resetTo({
+                            component: LoginPage,
+                            name: 'LoginPage',
+                            params: {store: this.props.store}
+                        });
+                    });
+                }
+            }
+        );
+
     }
 
     _renderFooter( noMoreData ) {
@@ -108,7 +125,7 @@ class Flow extends React.Component {
         return this.props.flow.flowList[tag].map((val, key) => {
             let height = val.imageHeight / val.imageWidth * ((width/100)*47);
             return (
-                <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
+                <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent" activeOpacity={0.5}>
                     <View>
                         <PrefetchImage
                             imageUri={val.image}

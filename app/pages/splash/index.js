@@ -25,28 +25,35 @@ class Splash extends React.Component {
     componentDidMount() {
         const { navigator } = this.props;
 
-        Token.getToken(navigator).then((token) => {
-                console.log(token);
+        InteractionManager.runAfterInteractions(() => {
+            navigator.resetTo({
+                component: Home,
+                name: 'Home',
+                params: {store: this.props.store}
+            });
+        });
 
-                if (token) {
-                    InteractionManager.runAfterInteractions(() => {
-                        navigator.resetTo({
-                            component: Home,
-                            name: 'Home',
-                            params: {store: this.props.store}
-                        });
-                    });
-                } else {
-                    InteractionManager.runAfterInteractions(() => {
-                        navigator.resetTo({
-                            component: LoginPage,
-                            name: 'LoginPage',
-                            params: {store: this.props.store}
-                        });
-                    });
-                }
-            }
-        );
+        //Token.getToken(navigator).then((token) => {
+        //        console.log(token);
+        //        if (token) {
+        //            InteractionManager.runAfterInteractions(() => {
+        //                navigator.resetTo({
+        //                    component: Home,
+        //                    name: 'Home',
+        //                    params: {store: this.props.store}
+        //                });
+        //            });
+        //        } else {
+        //            InteractionManager.runAfterInteractions(() => {
+        //                navigator.resetTo({
+        //                    component: LoginPage,
+        //                    name: 'LoginPage',
+        //                    params: {store: this.props.store}
+        //                });
+        //            });
+        //        }
+        //    }
+        //);
     }
 
     render() {
