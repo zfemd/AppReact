@@ -245,9 +245,16 @@ class Detail extends React.Component {
                             <Text style={[styles.dContent,styles.baseText]}>{detail.note ? detail.note.content :'' }</Text>
                         </View>
                         <View style={styles.tags}>
-                            <TouchableOpacity style={styles.tag}><Text style={styles.tagText}>美人志</Text></TouchableOpacity>
-                            <TouchableOpacity style={styles.tag}><Text style={styles.tagText}>衣服</Text></TouchableOpacity>
-                            <TouchableOpacity style={styles.tag}><Text style={styles.tagText}>新款</Text></TouchableOpacity>
+                            {
+                                detail.note ? detail.note.tags.map((val, key) => {
+                                        return (
+                                            <TouchableOpacity key={key} style={styles.tag}><Text style={styles.tagText}>{val.name}</Text></TouchableOpacity>
+                                        )
+                                    }, this) : <TouchableOpacity style={styles.tag}><Text style={styles.tagText}>新款</Text></TouchableOpacity>
+
+
+                            }
+
                         </View>
                     </View>
 
@@ -372,21 +379,21 @@ class Detail extends React.Component {
                     <TouchableOpacity style={styles.floatOp} >
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/note/heart.png')}/>
-                            <Text style={styles.floatOpText}>200</Text>
+                            <Text style={styles.floatOpText}>{detail.note? detail.note.likeCount : 0 }</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.floatOpLine}></View>
                     <TouchableOpacity style={styles.floatOp} onPress={() => this._jumpToCommentPage()} >
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/personal/comment.png')}/>
-                            <Text style={styles.floatOpText}>200</Text>
+                            <Text style={styles.floatOpText}>{detail.note ? detail.note.commentCount : 0 }</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.floatOpLine}></View>
                     <TouchableOpacity style={styles.floatOp}>
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/note/shopping_cart.png')}/>
-                            <Text style={styles.floatOpText}>200</Text>
+                            <Text style={styles.floatOpText}>{detail.note ? detail.note.transactionCount : 0 }</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.floatOpLine}></View>

@@ -25,6 +25,7 @@ export function fetchDetail(noteId) {
 function receiveNoteDetail(note) {
     return {
         type: types.RECEIVE_NOTE_DETAIL,
-        note
+        note,
+        noteId
     };
 }

@@ -27,6 +27,7 @@ import LoginPage from '../../pages/login/LoginPage';
 import {fetchList} from '../../actions/flow';
 import { connect } from 'react-redux';
 import { Token } from '../../utils/common';
+import {fetchDetail} from '../../actions/detail';
 
 const {height, width} = Dimensions.get('window');
 
@@ -124,6 +125,8 @@ class Flow extends React.Component {
     _renderChildren(tag){
         return this.props.flow.flowList[tag].map((val, key) => {
             let height = val.imageHeight / val.imageWidth * ((width/100)*47);
+            const { dispatch } = this.props;
+            dispatch(fetchDetail(val.noteId));
             return (
                 <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent" activeOpacity={0.5}>
                     <View>
@@ -388,9 +391,10 @@ var styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    const { flow } = state;
+    const { flow, detail } = state;
     return {
-        flow
+        flow,
+        detail
     };
 }
 
