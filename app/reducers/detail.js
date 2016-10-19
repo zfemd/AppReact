@@ -18,7 +18,9 @@ const detail = function (state = initialState, action = {}) {
 };
 
 function load(state, action) {
-    state.note[action.noteId] = state.note[action.noteId].concat(action.note);
+    if(!state.note[action.noteId]){
+        state.note[action.noteId] = action.note;
+    }
     return state.note;
 }
 export default detail;

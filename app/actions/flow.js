@@ -1,5 +1,7 @@
 import types from '../constants/actions';
 import { request } from '../utils/common';
+import _ from 'lodash';
+import {fetchDetail} from './detail';
 
 export function fetchList(refreshing = false, loadingMore = false, flowRefreshing = false, tag = 'all', loadedSize = 0, timestamp = 0) {
     return dispatch => {
@@ -17,6 +19,10 @@ export function fetchList(refreshing = false, loadingMore = false, flowRefreshin
                 } else {
                     dispatch(receiveFlowList(list.resultValues, tag, true));
                 }
+
+                _.each(list.resultValues, function (v, k) {
+                    dispatch(fetchDetail(v.noteId));
+                })
 
             }, function (error) {
                 dispatch(receiveFlowList([]));

@@ -125,8 +125,6 @@ class Flow extends React.Component {
     _renderChildren(tag){
         return this.props.flow.flowList[tag].map((val, key) => {
             let height = val.imageHeight / val.imageWidth * ((width/100)*47);
-            const { dispatch } = this.props;
-            dispatch(fetchDetail(val.noteId));
             return (
                 <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent" activeOpacity={0.5}>
                     <View>

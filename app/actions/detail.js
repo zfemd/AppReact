@@ -7,7 +7,7 @@ export function fetchDetail(noteId) {
         return request('/notes/' + noteId, 'get')
             .then((ret) => {
                 if(ret.resultCode === 0 && ret.resultValues){
-                    dispatch(receiveNoteDetail(ret.resultValues));
+                    dispatch(receiveNoteDetail(ret.resultValues, noteId));
                 } else {
                     dispatch(receiveNoteDetail());
                 }
@@ -22,7 +22,7 @@ export function fetchDetail(noteId) {
             });
     };
 }
-function receiveNoteDetail(note) {
+function receiveNoteDetail(note, noteId) {
     return {
         type: types.RECEIVE_NOTE_DETAIL,
         note,

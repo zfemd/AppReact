@@ -181,8 +181,8 @@ class Detail extends React.Component {
     }
 
     componentDidMount() {
-        const { dispatch, route } = this.props;
-        dispatch(fetchDetail(route.note.noteId));
+        //const { dispatch, route } = this.props;
+        //dispatch(fetchDetail(route.note.noteId));
     }
 
     componentWillUnmount() {
@@ -190,10 +190,11 @@ class Detail extends React.Component {
     }
 
     render() {
-        const {detail} = this.props;
+        const {detail, route} = this.props;
+        const noteId = route.note.noteId;
         let images = [];
-        if(detail.note){
-            detail.note.images.map((val, key) => {
+        if(detail.note[noteId]){
+            detail.note[noteId].images.map((val, key) => {
                 let image = {
                     width: val.width,
                     height: val.height,
@@ -224,9 +225,9 @@ class Detail extends React.Component {
 
                     <View style={[styles.note,styles.block]}>
                         <View style={styles.user}>
-                            <Image style={styles.portrait} source={{uri: (detail.note ? detail.note.portrait : 'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'), width:34, height:34 }}/>
+                            <Image style={styles.portrait} source={{uri: (detail.note[noteId] ? detail.note[noteId].portrait : 'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'), width:34, height:34 }}/>
                             <View style={styles.info}>
-                                <Text style={styles.nick}>{detail.note ? detail.note.nickname : '' }</Text>
+                                <Text style={styles.nick}>{detail.note[noteId] ? detail.note[noteId].nickname : '' }</Text>
                                 <Text style={styles.date}>5月26日 11:29</Text>
                             </View>
                             <Image style={styles.follow} source={require('../../assets/note/follow.png')}/>
@@ -242,11 +243,11 @@ class Detail extends React.Component {
                         </View>
                         <View style={styles.description}>
                             <Text style={[styles.dTitle,styles.baseText]}>miya2016夏装新品宽松镂空短袖</Text>
-                            <Text style={[styles.dContent,styles.baseText]}>{detail.note ? detail.note.content :'' }</Text>
+                            <Text style={[styles.dContent,styles.baseText]}>{detail.note[noteId] ? detail.note[noteId].content :'' }</Text>
                         </View>
                         <View style={styles.tags}>
                             {
-                                detail.note ? detail.note.tags.map((val, key) => {
+                                detail.note[noteId] ? detail.note[noteId].tags.map((val, key) => {
                                         return (
                                             <TouchableOpacity key={key} style={styles.tag}><Text style={styles.tagText}>{val.name}</Text></TouchableOpacity>
                                         )
@@ -379,21 +380,21 @@ class Detail extends React.Component {
                     <TouchableOpacity style={styles.floatOp} >
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/note/heart.png')}/>
-                            <Text style={styles.floatOpText}>{detail.note? detail.note.likeCount : 0 }</Text>
+                            <Text style={styles.floatOpText}>{detail.note[noteId]? detail.note[noteId].likeCount : 0 }</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.floatOpLine}></View>
                     <TouchableOpacity style={styles.floatOp} onPress={() => this._jumpToCommentPage()} >
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/personal/comment.png')}/>
-                            <Text style={styles.floatOpText}>{detail.note ? detail.note.commentCount : 0 }</Text>
+                            <Text style={styles.floatOpText}>{detail.note[noteId] ? detail.note[noteId].commentCount : 0 }</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.floatOpLine}></View>
                     <TouchableOpacity style={styles.floatOp}>
                         <View style={styles.floatOpView}>
                             <Image style={styles.floatOpImage} source={require('../../assets/note/shopping_cart.png')}/>
-                            <Text style={styles.floatOpText}>{detail.note ? detail.note.transactionCount : 0 }</Text>
+                            <Text style={styles.floatOpText}>{detail.note[noteId] ? detail.note[noteId].transactionCount : 0 }</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.floatOpLine}></View>
