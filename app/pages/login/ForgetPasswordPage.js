@@ -34,10 +34,8 @@ export default class ForgetPasswordPage extends Component {
         super(props);
 
         this.state = {
-            modalVisible: true,
+            modalVisible: true
         };
-        this.displayName = "ForgetPasswordPage"
-
     }
 
     _onPasswordLoginLink() {
@@ -97,10 +95,10 @@ export default class ForgetPasswordPage extends Component {
                         //navigator.jumpTo(navigator.getCurrentRoutes()[0]);
                         //HomeNavigator.pop();
                         //navigator.resetTo(Object.assign({},navigator.getCurrentRoutes()[0], {signIn: true}));
-                        navigator.push({
-                            name: 'Home',
-                            component: Home
-                        })
+                        setTimeout(function(){
+                            navigator.jumpTo(navigator.getCurrentRoutes()[0]);
+                        }, 1000);
+
                     });
 
                     Token.setToken(responseJson.resultValues.token);

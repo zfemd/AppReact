@@ -33,7 +33,6 @@ export default class LoginPage extends Component {
         this.state = {
             region: 'China'
         };
-        this.displayName = "Nav1"
     }
 
     _onPressForgetLink() {
