@@ -85,10 +85,10 @@ class Flow extends React.Component {
                     });
                 } else {
                     InteractionManager.runAfterInteractions(() => {
-                        navigator.resetTo({
+                        navigator.push({
                             component: LoginPage,
                             name: 'LoginPage',
-                            params: {store: this.props.store}
+                            sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
                         });
                     });
                 }

@@ -39,23 +39,18 @@ export default class ForgetPasswordPage extends Component {
     _onPasswordLoginLink() {
         const { navigator } = this.props;
 
-        if(navigator) {
-            navigator.push({
-                name: 'LoginPage',
-                component: LoginPage
-            })
+        if (navigator && navigator.getCurrentRoutes().length > 1) {
+            navigator.pop();
+            return true;
         }
     }
     _sendCode() {
-        fetch(configs.serviceUrl + 'accounts/' + this.state.phone + '/message/verification-code/login', {
+        fetch(configs.serviceUrl + '/message/verification-code?purpose=login&mobile='+this.state.phone, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                mobile: this.state.phone
-            })
+            }
         }).then((response) => {
             if (response.ok) {
                 return response.json()
@@ -81,12 +76,11 @@ export default class ForgetPasswordPage extends Component {
         //    body: formData
         //});
 
-        fetch(configs.serviceUrl + 'accounts/' + this.state.phone + '/login/verification-code', {
+        fetch(configs.serviceUrl + '/user/login?code=' + code + '&mobile=' + phone, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: "code=" + code
+            }
         }).then((response) => {
             if (response.ok) {
                 return response.json();
@@ -94,7 +88,7 @@ export default class ForgetPasswordPage extends Component {
         }).then((responseJson) => {
             console.log(responseJson);
             if (responseJson && responseJson.resultCode == 0) {
-                if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
+                if (responseJson.resultValues && responseJson.resultValues.token) {
 
                     navigator.push({
                         component: Home,
@@ -193,8 +187,8 @@ var styles = StyleSheet.create({
         color: '#656565'
     },
     container: {
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
+        flex: 1,
+        backgroundColor: '#fff',
         padding: 30,
         marginTop: 21,
         alignItems: 'stretch',

@@ -13,7 +13,8 @@ import {
     Image,
     NavigatorIOS,
     Picker,
-    ActivityIndicatorIOS
+    ActivityIndicatorIOS,
+    Navigator
 } from 'react-native';
 
 import Home from '../home';
@@ -36,15 +37,14 @@ export default class LoginPage extends Component {
 
     _onPressForgetLink() {
         const { navigator } = this.props;
-        //为什么这里可以取得 props.navigator?请看上文:
-        //<Component {...route.params} navigator={navigator} />
-        //这里传递了navigator作为props
-        if(navigator) {
+        InteractionManager.runAfterInteractions(() => {
             navigator.push({
+                component: ForgetPasswordPage,
                 name: 'ForgetPasswordPage',
-                component: ForgetPasswordPage
-            })
-        }
+                sceneConfigs: Navigator.SceneConfigs.FloatFromLeft,
+                params: {store: this.props.store}
+            });
+        });
     }
 
     _onPressLoginButton() {
@@ -81,10 +81,18 @@ export default class LoginPage extends Component {
     _onPressWeixinIcon() {
         const { navigator } = this.props;
         navigator.push({
-            component: WeixinLoginPage,
-            name: 'WeixinLoginPage',
+            component: WeiXinLoginPage,
+            name: 'WeiXinLoginPage',
             params: {store: this.props.store}
         });
+    }
+
+    _onPressCancel() {
+        const { navigator } = this.props;
+        if (navigator && navigator.getCurrentRoutes().length > 1) {
+            navigator.pop();
+            return true;
+        }
     }
 
     validate() {
@@ -106,8 +114,8 @@ export default class LoginPage extends Component {
             <View style={styles.container}>
                 <View style={styles.navigator}>
                     <Text style={{fontSize:24, flex:1, color:'#4a4a4a'}}>登陆</Text>
-                    <TouchableOpacity onPress={this._onPressForgetLink.bind(this)}>
-                        <Text style={{fontSize:24, flex:1, color:'#4a4a4a', textAlign:'right'}}>注册</Text>
+                    <TouchableOpacity onPress={this._onPressCancel.bind(this)}>
+                        <Image style={styles.close} source={require('../../assets/signin/close.png')}/>
                     </TouchableOpacity>
                 </View>
 
@@ -128,8 +136,10 @@ export default class LoginPage extends Component {
                     />
                 </View>
 
-                <View style={{justifyContent:'flex-end', flexDirection:'row'}}>
-                    <Button style={{textAlign:'right', fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
+                <View style={{justifyContent:'space-between', flexDirection:'row'}}>
+                    <Button style={{ textAlign:'left', fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
+                            onPress={this._onPressForgetLink.bind(this)} >快速注册</Button>
+                    <Button style={{ fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
                             onPress={this._onPressForgetLink.bind(this)} >忘记密码</Button>
                 </View>
 
@@ -162,8 +172,8 @@ var styles = StyleSheet.create({
         color: '#656565'
     },
     container: {
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
+        flex: 1,
+        backgroundColor: '#fff',
         padding: 30,
         marginTop: 21,
         alignItems: 'stretch',
@@ -200,5 +210,8 @@ var styles = StyleSheet.create({
     },
     activeButton: {
         backgroundColor: '#F37D30',
+    },
+    close: {
+
     }
 });
