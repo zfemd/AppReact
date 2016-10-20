@@ -56,6 +56,16 @@ Token.setToken = function (token) {
     }
 };
 
+Token.removeToken = function (token) {
+    if (token) {
+        try {
+            AsyncStorage.removeItem(StorageKeys.TOKEN_STORAGE_KEY);
+        } catch (error) {
+            console.error('Failed to remove token, AsyncStorage error: ' + error.message);
+        }
+    }
+};
+
 Token.isTokenValid = async function () {
     let token = await Token.getToken();
     if (token) {
@@ -84,14 +94,15 @@ Token.isTokenValid = async function () {
     return false;
 };
 
-export function request(url, method, body) {
+export function request(url, method, body, token) {
     let success;
     return new Promise((resolve, reject) => {
         fetch(configs.serviceUrl + url, {
             method,
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-App-Token': token? token: ''
             },
             body
         }).then((response) => {

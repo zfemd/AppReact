@@ -13,7 +13,8 @@ import {
     Modal,
     NavigatorIOS,
     Picker,
-    ActivityIndicatorIOS
+    ActivityIndicatorIOS,
+    InteractionManager
 } from 'react-native';
 
 import Home from '../home';
@@ -89,20 +90,19 @@ export default class ForgetPasswordPage extends Component {
             console.log(responseJson);
             if (responseJson && responseJson.resultCode == 0) {
                 if (responseJson.resultValues && responseJson.resultValues.token) {
-
-                    navigator.push({
-                        component: Home,
-                        name: 'Home',
-                        params: {store: this.props.store}
+                    InteractionManager.runAfterInteractions(() => {
+                        //navigator.jumpTo(navigator.getCurrentRoutes()[0]);
+                        navigator.resetTo(Object.assign({},navigator.getCurrentRoutes()[0], {signIn: true}));
                     });
 
                     Token.setToken(responseJson.resultValues.token);
-
-                    return;
+                    return true;
                 }
+            } else {
+                Alert.alert('登陆失败', "验证码登陆失败");
             }
 
-            Alert.alert('登陆失败', "验证码登陆失败");
+
         }).catch((error) => {
             Alert.alert('登陆失败', "网络连接失败：" + error);
         });

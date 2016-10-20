@@ -5,12 +5,15 @@ import React  from 'react';
 import {
     View,
     Text,
-    TouchableHighlight
+    TouchableHighlight,
+    Alert
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import SecurityPage from './security';
+import { request, Token } from '../../utils/common';
+import Home from '../home';
 
 var chevronRightIcon = <Icon style={[styles.messageLinkIcon]} size={16} name="angle-right"/>;
 
@@ -27,6 +30,43 @@ class SettingPage extends React.Component {
                 component: SecurityPage
             })
         }
+    }
+
+    _signOut() {
+        const { navigator } = this.props;
+        Token.getToken(navigator).then((token) => {
+            if (token) {
+                return request('/user/logout', 'post', '', token)
+                    .then((ret) => {
+                        if(ret.resultCode === 0){
+                            Token.removeToken(token);
+                            Alert.alert('登出成功', "登出成功");
+                            navigator.jumpTo(navigator.getCurrentRoutes()[0]);
+                        } else {
+                            Alert.alert('登出失败', "登出失败");
+                        }
+                    }, function (error) {
+                        Alert.alert('登出失败', "出错：" + error);
+                    })
+                    .catch(() => {
+                        Alert.alert('登出失败', "网络连接失败：" + error);
+                    });
+            } else {
+                console.log('sign out');
+            }
+        });
+
+    }
+
+    __onPressSignOut() {
+        Alert.alert(
+            '登出',
+            '确定要退出登录吗？',
+            [
+                {text: 'Cancel', onPress: () => console.log('still sign in')},
+                {text: 'OK', onPress: () => this._signOut()},
+            ]
+        )
     }
 
     render() {
@@ -70,7 +110,7 @@ class SettingPage extends React.Component {
                 </TouchableHighlight>
                 <View style={styles.separatorHorizontal} />
 
-                <TouchableHighlight>
+                <TouchableHighlight onPress={this.__onPressSignOut.bind(this)}>
                     <View style={styles.row}>
                         <Text style={styles.text}>登出</Text>
                         {chevronRightIcon}

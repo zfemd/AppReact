@@ -13,19 +13,20 @@ import LoginPage from './LoginPage';
 
 class Login extends Component {
     render() {
-        let defaultName = 'LoginPage';
-        let defaultComponent = LoginPage;
-        return (
-            <Navigator
-                initialRoute={{ name: defaultName, component: defaultComponent, title:'登陆', rightButtonTitle:'取消'}}
-                configureScene={(route, routeStack) => {
-                        return Navigator.SceneConfigs.VerticalDownSwipeJump;
-                    }}
-                renderScene={(route, navigator) => {
-                        let Component = route.component;
-                        return <Component {...route.params} navigator={navigator} />
-                    }}/>
-        );
+        //let defaultName = 'LoginPage';
+        //let defaultComponent = LoginPage;
+        //return (
+        //    <Navigator
+        //        initialRoute={{ name: defaultName, component: defaultComponent, title:'登陆', rightButtonTitle:'取消'}}
+        //        configureScene={(route, routeStack) => {
+        //                return Navigator.SceneConfigs.VerticalDownSwipeJump;
+        //            }}
+        //        renderScene={(route, navigator) => {
+        //                let Component = route.component;
+        //                return <Component {...route.params} navigator={navigator} />
+        //            }}/>
+        //);
+        return( <LoginPage navigator={this.props.navigator} ></LoginPage>)
     }
 }
 
