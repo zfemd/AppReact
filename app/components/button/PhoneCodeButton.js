@@ -21,6 +21,12 @@ export default class PhoneCodeButton extends Component {
             text: '发送验证码'
         };
 
+        this.timerId = null;
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerId);
     }
 
     onPressBtn() {
@@ -34,11 +40,11 @@ export default class PhoneCodeButton extends Component {
         this.props.disabled = true;
         let timeLeft = 60;
 
-        let timerId = setInterval((time) => {
+        this.timerId = setInterval((time) => {
             this.setState({text:timeLeft-- + '秒'})
 
             if (timeLeft <= 0) {
-                clearInterval(timerId);
+                clearInterval(this.timerId);
                 this.state.hasSent = false;
                 this.setState({text:'发送验证码'});
             }

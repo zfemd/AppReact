@@ -12,6 +12,12 @@ import {
 import LoginPage from './LoginPage';
 
 class Login extends Component {
+    constructor(props) {
+        super(props);
+
+        this.displayName = "Login"
+
+    }
     render() {
         //let defaultName = 'LoginPage';
         //let defaultComponent = LoginPage;
@@ -19,14 +25,14 @@ class Login extends Component {
         //    <Navigator
         //        initialRoute={{ name: defaultName, component: defaultComponent, title:'登陆', rightButtonTitle:'取消'}}
         //        configureScene={(route, routeStack) => {
-        //                return Navigator.SceneConfigs.VerticalDownSwipeJump;
+        //                return Navigator.SceneConfigs.FloatFromLeft;
         //            }}
         //        renderScene={(route, navigator) => {
         //                let Component = route.component;
-        //                return <Component {...route.params} navigator={navigator} />
+        //                return <Component {...route.params} navigator={navigator} HomeNavigator={this.props.navigator} />
         //            }}/>
         //);
-        return( <LoginPage navigator={this.props.navigator} ></LoginPage>)
+        return( <LoginPage navigator={this.props.navigator} ></LoginPage>);
     }
 }
 

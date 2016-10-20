@@ -23,7 +23,7 @@ import AutoResponsive from '../autoResponsive';
 import PrefetchImage from '../prefetchImage';
 import DetailPage from '../../pages/detail';
 import UserPage from '../../pages/user';
-import LoginPage from '../../pages/login/LoginPage';
+import LoginPage from '../../pages/login';
 import {fetchList} from '../../actions/flow';
 import { connect } from 'react-redux';
 import { Token } from '../../utils/common';

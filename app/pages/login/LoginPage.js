@@ -33,6 +33,7 @@ export default class LoginPage extends Component {
         this.state = {
             region: 'China'
         };
+        this.displayName = "Nav1"
     }
 
     _onPressForgetLink() {
@@ -41,8 +42,7 @@ export default class LoginPage extends Component {
             navigator.push({
                 component: ForgetPasswordPage,
                 name: 'ForgetPasswordPage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromLeft,
-                params: {store: this.props.store}
+                sceneConfigs: Navigator.SceneConfigs.FloatFromLeft
             });
         });
     }
@@ -113,7 +113,7 @@ export default class LoginPage extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.navigator}>
-                    <Text style={{fontSize:24, flex:1, color:'#4a4a4a'}}>登陆</Text>
+                    <Text style={{fontSize:24, flex:1, color:'#4a4a4a'}}>登录</Text>
                     <TouchableOpacity onPress={this._onPressCancel.bind(this)}>
                         <Image style={styles.close} source={require('../../assets/signin/close.png')}/>
                     </TouchableOpacity>

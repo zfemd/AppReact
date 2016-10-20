@@ -34,9 +34,12 @@ export default class ForgetPasswordPage extends Component {
         super(props);
 
         this.state = {
-            modalVisible: true
+            modalVisible: true,
         };
+        this.displayName = "ForgetPasswordPage"
+
     }
+
     _onPasswordLoginLink() {
         const { navigator } = this.props;
 
@@ -65,7 +68,7 @@ export default class ForgetPasswordPage extends Component {
     }
 
     _onPressLoginButton() {
-        const { navigator } = this.props;
+        const { navigator, HomeNavigator } = this.props;
         let {phone, code} = this.state;
 
         //let formData = new FormData();
@@ -92,7 +95,12 @@ export default class ForgetPasswordPage extends Component {
                 if (responseJson.resultValues && responseJson.resultValues.token) {
                     InteractionManager.runAfterInteractions(() => {
                         //navigator.jumpTo(navigator.getCurrentRoutes()[0]);
-                        navigator.resetTo(Object.assign({},navigator.getCurrentRoutes()[0], {signIn: true}));
+                        //HomeNavigator.pop();
+                        //navigator.resetTo(Object.assign({},navigator.getCurrentRoutes()[0], {signIn: true}));
+                        navigator.push({
+                            name: 'Home',
+                            component: Home
+                        })
                     });
 
                     Token.setToken(responseJson.resultValues.token);
