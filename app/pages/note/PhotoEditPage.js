@@ -19,7 +19,7 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
-var clone = require('clone');
+
 import { connect } from 'react-redux';
 import WebViewBridge from 'react-native-webview-bridge';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
@@ -37,6 +37,7 @@ import {fabrics} from '../../constants/fabrics';
 const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
+const originImg = require('../../assets/photo/origin.png');
 const sepia2Img = require('../../assets/photo/sepia2.jpg');
 const sepiaImg = require('../../assets/photo/sepia.jpg');
 const blurImg = require('../../assets/photo/blur.jpg');
@@ -45,6 +46,8 @@ const invertImg = require('../../assets/photo/invert.jpg');
 const pixelateImg = require('../../assets/photo/pixelate.jpg');
 
 import stickers from '../../assets/stickers.js';
+
+var clone = require('clone');
 
 var contrastIcon = <Icon name="adjust" size={30} color="#333" />;
 var brightnessIcon = <Icon name="sun-o" size={30} color="#333" />;
@@ -71,6 +74,7 @@ class PhotoEditPage extends Component {
             tags: [],
             currentTag: null,
             beautify: 'default',
+            currentFilter: null,
             updatedSticks: {}
         };
 
@@ -240,13 +244,14 @@ class PhotoEditPage extends Component {
     _applyImageFilter(filter){
         const { webviewbridge } = this.refs;
         webviewbridge.sendToBridge(JSON.stringify({type:'filter', value: filter}));
+        this.setState({currentFilter : filter});
     }
 
     _createImageSource() {
         let obj = {
             html: '<html><head><meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/></head>' +
-            '<body style="margin: 0;padding:0;border:1px solid #f00;background:#000;flex-direction:column;align-items:center;justify-content:center;">' +
-            '<div style="display:flex;flex-direction:row;align-items:center;justify-content:center;height:300px;"><canvas id="c" style="border:1px solid #fff;flex:1"></canvas></div>' +
+            '<body style="margin: 0;padding:0;border:0px solid #f00;background:#000;flex-direction:column;align-items:center;justify-content:center;">' +
+            '<div style="display:flex;flex-direction:row;align-items:center;justify-content:center;height:300px;"><canvas id="c" style="border:0px solid #fff;flex:1"></canvas></div>' +
             //'<image id="image" style="max-width:100%;max-height:100%" src="' + this.state.sImageBase64Data + '" />' +
             '<image id="image" style="max-width:100%;max-height:100%" />' +
             '</body></html>'
@@ -301,7 +306,7 @@ class PhotoEditPage extends Component {
     _renderSticker(rowData, sectionID, rowID, highlightRow) {
         let selectedStyle = rowData.added ? {backgroundColor:'#ccc'} : null;
         this.state.updatedSticks[rowID] = false; // reset
-;        return <TouchableHighlight style={[{marginHorizontal:10}, selectedStyle]}
+        return <TouchableHighlight style={[{marginHorizontal:10}, selectedStyle]}
                                    onPress={() => {
                                         highlightRow(sectionID, rowID);
                                         this._toggleSticker.call(this, rowData, sectionID, rowID);}}>
@@ -312,15 +317,7 @@ class PhotoEditPage extends Component {
     render() {
         let {height, width} = Dimensions.get('window');
 
-        var modalBackgroundStyle = {
-            backgroundColor: this.state.transparent ? 'rgba(0, 0, 0, 0.5)' : '#F5FCFF',
-        };
-        var innerContainerTransparentStyle = this.state.transparent
-            ? {backgroundColor: '#fff', padding: 20}
-            : null;
-        var activeButtonStyle = {
-            backgroundColor: '#ddd'
-        };
+        let choseFilterStyle = {backgroundColor: '#ccc'};
 
         return (
             <View style={[styles.container, {minHeight: height}]}>
@@ -351,37 +348,25 @@ class PhotoEditPage extends Component {
                             renderTabBar={() => <DefaultTabBar {...this.props}/>}
                             >
                             <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true}>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'invert');}} style={styles.filterBox}>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={invertImg} style={styles.filterImage} resizeMode="contain" />
-                                        <Text>取反</Text>
+                                        <Image source={originImg} style={styles.filterImage} resizeMode="contain" />
+                                        <Text>原图</Text>
                                     </View>
                                 </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={styles.filterBox}>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={sepiaImg} style={styles.filterImage} resizeMode="contain" />
                                         <Text>怀旧1</Text>
                                     </View>
                                 </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia2');}} style={styles.filterBox}>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia2');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={sepia2Img} style={styles.filterImage} resizeMode="contain" />
                                         <Text>怀旧2</Text>
                                     </View>
                                 </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'pixelate');}} style={styles.filterBox}>
-                                    <View style={styles.filterImageFrame}>
-                                        <Image source={pixelateImg} style={styles.filterImage} resizeMode="contain" />
-                                        <Text>像素化</Text>
-                                    </View>
-                                </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'blur');}} style={styles.filterBox}>
-                                    <View style={styles.filterImageFrame}>
-                                        <Image source={blurImg} style={styles.filterImage} resizeMode="contain" />
-                                        <Text>模糊</Text>
-                                    </View>
-                                </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={styles.filterBox}>
+                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={[styles.filterBox, (this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={sharpenImg} style={styles.filterImage} resizeMode="contain" />
                                         <Text>锐化</Text>
@@ -581,8 +566,15 @@ var injectScript = fabrics + `
                     }
                     applyFilters();
                 } else if (message.type === 'filter') {
-                    var filter = imageFilters[message.value];
-                    filter.checked = !filter.checked;
+                    Object.keys(imageFilters).forEach(function(filterName){
+                        imageFilters[filterName].checked = false;
+                    });
+
+                    if(message.value != 'none'){
+                        var filter = imageFilters[message.value];
+                        filter.checked = !filter.checked;
+                    }
+
                     applyFilters();
                 } else if (message.type === 'addSticker') {
 
