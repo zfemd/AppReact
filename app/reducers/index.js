@@ -7,6 +7,7 @@ import draftNote from './draftNote';
 import flow from './flow';
 import channel from './channel';
 import detail from './detail';
+import comments from './comments';
 
 const rootReducer = combineReducers({
     home,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
     draftNote,
     flow,
     channel,
-    detail
+    detail,
+    comments
 });
 
 export default rootReducer;

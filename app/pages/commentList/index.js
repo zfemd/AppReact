@@ -15,6 +15,7 @@ import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CommentPage from '../../pages/comment';
+import { connect } from 'react-redux';
 
 class CommentList extends React.Component {
     constructor(props) {
@@ -22,7 +23,7 @@ class CommentList extends React.Component {
         this._renderRow = this._renderRow.bind(this);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds.cloneWithRows([1,2,3,4,5,6,7,8,9,10,11,12,13,14])
+            dataSource: ds.cloneWithRows(this.props.comments.commentsList)
         };
     }
     _renderRow(rowData:string, sectionID:number, rowID:number) {
@@ -33,12 +34,12 @@ class CommentList extends React.Component {
                         <Image style={styles.portrait} source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 34, height: 34}}/>
                         <View style={styles.commentContent}>
                             <View style={styles.commentUserAndTime}>
-                                <Text style={styles.dimText}>我是小仙女 </Text>
+                                <Text style={styles.dimText}>{rowData.authorNickname} </Text>
                                 <Text style={[styles.dimText,styles.commentTime]}>2016-08-05 </Text>
                             </View>
 
                             <Text style={styles.baseText} >
-                                miya2016夏装新品宽松镂空短袖蕾丝衫女韩系显瘦性感度假上衣潮
+                                {rowData.comment}
                             </Text>
                         </View>
 
@@ -96,4 +97,11 @@ class CommentList extends React.Component {
     }
 }
 
-export default CommentList;
+function mapStateToProps(state) {
+    const { comments } = state;
+    return {
+        comments
+    };
+}
+
+export default connect(mapStateToProps)(CommentList);

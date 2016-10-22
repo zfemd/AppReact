@@ -59,9 +59,13 @@ const styles = StyleSheet.create({
     commentUserAndTime: {
         flex: 1,
         flexDirection: 'row',
+        height:20
     },
     commentTime: {
         fontSize: 10,
+        alignItems: 'flex-end',
+        flex:1,
+        lineHeight: 15
     },
     commentText: {
         height: 24,

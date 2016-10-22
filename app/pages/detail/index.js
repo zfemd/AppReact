@@ -22,6 +22,7 @@ import CommentPage from '../../pages/comment';
 import CommentListPage from '../../pages/commentList';
 import ImageSlider from '../../components/imageSlider';
 import {fetchDetail} from '../../actions/detail';
+import {fetchCommentsList} from '../../actions/comments';
 import { connect } from 'react-redux';
 
 const shareImg = require('../../assets/note/transfer.png');
@@ -181,8 +182,8 @@ class Detail extends React.Component {
     }
 
     componentDidMount() {
-        //const { dispatch, route } = this.props;
-        //dispatch(fetchDetail(route.note.noteId));
+        const { dispatch, route } = this.props;
+        dispatch(fetchCommentsList(route.note.noteId));
     }
 
     componentWillUnmount() {
@@ -190,7 +191,7 @@ class Detail extends React.Component {
     }
 
     render() {
-        const {detail, route} = this.props;
+        const {detail, route, comments} = this.props;
         const noteId = route.note.noteId;
         let images = [];
         if(detail.note[noteId]){
@@ -289,23 +290,24 @@ class Detail extends React.Component {
                         </View>
                         <View style={styles.comment}>
                             <View style={styles.blockTitle}>
-                                <Text style={styles.blockTitleText}>评论(100)</Text>
+                                <Text style={styles.blockTitleText}>评论({comments.commentsList.length})</Text>
                                 <TouchableOpacity style={styles.rightArrow} onPress={() => this._jumpToCommentListPage()}>
                                     <Image source={require('../../assets/note/rg_right.png')}/>
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.commentList}>
-                                <Text style={styles.NickName}>小熊猫1号:</Text>
-                                <Text style={styles.commentContent} lineBreakMode={'tail'}>很好看,很好看,很好看,很好看</Text>
-                            </View>
-                            <View style={styles.commentList}>
-                                <Text style={styles.NickName}>小熊猫1号:</Text>
-                                <Text style={styles.commentContent} lineBreakMode={'tail'}>很好看</Text>
-                            </View>
-                            <View style={styles.commentList}>
-                                <Text style={styles.NickName}>小熊猫1号:</Text>
-                                <Text style={styles.commentContent} lineBreakMode={'tail'}>很好看</Text>
-                            </View>
+                            {
+                                comments.commentsList.map((val, key) => {
+                                    if(key>2)
+                                        return;
+                                    return (
+                                        <View key={key} style={styles.commentList}>
+                                            <Text style={styles.NickName} lineBreakMode="tail" numberOfLines={1}>{val.authorNickname}</Text>
+                                            <Text>：</Text>
+                                            <Text style={styles.commentContent} lineBreakMode='tail' numberOfLines={1}>{val.comment}</Text>
+                                        </View>
+                                    )
+                                })
+                            }
                         </View>
                     </View>
                     <View style={[styles.block, styles.recommendByUser]}>
@@ -428,9 +430,10 @@ var hashCode = function (str) {
 };
 
 function mapStateToProps(state) {
-    const { detail } = state;
+    const { detail, comments } = state;
     return {
-        detail
+        detail,
+        comments
     };
 }
 

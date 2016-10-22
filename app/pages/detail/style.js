@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     },
     commentList: {
         flexDirection: 'row',
-        flex: 1,
+        justifyContent: 'flex-start',
         height: 30,
         alignItems: 'center',
         overflow: 'hidden'
@@ -186,7 +186,8 @@ const styles = StyleSheet.create({
     NickName: {
         color: '#9b9b9b',
         fontSize: 13,
-        marginRight: 5
+        marginRight: 5,
+        maxWidth: 50
     },
     commentContent: {
         color: '#4a4a4a',
