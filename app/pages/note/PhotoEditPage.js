@@ -7,6 +7,7 @@ import {
     Image,
     ImageEditor,
     ImageStore,
+    ListView,
     Modal,
     Navigator,
     Platform,
@@ -18,6 +19,7 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
+var clone = require('clone');
 import { connect } from 'react-redux';
 import WebViewBridge from 'react-native-webview-bridge';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
@@ -41,6 +43,8 @@ const blurImg = require('../../assets/photo/blur.jpg');
 const sharpenImg = require('../../assets/photo/sharpen.jpg');
 const invertImg = require('../../assets/photo/invert.jpg');
 const pixelateImg = require('../../assets/photo/pixelate.jpg');
+
+import stickers from '../../assets/stickers.js';
 
 var contrastIcon = <Icon name="adjust" size={30} color="#333" />;
 var brightnessIcon = <Icon name="sun-o" size={30} color="#333" />;
@@ -66,8 +70,20 @@ class PhotoEditPage extends Component {
             tagOverlayVisible: false,
             tags: [],
             currentTag: null,
-            beautify: 'default'
+            beautify: 'default',
+            updatedSticks: {}
         };
+
+        let stickersDataSource =new ListView.DataSource({
+            rowHasChanged: (r1, r2) => {
+                return (r1 !== r2 || this.state.updatedSticks[r1.name]);
+            },
+            sectionHeaderHasChanged: (s1, s2) => s1 != s2
+        });
+
+        this.state.stickers = clone(stickers);
+        // here, datasource's argument must be original "stickers" object.
+        this.state.stickersDataSource = stickersDataSource.cloneWithRowsAndSections(this.state.stickers);
     }
 
     _onWebViewLoadEnd() {
@@ -266,6 +282,33 @@ class PhotoEditPage extends Component {
         }
     }
 
+    _toggleSticker(stickerInfo, sectionID, rowID) {
+        let { webviewbridge } = this.refs;
+
+        if (!stickerInfo.added) {
+            stickerInfo.added = true;
+            this.state.updatedSticks[rowID] = true;
+            webviewbridge.sendToBridge(JSON.stringify({type:"addSticker", data: stickerInfo.uri, name:rowID}));
+            this.setState({stickersDataSource: this.state.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
+        } else {
+            stickerInfo.added = false;
+            this.state.updatedSticks[rowID] = true;
+            webviewbridge.sendToBridge(JSON.stringify({type:"removeSticker", name:rowID}));
+            this.setState({stickersDataSource: this.state.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
+        }
+    }
+
+    _renderSticker(rowData, sectionID, rowID, highlightRow) {
+        let selectedStyle = rowData.added ? {backgroundColor:'#ccc'} : null;
+        this.state.updatedSticks[rowID] = false; // reset
+;        return <TouchableHighlight style={[{marginHorizontal:10}, selectedStyle]}
+                                   onPress={() => {
+                                        highlightRow(sectionID, rowID);
+                                        this._toggleSticker.call(this, rowData, sectionID, rowID);}}>
+                <Image key={rowID} source={{uri:rowData.uri}} style={{width:80, height:80}} resizeMode="contain" />
+            </TouchableHighlight>;
+    }
+
     render() {
         let {height, width} = Dimensions.get('window');
 
@@ -294,7 +337,6 @@ class PhotoEditPage extends Component {
                         injectedJavaScript={injectScript} source={this._createImageSource()} style={[{height:300, padding: 0}]} onLoadEnd={this._onWebViewLoadEnd.bind(this)}>
                     </WebViewBridge>
                 </View>
-
 
                 <ScrollableTabView
                     tabBarPosition='bottom'
@@ -381,14 +423,18 @@ class PhotoEditPage extends Component {
                         </ScrollableTabView>
                     </ScrollView>
 
-                    <ScrollView tabLabel="标签" contentContainerStyle={{backgroundColor:'#f00', flex:1}}>
-                        <View style={[styles.tabView, {height:100}]}>
+                    <ScrollView tabLabel="标签" horizontal={true} contentContainerStyle={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                        <View style={[styles.tabView]}>
                             <Text>点击照片</Text>
                             <Text>选择添加相关信息</Text>
                         </View>
                     </ScrollView>
 
-                    <ScrollView navigator={this.props.navigator} tabLabel="贴图"/>
+                    <ScrollView horizontal={true} tabLabel="贴图" contentContainerStyle={{flex:1, justifyContent: 'center'}}>
+                        <ListView  horizontal={true} contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                   dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                   renderRow={this._renderSticker.bind(this)} />
+                    </ScrollView>
                 </ScrollableTabView>
 
                 {this.state.tagOverlayVisible ?
@@ -456,6 +502,7 @@ var injectScript = fabrics + `
         var padding = 10;
         var activeTag = null;
         var tagUID = 0;
+        var choseStickers = {};
         var imageFilters = {
             brightness: new fabric.Image.filters.Brightness({brightness: 0}),
             pixelate: new fabric.Image.filters.Pixelate({blocksize: 4}),
@@ -537,6 +584,17 @@ var injectScript = fabrics + `
                     var filter = imageFilters[message.value];
                     filter.checked = !filter.checked;
                     applyFilters();
+                } else if (message.type === 'addSticker') {
+
+                    fabric.Image.fromURL(message.data, function(oImage) {
+                        canvasFab.add(oImage);
+                        choseStickers[message.name] = oImage;
+                        //oImage.center();
+                    }, {width:50, height:50, hasControls:true});
+                    WebViewBridge.send(JSON.stringify({type:"addedSticker"}));
+                } else if (message.type === 'removeSticker') {
+                    canvasFab.remove(choseStickers[message.name]);
+                    WebViewBridge.send(JSON.stringify({type:"removedSticker"}));
                 } else if (message.type === 'imageLoaded') {
                     WebViewBridge.send('Image loading');
 
