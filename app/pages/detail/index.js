@@ -166,7 +166,8 @@ class Detail extends React.Component {
             navigator.push({
                 component: CommentPage,
                 name: 'CommentPage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
+                sceneConfigs: Navigator.SceneConfigs.FloatFromBottom,
+                noteId: this.props.route.note.noteId
             });
         });
     }
@@ -176,7 +177,8 @@ class Detail extends React.Component {
         InteractionManager.runAfterInteractions(() => {
             navigator.push({
                 component: CommentListPage,
-                name: 'CommentListPage'
+                name: 'CommentListPage',
+                noteId: this.props.route.note.noteId
             });
         });
     }

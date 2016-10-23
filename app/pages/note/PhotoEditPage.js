@@ -45,7 +45,7 @@ const sharpenImg = require('../../assets/photo/sharpen.jpg');
 
 import stickers from '../../assets/stickers.js';
 
-var clone = require('clone');
+var clone = require('lodash/clone');
 
 var contrastIcon = <Icon name="adjust" size={30} color="#333" />;
 var brightnessIcon = <Icon name="sun-o" size={30} color="#333" />;

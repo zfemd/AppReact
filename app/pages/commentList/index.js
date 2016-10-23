@@ -16,6 +16,8 @@ import Toolbar from '../../components/toolbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CommentPage from '../../pages/comment';
 import { connect } from 'react-redux';
+import { Token } from '../../utils/common';
+import LoginPage from '../../pages/login';
 
 class CommentList extends React.Component {
     constructor(props) {
@@ -51,13 +53,27 @@ class CommentList extends React.Component {
 
     _jumpToCommentPage(){
         const { navigator } = this.props;
-        InteractionManager.runAfterInteractions(() => {
-            navigator.push({
-                component: CommentPage,
-                name: 'CommentPage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
-            });
-        });
+        Token.getToken(navigator).then((token) => {
+                if (token) {
+                    InteractionManager.runAfterInteractions(() => {
+                        navigator.push({
+                            component: CommentPage,
+                            name: 'CommentPage',
+                            sceneConfigs: Navigator.SceneConfigs.FloatFromBottom,
+                            noteId: this.props.route.noteId
+                        });
+                    });
+                } else {
+                    InteractionManager.runAfterInteractions(() => {
+                        navigator.push({
+                            component: LoginPage,
+                            name: 'LoginPage',
+                            sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
+                        });
+                    });
+                }
+            }
+        );
     }
 
     render() {
@@ -74,6 +90,7 @@ class CommentList extends React.Component {
                     renderRow={this._renderRow}
                     horizontal={false}
                     showsVerticalScrollIndicator={false}
+                    enableEmptySections={true}
                     />
 
                 <View style={styles.float}>
