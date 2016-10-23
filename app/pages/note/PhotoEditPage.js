@@ -34,16 +34,14 @@ import CurrencyOptionList from './CurrencyOptionList';
 import NationOptionList from './NationOptionList';
 import PostNotePage from './PostNotePage';
 import {fabrics} from '../../constants/fabrics';
+import {fabricContrast} from '../../constants/imageFilters';
 const arrowImg = require('../../assets/header/arrow.png');
 import styles from './style';
 
 const originImg = require('../../assets/photo/origin.png');
 const sepia2Img = require('../../assets/photo/sepia2.jpg');
 const sepiaImg = require('../../assets/photo/sepia.jpg');
-const blurImg = require('../../assets/photo/blur.jpg');
 const sharpenImg = require('../../assets/photo/sharpen.jpg');
-const invertImg = require('../../assets/photo/invert.jpg');
-const pixelateImg = require('../../assets/photo/pixelate.jpg');
 
 import stickers from '../../assets/stickers.js';
 
@@ -73,7 +71,11 @@ class PhotoEditPage extends Component {
             tagOverlayVisible: false,
             tags: [],
             currentTag: null,
-            beautify: 'default',
+            beautifyTab: 'default',
+            beautify: {
+                brightness: {oldValue: 0.5, newValue: 0.5 },
+                contrast: {oldValue: 1, newValue: 1 }
+            },
             currentFilter: null,
             updatedSticks: {}
         };
@@ -218,27 +220,29 @@ class PhotoEditPage extends Component {
     _onPressBrightness() {
         this.state.bShowTabsBar = false;
         this._resetTabBars();
-        this.setState({beautify: 'brightness'});
+        this.setState({beautifyTab: 'brightness'});
     }
 
     _onPressContrast() {
         this.state.bShowTabsBar = false;
         this._resetTabBars();
-        this.setState({beautify: 'contrast'});
+        this.setState({beautifyTab: 'contrast'});
     }
 
     _resetTabBars() {
         this.state.oTabsBar = this.state.bShowTabsBar ? this.state.oDefaultTabsBar : false;
     }
 
-    _adjustImageBrightness(dBrightness) {
+    _adjustImageBrightness(value) {
         const { webviewbridge } = this.refs;
-        webviewbridge.sendToBridge(JSON.stringify({type:'brightness', value: dBrightness}));
+        webviewbridge.sendToBridge(JSON.stringify({type:'beautify', beautify:'brightness', value: value}));
+        this.state.beautify.brightness.newValue = value;
     }
 
-    _adjustImageContrast(dContrast){
+    _adjustImageContrast(value){
         const { webviewbridge } = this.refs;
-        webviewbridge.sendToBridge(JSON.stringify({type:'contrast', value: dContrast}));
+        webviewbridge.sendToBridge(JSON.stringify({type:'beautify', beautify:'contrast', value: value}));
+        this.state.beautify.contrast.newValue = value;
     }
 
     _applyImageFilter(filter){
@@ -375,7 +379,7 @@ class PhotoEditPage extends Component {
                             </ScrollView>
                             <ScrollView navigator={this.props.navigator}  tabLabel="美化照片" horizontal={true} style={{flex:1}} contentContainerStyle={{flex:1, backgroundColor:'#fff'}}>
                                 {
-                                    this.state.beautify == 'default' ? (<View style={{flex:1, flexDirection: 'row', alignItems: 'stretch', justifyContent:'space-between', backgroundColor:'#999'}}>
+                                    this.state.beautifyTab == 'default' ? (<View style={{flex:1, flexDirection: 'row', alignItems: 'stretch', justifyContent:'space-between', backgroundColor:'#999'}}>
                                         <TouchableHighlight onPress={this._onPressBrightness.bind(this)} style={{flex:1}}>
                                             <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
                                                 {brightnessIcon}
@@ -392,16 +396,31 @@ class PhotoEditPage extends Component {
                                 }
 
                                 {
-                                    this.state.beautify == 'brightness' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
-                                        <Slider value={0.5} onValueChange={(value) => this._adjustImageBrightness(value)} style={{flex:1}}></Slider>
-                                        <ConfirmBar style={styles.confirmBar} title='亮度' onConfirm={() => this.setState({beautify:'default', oTabsBar:null})}></ConfirmBar>
+                                    this.state.beautifyTab == 'brightness' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
+                                        <Slider value={this.state.beautify.brightness.oldValue} onValueChange={(value) => this._adjustImageBrightness(value)} style={{flex:1}}></Slider>
+                                        <ConfirmBar style={styles.confirmBar} title='亮度'
+                                                    onCancel={() => {
+                                                            this._adjustImageBrightness(this.state.beautify.brightness.oldValue)
+                                                            this.setState({beautifyTab:'default', oTabsBar:null})}
+                                                        }
+                                                    onConfirm={() => {
+                                                            this.state.beautify.brightness.oldValue = this.state.beautify.brightness.newValue;
+                                                            this.setState({beautifyTab:'default', oTabsBar:null})}
+                                                        }></ConfirmBar>
                                     </View>) : null
                                 }
 
                                 {
-                                    this.state.beautify == 'contrast' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
-                                        <Slider value={0.5} onValueChange={(value) => this._adjustImageContrast(value)} style={{flex:1}}></Slider>
-                                        <ConfirmBar style={styles.confirmBar} title='亮度' onConfirm={() => this.setState({beautify:'default', oTabsBar:null})}></ConfirmBar>
+                                    this.state.beautifyTab == 'contrast' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
+                                        <Slider value={this.state.beautify.contrast.oldValue} onValueChange={(value) => this._adjustImageContrast(value)} minimumValue={0} maximumValue={2} step={0.1} style={{flex:1}}></Slider>
+                                        <ConfirmBar style={styles.confirmBar} title='对比度'
+                                                    onCancel={() => {
+                                                        this._adjustImageContrast(this.state.beautify.contrast.oldValue);
+                                                        this.setState({beautifyTab:'default', oTabsBar:null})}}
+                                                    onConfirm={() => {
+                                                            this.state.beautify.contrast.oldValue = this.state.beautify.contrast.newValue;
+                                                            this.setState({beautifyTab:'default', oTabsBar:null})}
+                                                        }></ConfirmBar>
                                     </View>) : null
                                 }
                             </ScrollView>
@@ -473,7 +492,7 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(PhotoEditPage);
 
-var injectScript = fabrics + `
+var injectScript = fabrics + fabricContrast + `
 (function () {
     if (!WebViewBridge) return;
 
@@ -490,15 +509,16 @@ var injectScript = fabrics + `
         var choseStickers = {};
         var imageFilters = {
             brightness: new fabric.Image.filters.Brightness({brightness: 0}),
-            pixelate: new fabric.Image.filters.Pixelate({blocksize: 4}),
-            invert: new fabric.Image.filters.Invert(),
+            contrast: new fabric.Image.filters.Contrast({contrast: 1}),
+            //pixelate: new fabric.Image.filters.Pixelate({blocksize: 4}),
+            //invert: new fabric.Image.filters.Invert(),
             sepia: new fabric.Image.filters.Sepia(),
             sepia2: new fabric.Image.filters.Sepia2(),
             tint: new fabric.Image.filters.Tint({color: '#000000', opacity: 0.5}),
-            blur: new fabric.Image.filters.Convolute({matrix: [ 1/9, 1/9, 1/9,
-                1/9, 1/9, 1/9,
-                1/9, 1/9, 1/9 ]
-            }),
+            //blur: new fabric.Image.filters.Convolute({matrix: [ 1/9, 1/9, 1/9,
+            //    1/9, 1/9, 1/9,
+            //    1/9, 1/9, 1/9 ]
+            //}),
             sharpen: new fabric.Image.filters.Convolute({matrix: [  0, -1,  0,
                 -1,  5, -1,
                  0, -1,  0 ]
@@ -551,20 +571,35 @@ var injectScript = fabrics + `
             imgFab.applyFilters(canvasFab.renderAll.bind(canvasFab));
         }
 
+        var applyBrightness = function(value) {
+            var filterBrightness = imageFilters['brightness'];
+            var filterTint = imageFilters['tint'];
+            if (value > 0.5) {
+                filterTint.checked = !(filterBrightness.checked = true);
+                filterBrightness.setOptions({brightness: (value - 0.5) * 255});
+            } else {
+                filterBrightness.checked = !(filterTint.checked = true);
+                filterTint.setOptions({opacity: (0.5 - value), color:'#000000'});
+            }
+            applyFilters();
+        };
+
+        var applyContrast = function(value) {
+            var filterContrast = imageFilters['contrast'];
+            filterContrast.setOptions({contrast:value});
+            filterContrast.checked = true;
+            applyFilters();
+        };
+
         WebViewBridge.onMessage = function (message) {
             if (message && message.startsWith("{")) {
                 message = JSON.parse(message);
-                if (message.type === 'brightness') {
-                    var filterBrightness = imageFilters['brightness'];
-                    var filterTint = imageFilters['tint'];
-                    if (message.value > 0.5) {
-                        filterTint.checked = !(filterBrightness.checked = true);
-                        filterBrightness.setOptions({brightness: (message.value - 0.5) * 255});
-                    } else {
-                        filterBrightness.checked = !(filterTint.checked = true);
-                        filterTint.setOptions({opacity: (0.5 - message.value), color:'#000000'});
+                if (message.type === 'beautify') {
+                    if (message.beautify == 'brightness') {
+                        applyBrightness(message.value);
+                    } else if (message.beautify == 'contrast') {
+                        applyContrast(message.value);
                     }
-                    applyFilters();
                 } else if (message.type === 'filter') {
                     Object.keys(imageFilters).forEach(function(filterName){
                         imageFilters[filterName].checked = false;
