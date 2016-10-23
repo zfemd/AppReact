@@ -6,7 +6,8 @@ import {
     Text,
     TouchableOpacity,
     TextInput,
-    Alert
+    Alert,
+    DeviceEventEmitter
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -14,6 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { request } from '../../utils/common';
 import { Token } from '../../utils/common';
 import {fetchCommentsList} from '../../actions/comments';
+import { connect } from 'react-redux';
 
 class Comment extends React.Component {
     constructor(props) {
@@ -66,11 +68,14 @@ class Comment extends React.Component {
     }
 
     _jumpToListPage(){
-        const {navigator, dispatch, route } = this.props;
-        dispatch(fetchCommentsList(route.noteId));
-        if (navigator && navigator.getCurrentRoutes().length > 1) {
-            navigator.pop();
-        }
+        const {navigator, dispatch, route, comments } = this.props;
+        dispatch(fetchCommentsList(route.noteId)).then(() => {
+            DeviceEventEmitter.emit('newComment',comments );
+            if (navigator && navigator.getCurrentRoutes().length > 1) {
+                navigator.pop();
+            }
+        });
+
     }
 
     render() {
@@ -104,4 +109,11 @@ class Comment extends React.Component {
     }
 }
 
-export default Comment;
+function mapStateToProps(state) {
+    const { comments } = state;
+    return {
+        comments
+    };
+}
+
+export default connect(mapStateToProps)(Comment);

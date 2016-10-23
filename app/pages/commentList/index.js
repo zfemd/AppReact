@@ -9,7 +9,8 @@ import {
     Image,
     ListView,
     InteractionManager,
-    Navigator
+    Navigator,
+    DeviceEventEmitter
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -23,11 +24,20 @@ class CommentList extends React.Component {
     constructor(props) {
         super(props);
         this._renderRow = this._renderRow.bind(this);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds.cloneWithRows(this.props.comments.commentsList)
+            dataSource: this.ds.cloneWithRows(this.props.comments.commentsList)
         };
     }
+
+    componentDidMount() {
+        let the = this;
+        DeviceEventEmitter.addListener('newComment',()=>{
+            the.setState({'dataSource': the.ds.cloneWithRows(the.props.comments.commentsList)})
+        });
+
+    }
+
     _renderRow(rowData:string, sectionID:number, rowID:number) {
         return (
             <TouchableOpacity  underlayColor="transparent" activeOpacity={0.5}>
