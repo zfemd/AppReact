@@ -35,7 +35,7 @@ class Home extends React.Component {
         this.state = {
             showToolbar: this.props.home.showToolbar,
             showFilter: false,
-            filterMounted: false,
+            filterMounted: false
         }
     }
 
@@ -128,7 +128,7 @@ class Home extends React.Component {
                     </ScrollView>
 
                     <MessagesPage navigator={this.props.navigator} tabLabel="ios-mail-outline" style={styles.tabView}/>
-                    <MyPage {...this.props} navigator={this.props.navigator} tabLabel="ios-person-outline" style={styles.tabView}/>
+                    <MyPage navigator={this.props.navigator} tabLabel="ios-person-outline" style={styles.tabView}/>
                 </ScrollableTabView>
                 {[this.state.showFilter].map((show) => {
                     if (show) {

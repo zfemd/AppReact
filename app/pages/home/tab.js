@@ -3,9 +3,13 @@ import {
     Text,
     View,
     TouchableOpacity,
+    Navigator,
+    InteractionManager
 } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/Ionicons';
+import LoginPage from '../../pages/login';
+import { Token } from '../../utils/common';
 
 let tabIcons = [];
 let tabTitle = [];
@@ -14,6 +18,9 @@ class TabBar extends React.Component {
     constructor(props) {
         super(props);
         this._setAnimationValue = this._setAnimationValue.bind(this);
+        this.state ={
+            token: null
+        }
     }
 
 
@@ -54,12 +61,28 @@ class TabBar extends React.Component {
     }
 
     _onIconPress(i) {
-        if(i !== 2) {
-            this.props.goToPage(i);
-        }else{
-            const { navigator } = this.props;
-            this.props.cameraPress(navigator);
-        }
+        const { navigator } = this.props;
+        let the = this;
+        Token.getToken(navigator).then((token) => {
+            if (!token && (i === 2 || i === 3 || i === 4)) {
+                InteractionManager.runAfterInteractions(() => {
+                    the.props.navigator.push({
+                        component: LoginPage,
+                        name: 'LoginPage',
+                        sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
+                    });
+                });
+            } else {
+                if(i !== 2) {
+                    this.props.goToPage(i);
+                }else{
+                    const { navigator } = this.props;
+                    this.props.cameraPress(navigator);
+                }
+            }
+        });
+
+
     }
     render() {
         return (<View style={[styles.tabs, this.props.style, ]}>
