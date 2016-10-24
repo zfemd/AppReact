@@ -70,7 +70,8 @@ export default styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#ccc',
         backgroundColor: '#fff',
-        padding: 20
+        padding: 20,
+        paddingBottom: 60
     },
     noteUserBox: {
         flexDirection: 'row'

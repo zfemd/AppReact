@@ -18,9 +18,6 @@ class TabBar extends React.Component {
     constructor(props) {
         super(props);
         this._setAnimationValue = this._setAnimationValue.bind(this);
-        this.state ={
-            token: null
-        }
     }
 
 

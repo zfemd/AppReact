@@ -344,7 +344,7 @@ export default class MyHomePage extends Component {
         this.user = this.state.user;
 
         return (
-            <View>
+            <View style={{flex:1}}>
                 <Toolbar
                     title="我的主页"
                     navigator={this.props.navigator}
@@ -393,6 +393,7 @@ export default class MyHomePage extends Component {
                 </View>
 
                 <ListView dataSource={this.state.dataSource}
+                          contentContainerStyle={styles.list}
                           renderSectionHeader={this._renderSectionHeader}
                           renderRow={this._renderNote.bind(this)}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
