@@ -3,6 +3,7 @@
  */
 const initialState = {
     notePhotos: [],
+    photoData: [],
     currentPhotoIndex: -1
 };
 
@@ -14,6 +15,12 @@ const draftNote = function (state = initialState, action = {}) {
             if (action.photo) {
                 state.notePhotos.push({photo:action.photo});
                 state.currentPhotoIndex = state.notePhotos.length - 1;
+            }
+            break;
+        case Actions.ADD_NOTE_PHOTO_DATA:
+            if (state.currentPhotoIndex >= 0) {
+                state.notePhotos[state.currentPhotoIndex].imageData = action.imageData;
+                console.log(state.notePhotos[state.currentPhotoIndex]);
             }
             break;
         case Actions.EDIT_NOTE_PHOTO:

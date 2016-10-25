@@ -127,15 +127,10 @@ class PhotoEditPage extends Component {
 
     _onContinue() {
         const { navigator, dispatch } = this.props;
+        const { webviewbridge } = this.refs;
 
+        webviewbridge.sendToBridge(JSON.stringify({type:'continue'}));
         dispatch({type:StoreActions.ADD_TAGS, tags: this.state.tags.slice()});
-
-        if(navigator) {
-            navigator.push({
-                name: 'PostNotePage',
-                component: PostNotePage
-            })
-        }
     }
 
     /**
@@ -254,10 +249,10 @@ class PhotoEditPage extends Component {
     _createImageSource() {
         let obj = {
             html: '<html><head><meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/></head>' +
-            '<body style="margin: 0;padding:0;border:0px solid #f00;background:#000;flex-direction:column;align-items:center;justify-content:center;">' +
-            '<div style="display:flex;flex-direction:row;align-items:center;justify-content:center;height:300px;"><canvas id="c" style="border:0px solid #fff;flex:1"></canvas></div>' +
-            //'<image id="image" style="max-width:100%;max-height:100%" src="' + this.state.sImageBase64Data + '" />' +
-            '<image id="image" style="max-width:100%;max-height:100%" />' +
+            '<body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">' +
+            '<div style="display:flex;flex-direction:row;align-items:center;justify-content:center;height:300px;"><canvas id="c" style="border:none;"></canvas></div>' +
+            '<div><image id="image" style="max-width:100%;max-height:100%" /></div>' +
+            '<div><image id="image-origin" style="display:none;"/></div>' +
             '</body></html>'
         };
 
@@ -265,6 +260,7 @@ class PhotoEditPage extends Component {
     }
 
     _onBridgeMessage(message) {
+        const { navigator, dispatch } = this.props;
         const { webviewbridge } = this.refs;
 
         if (message.startsWith("{")) {
@@ -276,12 +272,21 @@ class PhotoEditPage extends Component {
                 case "imageUpdated":
                     //this.setState({sImageBase64Data: message.data});
                     break;
+                case "continue":
+                    dispatch({type:StoreActions.ADD_NOTE_PHOTO_DATA, imageData: message.imageData});
 
+                    if(navigator) {
+                        navigator.push({
+                            name: 'PostNotePage',
+                            component: PostNotePage
+                        })
+                    }
+                    break;
             }
         }
 
-        console.log(message);
         switch (message) {
+
             case "hello from webview":
                 webviewbridge.sendToBridge("hello from react-native");
                 break;
@@ -498,10 +503,14 @@ var injectScript = fabrics + fabricContrast + `
 
     if (WebViewBridge) {
         var imageClickable = false;
+        var imgElement = document.getElementById('image');
+        var imgElementOrigin = document.getElementById('image-origin');
         var canvas = document.getElementById('c');
         var canvasFab = new fabric.Canvas('c', {isDrawingMode:false, renderOnAddRemove: true});
         var canvasParent = canvas.parentElement;
         var imgFab = null;
+        var scale = 1;
+
         var tags = {};
         var padding = 10;
         var activeTag = null;
@@ -612,25 +621,32 @@ var injectScript = fabrics + fabricContrast + `
 
                     applyFilters();
                 } else if (message.type === 'addSticker') {
-
                     fabric.Image.fromURL(message.data, function(oImage) {
                         canvasFab.add(oImage);
                         choseStickers[message.name] = oImage;
                         //oImage.center();
-                    }, {width:50, height:50, hasControls:true});
+                    }, {scaleX:scale, scaleY:scale, hasControls:true});
                     WebViewBridge.send(JSON.stringify({type:"addedSticker"}));
+
                 } else if (message.type === 'removeSticker') {
+
                     canvasFab.remove(choseStickers[message.name]);
                     WebViewBridge.send(JSON.stringify({type:"removedSticker"}));
+
+                } else if (message.type == 'continue') {
+                    WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'png'})}));
                 } else if (message.type === 'imageLoaded') {
                     WebViewBridge.send('Image loading');
 
-                    var imgElement = document.getElementById('image');
-                    imgElement.addEventListener('load', function(){
-                        imgFab = new fabric.Image(imgElement, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
+                    imgElementOrigin.addEventListener('load', function(){
+                        imgFab = new fabric.Image(imgElementOrigin, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
                         canvasFab.backgroundImage = imgFab;
-                        canvasFab.setDimensions({width:imgElement.width, height:imgElement.height});
-                        //canvasFab.add(imgFab);
+                    });
+
+                    imgElement.addEventListener('load', function(){
+                        scale = message.image.width / imgElement.width;
+                        canvasFab.setDimensions({width:imgElement.width, height:imgElement.height}, {cssOnly:true});
+                        canvasFab.renderAll();
 
                         canvasFab.on("mouse:up", function(data){
                             if (!imageClickable) {return}
@@ -652,6 +668,8 @@ var injectScript = fabrics + fabricContrast + `
                             } else {
                                 activeTag = null;
                             }
+
+                            canvas.getActiveObject().borderScaleFactor = 20;
                         });
 
                         canvasFab.on("mouse:move", function(data){
@@ -665,7 +683,9 @@ var injectScript = fabrics + fabricContrast + `
                         });
                     });
                     if (message.data) {
+                        imgElementOrigin.src = message.data;
                         imgElement.src = message.data;
+                        canvasFab.setDimensions({width:message.image.width, height:message.image.height}, {backstoreOnly:true});
                     }
 
                     WebViewBridge.send(JSON.stringify({type:"imageUpdated",data:message.data}));

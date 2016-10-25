@@ -10,6 +10,7 @@ export default keyMirror({
     ADD_NOTE_PHOTO: null,
     EDIT_NOTE_PHOTO: null,
     REMOVE_NOTE_PHOTO: null,
+    ADD_NOTE_PHOTO_DATA:null,
     ADD_TAGS: null,
     POST_DRAFT_NOTE: null,
     RESET_DRAFT_NOTE: null,
