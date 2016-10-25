@@ -76,6 +76,9 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         borderWidth: 0,
         backgroundColor:  'rgba(155,155,155,0.1)',
+    },
+    commentList: {
+        paddingBottom: 40
     }
 });
 

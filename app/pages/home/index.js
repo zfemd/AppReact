@@ -22,6 +22,7 @@ import MessagesPage from '../messages';
 import CreateNotePage from '../note';
 import Channel from '../channel';
 import AddFriends from '../addFriends';
+import {showorHideFilter} from '../../actions/home';
 
 const addImg = require('../../assets/header/add.png');
 const searchImg = require('../../assets/header/search.png');
@@ -34,7 +35,6 @@ class Home extends React.Component {
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
         this.state = {
             showToolbar: this.props.home.showToolbar,
-            showFilter: false,
             filterMounted: false
         }
     }
@@ -61,12 +61,18 @@ class Home extends React.Component {
     };
 
     _showFilter() {
-        this.setState({showFilter: this.props.home.showFilter});
+        const { dispatch} = this.props;
+        if(this.props.home.showFilter){
+            dispatch(showorHideFilter(false));
+        } else {
+            dispatch(showorHideFilter(true));
+        }
+
     }
 
     _onFilterClicked() {
         if (this.props.home.filterMounted) {
-            this.props.home.showFilter = !this.props.home.showFilter;
+            //this.props.home.showFilter = !this.props.home.showFilter;
             this._showFilter();
         }
     }
@@ -102,7 +108,7 @@ class Home extends React.Component {
                 {
                     this.state.showToolbar ? (
                         <Toolbar
-                            title="剁手记"
+                            title={this.props.home.isFollowed ? '关注的' : '剁手记'}
                             navigator={navigator}
                             showFilter={this._showFilter}
                             leftImg={addImg}
@@ -120,7 +126,7 @@ class Home extends React.Component {
                     renderTabBar={() => <TabBar {...this.props}/>}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
-                    <Flow tag='all' navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
+                    <Flow tag='all' isFollowed={this.state.isFollowed} navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
 
                     <Channel navigator={this.props.navigator} tabLabel="ios-compass-outline" style={styles.tabView}></Channel>
 
@@ -130,13 +136,11 @@ class Home extends React.Component {
                     <MessagesPage navigator={this.props.navigator} tabLabel="ios-mail-outline" style={styles.tabView}/>
                     <MyPage navigator={this.props.navigator} tabLabel="ios-person-outline" style={styles.tabView}/>
                 </ScrollableTabView>
-                {[this.state.showFilter].map((show) => {
-                    if (show) {
-                        return (
-                            <HomeFilter click={this._onFilterClicked} key=''/>
-                        );
-                    }
-                })}
+                {
+                    this.props.home.showFilter ?  <HomeFilter isFollowed={this.state.isFollowed} click={this._onFilterClicked} key=''/> : <View></View>
+
+                }
+
 
             </View>
 

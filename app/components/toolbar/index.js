@@ -63,7 +63,7 @@ class Toolbar extends React.Component {
 
     _onArrowClicked() {
         if(!this.props.hideDrop){
-            this.props.home.showFilter = !this.props.home.showFilter;
+            //this.props.home.showFilter = !this.props.home.showFilter;
             this.props.showFilter();
         }
     }

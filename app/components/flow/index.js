@@ -30,7 +30,15 @@ import { Token } from '../../utils/common';
 import {fetchDetail} from '../../actions/detail';
 
 const {height, width} = Dimensions.get('window');
-
+let fetchParams = {
+    refreshing : false,
+    loadingMore : false,
+    flowRefreshing : false,
+    tag : 'all',
+    loadedSize : 0,
+    timestamp : 0,
+    myFollowOnly: false
+};
 class Flow extends React.Component {
     constructor(props) {
         super(props);
@@ -48,16 +56,22 @@ class Flow extends React.Component {
 
     componentDidMount() {
         const { dispatch ,tag} = this.props;
+        fetchParams.tag = tag;
         if(typeof tag !== 'undefined')
-            dispatch(fetchList(false, false, false, tag));
+            dispatch(fetchList(fetchParams));
     }
 
     _onRefresh(isFlow) {
         const { dispatch ,tag } = this.props;
-        if (isFlow)
-            dispatch(fetchList(true, false, false, tag));
-        else
-            dispatch(fetchList(true, false, true, tag));
+        fetchParams.refreshing = true;
+        fetchParams.tag = tag;
+
+        if (isFlow){
+            dispatch(fetchList(fetchParams));
+        } else {
+            fetchParams.flowRefreshing = true;
+            dispatch(fetchList(fetchParams));
+        }
     }
 
     _jumpToDetailPage(note) {
@@ -208,6 +222,9 @@ class Flow extends React.Component {
         let maxOffset = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height;
         let offset = event.nativeEvent.contentOffset.y;
         if ((maxOffset - offset) < 0 && !this.props.flow.loadingMore) {
+            fetchParams.refreshing = true;
+            fetchParams.tag = tag;
+            fetchParams.loadingMore = true;
             dispatch(fetchList(true, true, false, tag, loadedSize, timestamp));
         }
     }
@@ -389,10 +406,11 @@ var styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    const { flow, detail } = state;
+    const { flow, detail, home } = state;
     return {
         flow,
-        detail
+        detail,
+        home
     };
 }
 

@@ -6,14 +6,20 @@ const initialState = {
     showToolbar: true,
     showFilter: false,
     filterMounted: false,
+    isFollowed: false
 };
 
 const home = function (state = initialState, action ={}) {
     switch (action.type) {
-        case StoreActions.SHOW_HOME_TOOLBAR:
-            state.showToolbar = true; break;
-        case StoreActions.HIDE_HOME_TOOLBAR:
-            state.showToolbar = false; break;
+        case StoreActions.SHOW_FOLLOW:
+            return Object.assign({}, state, {
+                isFollowed: action.isFollowed,
+                showFilter: action.showFilter
+            });
+        case StoreActions.SHOW_FILTER:
+            return Object.assign({}, state, {
+                showFilter: action.showFilter
+            });
         default:
             return state;
     }

@@ -1,37 +1,48 @@
 import types from '../constants/actions';
-import { request } from '../utils/common';
+import { request, Token } from '../utils/common';
 import _ from 'lodash';
 import {fetchDetail} from './detail';
+import home from '../reducers/home';
 
-export function fetchList(refreshing = false, loadingMore = false, flowRefreshing = false, tag = 'all', loadedSize = 0, timestamp = 0) {
+export function fetchList(params) {
+
     return dispatch => {
-        if (!loadingMore) {
-            timestamp = (new Date()).getTime();
+        if (!params.loadingMore) {
+            params.timestamp = (new Date()).getTime();
         }
-        dispatch(fetchFlowList(refreshing, loadingMore, flowRefreshing, timestamp, tag));
+        dispatch(fetchFlowList(params.refreshing, params.loadingMore, params.flowRefreshing, params.timestamp, params.tag));
 
         const pageSize = 5;
-        loadedSize = loadedSize ? loadedSize : 0;
-        return request('/notes?timestamp=' + timestamp + '&pageSize=' + pageSize + '&loadedSize=' + loadedSize + '&tag=' + (tag!=='all'?tag: ''), 'get')
-            .then((list) => {
-                if(list.resultValues.length > 0){
-                    dispatch(receiveFlowList(list.resultValues, tag, false));
-                } else {
-                    dispatch(receiveFlowList(list.resultValues, tag, true));
-                }
+        params.loadedSize = params.loadedSize ? params.loadedSize : 0;
 
-                _.each(list.resultValues, function (v, k) {
-                    dispatch(fetchDetail(v.noteId));
+        Token.getToken().then((token) => {
+            return request('/notes?' +
+                'timestamp=' + params.timestamp
+                + '&pageSize=' + pageSize
+                + '&loadedSize=' + params.loadedSize
+                + (params.myFollowOnly? '&myFollowOnly': '')
+                + '&tag=' + (params.tag !== 'all' ? params.tag : ''), 'get', '', token)
+                .then((list) => {
+                    if (list.resultCode === 0 && list.resultValues.length > 0) {
+                        dispatch(receiveFlowList(list.resultValues, params.tag, false));
+                    } else {
+                        dispatch(receiveFlowList(list.resultValues, params.tag, true));
+                    }
+
+                    _.each(list.resultValues, function (v, k) {
+                        dispatch(fetchDetail(v.noteId));
+                    })
+
+                }, function (error) {
+                    dispatch(receiveFlowList([]));
+                    console.log(error);
                 })
+                .catch(() => {
+                    dispatch(receiveFlowList([]));
+                    console.log('network error');
+                });
+        });
 
-            }, function (error) {
-                dispatch(receiveFlowList([]));
-                console.log(error);
-            })
-            .catch(() => {
-                dispatch(receiveFlowList([]));
-                console.log('network error');
-            });
     };
 }
 

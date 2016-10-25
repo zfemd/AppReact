@@ -17,7 +17,9 @@ export default keyMirror({
     RECEIVE_FLOW_LIST: null,
     RECEIVE_CHANNEL_LIST: null,
     RECEIVE_COMMENTS_LIST: null,
-    RECEIVE_NOTE_DETAIL: null
+    RECEIVE_NOTE_DETAIL: null,
+    SHOW_FOLLOW: null,
+    SHOW_FILTER: null
 });
 
 
