@@ -53,7 +53,7 @@ class Channel extends React.Component {
                                         tabLabel={val.name}
                                         style={{ flex: 1 }}
                                         >
-                                        <Flow tag={val.identifier} navigator={this.props.navigator}/>
+                                        <Flow tag={val.identifier}  navigator={this.props.navigator}/>
                                     </View>
                                 )
                             })

@@ -8,7 +8,8 @@ const initialState = {
     flowRefreshing: false,
     flowList: {},
     timestamp: {},
-    noMoreData: false
+    noMoreData: false,
+    pageRefresh: false
 };
 
 
@@ -21,7 +22,8 @@ const flow = function (state = initialState, action = {}) {
                 refreshing: action.refreshing,
                 loadingMore: action.loadingMore,
                 flowRefreshing: action.flowRefreshing,
-                timestamp: state.timestamp
+                timestamp: state.timestamp,
+                pageRefresh: false
             });
         case types.RECEIVE_FLOW_LIST:
             return Object.assign({}, state, {
@@ -31,6 +33,10 @@ const flow = function (state = initialState, action = {}) {
                 flowRefreshing: false,
                 noMoreData: action.noMoreData,
                 flowList: state.loadingMore ?  loadMore(state, action) : init(state, action)
+            });
+        case types.PAGE_REFRESH:
+            return Object.assign({}, state, {
+                pageRefresh: action.pageRefresh
             });
         default:
             return state;

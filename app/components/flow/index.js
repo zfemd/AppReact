@@ -28,7 +28,7 @@ import {fetchList} from '../../actions/flow';
 import { connect } from 'react-redux';
 import { Token } from '../../utils/common';
 import {fetchDetail} from '../../actions/detail';
-
+import _ from 'lodash';
 const {height, width} = Dimensions.get('window');
 let fetchParams = {
     refreshing : false,
@@ -52,25 +52,31 @@ class Flow extends React.Component {
                 rowHasChanged: (row1, row2) => row1 !== row2,
             }),
         };
+        fetchParams.myFollowOnly = this.props.home.isFollowed;
     }
 
     componentDidMount() {
         const { dispatch ,tag} = this.props;
-        fetchParams.tag = tag;
+        let params = _.cloneDeep(fetchParams);
+        params.tag = tag;
         if(typeof tag !== 'undefined')
-            dispatch(fetchList(fetchParams));
+            dispatch(fetchList(params));
     }
 
     _onRefresh(isFlow) {
         const { dispatch ,tag } = this.props;
-        fetchParams.refreshing = true;
-        fetchParams.tag = tag;
-
+        let params = _.cloneDeep(fetchParams);
+        params.refreshing = true;
+        params.tag = tag;
+        params.loadingMore = false;
+        params.loadedSize = 0;
+        params.myFollowOnly = this.props.home.isFollowed;
         if (isFlow){
-            dispatch(fetchList(fetchParams));
+            params.flowRefreshing = true;
+            dispatch(fetchList(params));
         } else {
-            fetchParams.flowRefreshing = true;
-            dispatch(fetchList(fetchParams));
+            params.flowRefreshing = false;
+            dispatch(fetchList(params));
         }
     }
 
@@ -217,17 +223,30 @@ class Flow extends React.Component {
 
     _onScroll(event) {
         const { dispatch, tag } = this.props;
-        const loadedSize = this.props.flow.flowList[tag].length;
-        const timestamp = this.props.flow.timestamp[tag];
         let maxOffset = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height;
         let offset = event.nativeEvent.contentOffset.y;
-        if ((maxOffset - offset) < 0 && !this.props.flow.loadingMore) {
-            fetchParams.refreshing = true;
-            fetchParams.tag = tag;
-            fetchParams.loadingMore = true;
-            dispatch(fetchList(true, true, false, tag, loadedSize, timestamp));
+        let params = _.cloneDeep(fetchParams);
+        if ((maxOffset - offset) < 0 && !this.props.flow.loadingMore && !this.props.flow.noMoreData) {
+            params.loadedSize = this.props.flow.flowList[tag].length;
+            params.timestamp = this.props.flow.timestamp[tag];
+            params.refreshing = true;
+            params.tag = tag;
+            params.loadingMore = true;
+            params.myFollowOnly = this.props.home.isFollowed;
+            dispatch(fetchList(params));
         }
     }
+
+    componentDidUpdate(){
+        const {flow, tag, dispatch, home} = this.props;
+        if(flow.pageRefresh){
+            let params = _.cloneDeep(fetchParams);
+            params.myFollowOnly = home.isFollowed;
+            params.tag = tag;
+            dispatch(fetchList(params));
+        }
+    }
+
     render() {
         const {flow, tag} = this.props;
         let list = null;
@@ -250,7 +269,7 @@ class Flow extends React.Component {
                     refreshControl={
                         <RefreshControl
                           refreshing={flow.refreshing}
-                          onRefresh={() => this._onRefresh(true)}
+                          onRefresh={() => this._onRefresh(false)}
                           title="努力加载中..."
                           titleColor="#fc7d30"
                           colors={['#fc7d30']}

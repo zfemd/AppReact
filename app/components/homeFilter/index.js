@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import {showorHideFollow} from '../../actions/home';
+import {pageRefresh} from '../../actions/flow';
 
 var {height, width} = Dimensions.get('window');
 
@@ -50,6 +51,7 @@ class HomeFilter extends React.Component {
         if(param === 1){
             dispatch(showorHideFollow(true));
         }
+        dispatch(pageRefresh());
     }
 
     render() {
@@ -114,9 +116,10 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-    const { home } = state;
+    const { home, flow } = state;
     return {
-        home
+        home,
+        flow
     };
 }
 

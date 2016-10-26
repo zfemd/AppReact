@@ -126,7 +126,7 @@ class Home extends React.Component {
                     renderTabBar={() => <TabBar {...this.props}/>}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
-                    <Flow tag='all' isFollowed={this.state.isFollowed} navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
+                    <Flow tag='all' navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
 
                     <Channel navigator={this.props.navigator} tabLabel="ios-compass-outline" style={styles.tabView}></Channel>
 
@@ -137,7 +137,7 @@ class Home extends React.Component {
                     <MyPage navigator={this.props.navigator} tabLabel="ios-person-outline" style={styles.tabView}/>
                 </ScrollableTabView>
                 {
-                    this.props.home.showFilter ?  <HomeFilter isFollowed={this.state.isFollowed} click={this._onFilterClicked} key=''/> : <View></View>
+                    this.props.home.showFilter ?  <HomeFilter  click={this._onFilterClicked} key=''/> : <View></View>
 
                 }
 
@@ -149,9 +149,10 @@ class Home extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { home } = state;
+    const { home, flow } = state;
     return {
-        home
+        home,
+        flow
     };
 }
 

@@ -19,7 +19,8 @@ export default keyMirror({
     RECEIVE_COMMENTS_LIST: null,
     RECEIVE_NOTE_DETAIL: null,
     SHOW_FOLLOW: null,
-    SHOW_FILTER: null
+    SHOW_FILTER: null,
+    PAGE_REFRESH: null
 });
 
 

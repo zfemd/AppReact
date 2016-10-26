@@ -20,7 +20,7 @@ export function fetchList(params) {
                 'timestamp=' + params.timestamp
                 + '&pageSize=' + pageSize
                 + '&loadedSize=' + params.loadedSize
-                + (params.myFollowOnly? '&myFollowOnly': '')
+                + (params.myFollowOnly ? '&myFollowOnly' : '')
                 + '&tag=' + (params.tag !== 'all' ? params.tag : ''), 'get', '', token)
                 .then((list) => {
                     if (list.resultCode === 0 && list.resultValues.length > 0) {
@@ -64,4 +64,13 @@ function receiveFlowList(list, tag, noMoreData) {
         tag,
         list
     };
+}
+
+export function pageRefresh() {
+    return dispatch => {
+        dispatch({
+            type: types.PAGE_REFRESH,
+            pageRefresh: true
+        })
+    }
 }
