@@ -239,7 +239,7 @@ class Flow extends React.Component {
 
     componentDidUpdate(){
         const {flow, tag, dispatch, home} = this.props;
-        if(flow.pageRefresh){
+        if(flow.pageRefresh && flow.currentTag === tag){
             let params = _.cloneDeep(fetchParams);
             params.myFollowOnly = home.isFollowed;
             params.tag = tag;

@@ -9,7 +9,8 @@ const initialState = {
     flowList: {},
     timestamp: {},
     noMoreData: false,
-    pageRefresh: false
+    pageRefresh: false,
+    currentTag: 'all'
 };
 
 
@@ -23,7 +24,8 @@ const flow = function (state = initialState, action = {}) {
                 loadingMore: action.loadingMore,
                 flowRefreshing: action.flowRefreshing,
                 timestamp: state.timestamp,
-                pageRefresh: false
+                pageRefresh: false,
+                currentTag: action.tag
             });
         case types.RECEIVE_FLOW_LIST:
             return Object.assign({}, state, {
