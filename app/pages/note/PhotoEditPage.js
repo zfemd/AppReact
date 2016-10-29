@@ -506,7 +506,7 @@ var injectScript = fabrics + fabricContrast + `
         var imgElement = document.getElementById('image');
         var imgElementOrigin = document.getElementById('image-origin');
         var canvas = document.getElementById('c');
-        var canvasFab = new fabric.Canvas('c', {isDrawingMode:false, renderOnAddRemove: true});
+        var canvasFab = new fabric.Canvas('c', {isDrawingMode:false, renderOnAddRemove: true, controlsAboveOverlay:false});
         var canvasParent = canvas.parentElement;
         var imgFab = null;
         var scale = 1;
@@ -621,11 +621,11 @@ var injectScript = fabrics + fabricContrast + `
 
                     applyFilters();
                 } else if (message.type === 'addSticker') {
+
                     fabric.Image.fromURL(message.data, function(oImage) {
                         canvasFab.add(oImage);
                         choseStickers[message.name] = oImage;
-                        //oImage.center();
-                    }, {scaleX:scale, scaleY:scale, hasControls:true});
+                    }, {scaleX:scale, scaleY:scale, hasControls:true, cornerSize:12 * scale, rotatingPointOffset: 40 * scale, transparentCorners: false, cornerColor: "#ccc"});
                     WebViewBridge.send(JSON.stringify({type:"addedSticker"}));
 
                 } else if (message.type === 'removeSticker') {
@@ -634,7 +634,11 @@ var injectScript = fabrics + fabricContrast + `
                     WebViewBridge.send(JSON.stringify({type:"removedSticker"}));
 
                 } else if (message.type == 'continue') {
+
+                    // remove controls before export to data url.
+                    canvasFab.getActiveObject().setOptions({hasControls:false});
                     WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'png'})}));
+
                 } else if (message.type === 'imageLoaded') {
                     WebViewBridge.send('Image loading');
 
