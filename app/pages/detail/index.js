@@ -24,6 +24,8 @@ import ImageSlider from '../../components/imageSlider';
 import {fetchDetail} from '../../actions/detail';
 import {fetchCommentsList} from '../../actions/comments';
 import { connect } from 'react-redux';
+import React_Native_Taobao_Baichuan_Api from 'react-native-taobao-baichuan-api';
+
 
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
@@ -125,7 +127,7 @@ class Detail extends React.Component {
         var rowHash = Math.abs(hashCode(rowData));
         var imgSource = thumbs[(rowHash - 2) % thumbs.length];
         return (
-            <TouchableOpacity onPress={() => this._jumpToDetailPage()} underlayColor="transparent" activeOpacity={0.5}>
+            <TouchableOpacity onPress={() => this._jumpToRecommendPage()} underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.sysRow}>
                         <PrefetchImage
@@ -190,6 +192,10 @@ class Detail extends React.Component {
 
     componentWillUnmount() {
 
+    }
+
+    _jumpToRecommendPage() {
+        React_Native_Taobao_Baichuan_Api.jump('23757812458')
     }
 
     render() {
