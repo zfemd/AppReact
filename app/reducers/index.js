@@ -8,6 +8,7 @@ import flow from './flow';
 import channel from './channel';
 import detail from './detail';
 import comments from './comments';
+import recommend from './recommend';
 
 const rootReducer = combineReducers({
     home,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     flow,
     channel,
     detail,
-    comments
+    comments,
+    recommend
 });
 
 export default rootReducer;
