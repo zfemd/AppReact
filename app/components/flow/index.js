@@ -53,6 +53,7 @@ class Flow extends React.Component {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
             }),
+            list: this.props.flow
         };
         fetchParams.myFollowOnly = this.props.home.isFollowed;
     }
@@ -111,11 +112,18 @@ class Flow extends React.Component {
 
     }
 
-    _like(noteId) {
+    _like(noteId,tag) {
         const { navigator } = this.props;
+        let the = this;
         Token.getToken(navigator).then((token) => {
                 if (token) {
-                    like(noteId);
+                    like(noteId,token).then((res) => {
+                        let list = the.props.flow.flowList[tag];
+                        let note = _.find(list,{noteId:noteId});
+                        note.liked = true;
+                        note.likeCount++;
+                        this.setState({list: this.props.flow})
+                    });
                 }
             }
         );
@@ -190,11 +198,12 @@ class Flow extends React.Component {
                                 }
                             </View>
                             <View style={styles.like}>
-                                <TouchableOpacity onPress={()=> this._like(val.noteId)}>
+                                <TouchableOpacity onPress={()=> this._like(val.noteId,tag)}>
                                     <Icon
                                         name={'ios-heart'}
                                         size={18}
-                                        color={'#bebdbd'}
+
+                                        color={ val.liked?'#fc7d30':'#bebdbd'}
                                         style={{marginTop : -4}}
                                         />
                                 </TouchableOpacity>

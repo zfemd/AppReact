@@ -23,7 +23,6 @@ export class Token {
 
 Token.getToken = async function (navigator) {
     var token = null;
-console.log('===========')
     try {
         token = await AsyncStorage.getItem(StorageKeys.TOKEN_STORAGE_KEY, (error, result) => {
             if (error) {
@@ -126,4 +125,22 @@ export function request(url, method, body, token) {
             reject(error);
         });
     });
+}
+
+export function like(noteId,token){
+    return request('/notes/'+noteId+'/likes', 'post', '', token)
+        .then((res) => {
+            if(res.resultCode === 0){
+                return true;
+            } else {
+                return false;
+            }
+        }, function (error) {
+            return false;
+            console.log(error);
+        })
+        .catch(() => {
+            return false;
+            console.log('network error');
+        });
 }
