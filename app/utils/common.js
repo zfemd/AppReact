@@ -1,7 +1,9 @@
 'use strict';
 
 import {
-    AsyncStorage
+    AsyncStorage,
+    InteractionManager,
+    Navigator
 } from 'react-native';
 import StorageKeys from '../constants/StorageKeys';
 import configs from '../constants/configs';
@@ -21,7 +23,7 @@ export class Token {
 
 Token.getToken = async function (navigator) {
     var token = null;
-
+console.log('===========')
     try {
         token = await AsyncStorage.getItem(StorageKeys.TOKEN_STORAGE_KEY, (error, result) => {
             if (error) {
@@ -32,12 +34,14 @@ Token.getToken = async function (navigator) {
         if (token == null) {
             if (navigator) {
                 InteractionManager.runAfterInteractions(() => {
-                    navigator.resetTo({
+                    navigator.push({
                         component: LoginPage,
-                        name: 'LoginPage'
+                        name: 'LoginPage',
+                        sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
                     });
                 });
             }
+            return null;
         }
     } catch (error) {
         console.log('Failed to get token from server, AsyncStorage error: ' + error.message);

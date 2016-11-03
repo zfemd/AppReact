@@ -13,6 +13,7 @@ import {
 import { connect } from 'react-redux';
 import {showorHideFollow} from '../../actions/home';
 import {pageRefresh} from '../../actions/flow';
+import { Token } from '../../utils/common';
 
 var {height, width} = Dimensions.get('window');
 
@@ -44,14 +45,23 @@ class HomeFilter extends React.Component {
     }
 
     _filter(param) {
-        const { dispatch} = this.props;
+        const { dispatch, navigator} = this.props;
         if(param === 0){
             dispatch(showorHideFollow(false));
+            dispatch(pageRefresh());
+            return;
         }
-        if(param === 1){
-            dispatch(showorHideFollow(true));
-        }
-        dispatch(pageRefresh());
+
+        Token.getToken(navigator).then((token) => {
+            if(param === 1 && token){
+                dispatch(showorHideFollow(true));
+            } else {
+                dispatch(showorHideFollow(false));
+                return;
+            }
+
+            dispatch(pageRefresh());
+        });
     }
 
     render() {

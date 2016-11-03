@@ -137,7 +137,7 @@ class Home extends React.Component {
                     <MyPage navigator={this.props.navigator} tabLabel="ios-person-outline" style={styles.tabView}/>
                 </ScrollableTabView>
                 {
-                    this.props.home.showFilter ?  <HomeFilter  click={this._onFilterClicked} key=''/> : <View></View>
+                    this.props.home.showFilter ?  <HomeFilter navigator={this.props.navigator}  click={this._onFilterClicked} key=''/> : <View></View>
 
                 }
 

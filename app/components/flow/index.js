@@ -26,9 +26,11 @@ import UserPage from '../../pages/user';
 import LoginPage from '../../pages/login';
 import {fetchList} from '../../actions/flow';
 import { connect } from 'react-redux';
-import { Token } from '../../utils/common';
+import { Token,like } from '../../utils/common';
 import {fetchDetail} from '../../actions/detail';
 import _ from 'lodash';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const {height, width} = Dimensions.get('window');
 let fetchParams = {
     refreshing : false,
@@ -103,18 +105,20 @@ class Flow extends React.Component {
                             sceneConfigs: Navigator.SceneConfigs.FloatFromRight
                         });
                     });
-                } else {
-                    InteractionManager.runAfterInteractions(() => {
-                        navigator.push({
-                            component: LoginPage,
-                            name: 'LoginPage',
-                            sceneConfigs: Navigator.SceneConfigs.FloatFromBottom
-                        });
-                    });
                 }
             }
         );
 
+    }
+
+    _like(noteId) {
+        const { navigator } = this.props;
+        Token.getToken(navigator).then((token) => {
+                if (token) {
+                    like(noteId);
+                }
+            }
+        );
     }
 
     _renderFooter( noMoreData ) {
@@ -186,7 +190,15 @@ class Flow extends React.Component {
                                 }
                             </View>
                             <View style={styles.like}>
-                                <Image source={require('../../assets/flow/heart.png')}/>
+                                <TouchableOpacity onPress={()=> this._like(val.noteId)}>
+                                    <Icon
+                                        name={'ios-heart'}
+                                        size={18}
+                                        color={'#bebdbd'}
+                                        style={{marginTop : -4}}
+                                        />
+                                </TouchableOpacity>
+
                                 <Text style={styles.interText}>{val.likeCount}</Text>
                             </View>
                             <View style={styles.like}>
@@ -421,6 +433,10 @@ var styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 14,
         marginLeft: 10
+    },
+    heart: {
+        width: 20,
+        height: 20
     }
 });
 

@@ -60,7 +60,7 @@ class TabBar extends React.Component {
     _onIconPress(i) {
         const { navigator } = this.props;
         let the = this;
-        Token.getToken(navigator).then((token) => {
+        Token.getToken().then((token) => {
             if (!token && (i === 2 || i === 3 || i === 4)) {
                 InteractionManager.runAfterInteractions(() => {
                     the.props.navigator.push({
