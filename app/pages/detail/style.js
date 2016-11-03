@@ -262,8 +262,19 @@ const styles = StyleSheet.create({
     recPriceOld: {
         textDecorationLine: 'line-through',
         marginLeft: 5
+    },
+    recFlowPrice: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        height: 22,
+        marginTop: -22,
+        width: width/3-5,
+        position: 'absolute'
+    },
+    recFlowText: {
+        color: '#fc7d30',
+        paddingLeft: 4
     }
-
 });
 
 export default styles;

@@ -60,6 +60,9 @@ class Detail extends React.Component {
                             width={width/3-5}
                             height={width/3-5}
                             />
+                        <View style={styles.recFlowPrice}>
+                            <Text style={[styles.baseText,styles.recFlowText]}>￥{rowData.price}</Text>
+                        </View>
                         <View>
                             <Text style={styles.baseText} lineBreakMode={'tail'} numberOfLines={1}>
                                 {rowData.title}
