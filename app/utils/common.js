@@ -72,26 +72,26 @@ Token.removeToken = function (token) {
 Token.isTokenValid = async function () {
     let token = await Token.getToken();
     if (token) {
-         await fetch(configs.serviceUrl + 'login/authenticate/token', {
-             method: 'POST',
-             headers: {
-                 'X-App-Token': token
-             }
-         }).then(response => {
-             console.log(response);
-             if (response.ok) {
-                 return response.json()
-             }
-         }).then((responseJson) => {
-             if (responseJson && responseJson.resultCode == 0) {
-                 if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
-                     AsyncStorage.setItem(TOKEN_STORAGE_KEY, responseJson.token);
-                     return true;
-                 }
-             }
-         }).catch((error) => {
-             Alert.alert('登陆失败', "网络连接失败：" + error);
-         });
+        await fetch(configs.serviceUrl + 'login/authenticate/token', {
+            method: 'POST',
+            headers: {
+                'X-App-Token': token
+            }
+        }).then(response => {
+            console.log(response);
+            if (response.ok) {
+                return response.json()
+            }
+        }).then((responseJson) => {
+            if (responseJson && responseJson.resultCode == 0) {
+                if (responseJson.resultValues && responseJson.resultValues.loginSuccess) {
+                    AsyncStorage.setItem(TOKEN_STORAGE_KEY, responseJson.token);
+                    return true;
+                }
+            }
+        }).catch((error) => {
+            Alert.alert('登陆失败', "网络连接失败：" + error);
+        });
     }
 
     return false;
@@ -105,7 +105,7 @@ export function request(url, method, body, token) {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'X-App-Token': token? token: ''
+                'X-App-Token': token ? token : ''
             },
             body
         }).then((response) => {
@@ -127,20 +127,38 @@ export function request(url, method, body, token) {
     });
 }
 
-export function like(noteId,token){
-    return request('/notes/'+noteId+'/likes', 'post', '', token)
+export function like(noteId, token) {
+    return request('/notes/' + noteId + '/likes', 'POST', '', token)
         .then((res) => {
-            if(res.resultCode === 0){
+            if (res.resultCode === 0) {
                 return true;
             } else {
                 return false;
             }
         }, function (error) {
-            return false;
             console.log(error);
+            return false;
         })
         .catch(() => {
-            return false;
             console.log('network error');
+            return false;
+        });
+}
+
+export function follow(userId, token) {
+    return request('/user/follows?followeeId='+userId, 'POST', '', token)
+        .then((res) => {
+            if (res.resultCode === 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }, function (error) {
+            console.log(error);
+            return false;
+        })
+        .catch(() => {
+            console.log('network error');
+            return false;
         });
 }

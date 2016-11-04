@@ -20,12 +20,15 @@ import Flow from '../../components/flow';
 import Share from '../../components/share';
 import CommentPage from '../../pages/comment';
 import CommentListPage from '../../pages/commentList';
+import UserPage from '../../pages/user';
 import ImageSlider from '../../components/imageSlider';
 import {fetchDetail} from '../../actions/detail';
 import {fetchCommentsList} from '../../actions/comments';
 import {fetchRecommendList} from '../../actions/recommend';
 import { connect } from 'react-redux';
 import React_Native_Taobao_Baichuan_Api from 'react-native-taobao-baichuan-api';
+import { Token,follow } from '../../utils/common';
+import _ from 'lodash';
 
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
@@ -43,7 +46,8 @@ class Detail extends React.Component {
         this.state = {
             commendTaobaoSource: this.ds.cloneWithRows([]),
             showShare: false,
-            position: 0
+            position: 0,
+            note: null
         };
     }
 
@@ -76,18 +80,27 @@ class Detail extends React.Component {
     }
 
     _onSharePress() {
-        this.setState({showShare: !this.state.showShare});
+        const {navigator } = this.props;
+        Token.getToken(navigator).then((token) => {
+            if (token) {
+                this.setState({showShare: !this.state.showShare});
+            }
+        });
     }
 
     _jumpToCommentPage() {
         const { navigator } = this.props;
-        InteractionManager.runAfterInteractions(() => {
-            navigator.push({
-                component: CommentPage,
-                name: 'CommentPage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromBottom,
-                noteId: this.props.route.note.noteId
-            });
+        Token.getToken(navigator).then((token) => {
+            if (token) {
+                InteractionManager.runAfterInteractions(() => {
+                    navigator.push({
+                        component: CommentPage,
+                        name: 'CommentPage',
+                        sceneConfigs: Navigator.SceneConfigs.FloatFromBottom,
+                        noteId: this.props.route.note.noteId
+                    });
+                });
+            }
         });
     }
 
@@ -106,7 +119,7 @@ class Detail extends React.Component {
         const { dispatch, route } = this.props;
         let the = this;
         dispatch(fetchCommentsList(route.note.noteId));
-        dispatch(fetchRecommendList(route.note.noteId)).then(()=>{
+        dispatch(fetchRecommendList(route.note.noteId)).then(()=> {
             let taobaoList = the.props.recommend.recommendList.taobao ? the.props.recommend.recommendList.taobao : [];
             the.setState({'commendTaobaoSource': the.ds.cloneWithRows(taobaoList)})
         });
@@ -118,6 +131,36 @@ class Detail extends React.Component {
 
     _jumpToRecommendPage(itemId) {
         React_Native_Taobao_Baichuan_Api.jump(itemId)
+    }
+
+    _jumpToUserPage(userId) {
+        const { navigator } = this.props;
+        Token.getToken(navigator).then((token) => {
+                if (token) {
+                    InteractionManager.runAfterInteractions(() => {
+                        navigator.push({
+                            component: UserPage,
+                            name: 'UserPage',
+                            sceneConfigs: Navigator.SceneConfigs.FloatFromRight
+                        });
+                    });
+                }
+            }
+        );
+    }
+
+    _follow(userId) {
+        let {navigator,detail } = this.props;
+        Token.getToken(navigator).then((token) => {
+            if (token) {
+                follow(userId, token).then((res) => {
+                    console.log(res);
+                    let note = _.find(detail.note,{userId:userId});
+                    note.followed = true;
+                    this.setState({note: note});
+                });
+            }
+        });
     }
 
     render() {
@@ -156,14 +199,25 @@ class Detail extends React.Component {
 
                     <View style={[styles.note,styles.block]}>
                         <View style={styles.user}>
-                            <Image style={styles.portrait}
-                                   source={{uri: (detail.note[noteId] ? detail.note[noteId].portrait : 'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'), width:34, height:34 }}/>
-                            <View style={styles.info}>
-                                <Text
-                                    style={styles.nick}>{detail.note[noteId] ? detail.note[noteId].nickname : '' }</Text>
-                                <Text style={styles.date}>5月26日 11:29</Text>
-                            </View>
-                            <Image style={styles.follow} source={require('../../assets/note/follow.png')}/>
+                            <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this._jumpToUserPage(detail.note[noteId].userId)}>
+                                <Image style={styles.portrait}
+                                       source={{uri: (detail.note[noteId] ? detail.note[noteId].portrait : 'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'), width:34, height:34 }}/>
+                                <View style={styles.info}>
+                                    <Text
+                                        style={styles.nick}>{detail.note[noteId] ? detail.note[noteId].nickname : '' }</Text>
+                                    <Text style={styles.date}>5月26日 11:29</Text>
+                                </View>
+                            </TouchableOpacity>
+
+                            {
+                                !detail.note[noteId].followed?
+                                    <TouchableOpacity style={styles.follow} onPress={() => this._follow(detail.note[noteId].userId)}>
+                                        <Image  source={require('../../assets/note/follow.png')}/>
+                                    </TouchableOpacity>
+                                    :
+                                    <View></View>
+                            }
+
                         </View>
                         <View style={styles.thumbWarp}>
 

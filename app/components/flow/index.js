@@ -109,7 +109,6 @@ class Flow extends React.Component {
                 }
             }
         );
-
     }
 
     _like(noteId,tag) {
@@ -122,7 +121,7 @@ class Flow extends React.Component {
                         let note = _.find(list,{noteId:noteId});
                         note.liked = true;
                         note.likeCount++;
-                        this.setState({list: this.props.flow})
+                        this.setState({list: this.props.flow});
                     });
                 }
             }
