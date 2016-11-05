@@ -52,12 +52,16 @@ export default class ForgetPasswordPage extends Component {
             toast('请填写正确的手机号码');
             return false;
         }
-        fetch(configs.serviceUrl + '/message/verification-code?purpose=login&mobile='+this.state.phone, {
+        fetch(configs.serviceUrl + '/message/verification-code', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({
+                purpose: 'login',
+                mobile: this.state.phone
+            })
         }).then((response) => {
             if (response.ok) {
                 return response.json()
@@ -85,11 +89,17 @@ export default class ForgetPasswordPage extends Component {
         //    body: formData
         //});
 
-        fetch(configs.serviceUrl + '/user/login?code=' + code + '&mobile=' + phone, {
+        fetch(configs.serviceUrl + '/user/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                loginMethod: 'VERIFICATION_CODE',
+                secret: code,
+                mobileNumber: phone
+            })
         }).then((response) => {
             if (response.ok) {
                 return response.json();

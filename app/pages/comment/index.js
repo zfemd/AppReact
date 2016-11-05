@@ -31,15 +31,15 @@ class Comment extends React.Component {
         const noteId = route.noteId;
         Token.getToken(navigator).then((token) => {
                 if (token) {
-                    //let body = {
-                    //    comment: this.state.comment,
-                    //    rating: 0,
-                    //    longitude: 0,
-                    //    latitude: 0
-                    //};
-                    //body = JSON.stringify(body);
-                    const body = 'comment=' + this.state.comment + '&rating=0&longitude=0&latitude=0';
-                    request('/notes/' + noteId + '/comments?' + body, 'POST', '', token)
+                    let body = {
+                        comment: this.state.comment,
+                        rating: 0,
+                        longitude: 0,
+                        latitude: 0
+                    };
+                    body = JSON.stringify(body);
+                    //const body = 'comment=' + this.state.comment + '&rating=0&longitude=0&latitude=0';
+                    request('/notes/' + noteId + '/comments', 'POST', body, token)
                         .then((res) => {
                             if (res.resultCode === 0) {
                                 Alert.alert('评论', "评论成功",

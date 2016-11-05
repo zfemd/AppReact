@@ -149,7 +149,11 @@ export function like(noteId, token) {
 }
 
 export function follow(userId, token) {
-    return request('/user/follows?followeeId='+userId, 'POST', '', token)
+    let body = {
+        followeeId: userId
+    };
+    body = JSON.stringify(body);
+    return request('/user/follows', 'POST', body, token)
         .then((res) => {
             if (res.resultCode === 0) {
                 return true;
