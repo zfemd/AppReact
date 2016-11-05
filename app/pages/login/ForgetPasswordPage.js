@@ -19,7 +19,8 @@ import {
 
 import Home from '../home';
 import {
-    Token
+    Token,
+    toast
 } from '../../utils/common';
 import Button from '../../../app/components/button/Button';
 import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
@@ -47,6 +48,10 @@ export default class ForgetPasswordPage extends Component {
         }
     }
     _sendCode() {
+        if(!this.state.phone){
+            toast('请填写正确的手机号码');
+            return false;
+        }
         fetch(configs.serviceUrl + '/message/verification-code?purpose=login&mobile='+this.state.phone, {
             method: 'POST',
             headers: {
@@ -58,8 +63,10 @@ export default class ForgetPasswordPage extends Component {
                 return response.json()
             }
         }).then((responseJson) => {
-            console.log(responseJson);
-            return responseJson.resultCode;
+            if(responseJson.resultCode == 0){
+                toast('验证码已发送');
+                return responseJson.resultCode;
+            }
         }).catch((error) => {
             console.error(error);
         });
@@ -100,7 +107,7 @@ export default class ForgetPasswordPage extends Component {
                         }, 1000);
 
                     });
-
+                    toast('登录成功');
                     Token.setToken(responseJson.resultValues.token);
                     return true;
                 }

@@ -26,7 +26,7 @@ import UserPage from '../../pages/user';
 import LoginPage from '../../pages/login';
 import {fetchList} from '../../actions/flow';
 import { connect } from 'react-redux';
-import { Token,like } from '../../utils/common';
+import { Token,like, toast } from '../../utils/common';
 import {fetchDetail} from '../../actions/detail';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';

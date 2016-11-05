@@ -3,11 +3,14 @@
 import {
     AsyncStorage,
     InteractionManager,
-    Navigator
+    Navigator,
+    ToastAndroid,
+    Platform
 } from 'react-native';
 import StorageKeys from '../constants/StorageKeys';
 import configs from '../constants/configs';
 import LoginPage from '../pages/login/LoginPage';
+import Toast from 'react-native-root-toast';
 
 export function naviGoBack(navigator) {
     if (navigator && navigator.getCurrentRoutes().length > 1) {
@@ -161,4 +164,32 @@ export function follow(userId, token) {
             console.log('network error');
             return false;
         });
+}
+
+export function toast(message){
+    if(Platform.OS === 'ios'){
+        let toast = Toast.show(message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            onShow: () => {
+                // calls on toast\`s appear animation start
+            },
+            onShown: () => {
+                // calls on toast\`s appear animation end.
+            },
+            onHide: () => {
+                // calls on toast\`s hide animation start.
+            },
+            onHidden: () => {
+                // calls on toast\`s hide animation end.
+            }
+        });
+
+    } else {
+        ToastAndroid.show(message, ToastAndroid.SHORT,ToastAndroid.BOTTOM);
+    }
 }

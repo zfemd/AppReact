@@ -12,7 +12,7 @@ import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import SecurityPage from './security';
-import { request, Token } from '../../utils/common';
+import { request, Token, toast } from '../../utils/common';
 import Home from '../home';
 
 var chevronRightIcon = <Icon style={[styles.messageLinkIcon]} size={16} name="angle-right"/>;
@@ -40,7 +40,7 @@ class SettingPage extends React.Component {
                     .then((ret) => {
                         if(ret.resultCode === 0){
                             Token.removeToken(token);
-                            Alert.alert('登出成功', "登出成功");
+                            toast('登出成功');
                             navigator.jumpTo(navigator.getCurrentRoutes()[0]);
                         } else {
                             Alert.alert('登出失败', "登出失败");
