@@ -155,12 +155,14 @@ class Flow extends React.Component {
 
     _renderChildren(tag){
         return this.props.flow.flowList[tag].map((val, key) => {
+            val.imageHeight = val.imageHeight !==0 ? val.imageHeight : 100;
+            val.imageWidth = val.imageWidth !==0 ? val.imageWidth : 100;
             let height = val.imageHeight / val.imageWidth * ((width/100)*47);
             return (
                 <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent" activeOpacity={0.5}>
                     <View>
                         <PrefetchImage
-                            imageUri={val.image}
+                            imageUri={val.image?val.image:'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
                             width={(width/100)*47}
