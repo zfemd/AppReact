@@ -29,6 +29,10 @@ export default class ConfirmBar extends Component {
         }
     }
 
+    setNativeProps(nativeProps) {
+        this._root.setNativeProps(nativeProps);
+    }
+
     _onCancelPressed() {
 
     }

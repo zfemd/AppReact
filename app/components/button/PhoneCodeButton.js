@@ -22,7 +22,10 @@ export default class PhoneCodeButton extends Component {
         };
 
         this.timerId = null;
+    }
 
+    setNativeProps(nativeProps) {
+        this._root.setNativeProps(nativeProps);
     }
 
     componentWillUnmount() {

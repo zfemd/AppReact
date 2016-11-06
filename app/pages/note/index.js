@@ -13,10 +13,10 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 import ImagePicker from 'react-native-image-picker';
 import { connect } from 'react-redux';
 import Toolbar from '../../components/toolbar';
-//import ToolbarFilter from '../../components/toolbar/ToolbarFilter';
 import PhoneLib from '../../components/camera/PhoneLib';
 import StoreActions from '../../constants/actions';
 import PhotoEditPage from './PhotoEditPage';
@@ -28,9 +28,7 @@ class SelectPhotoPage extends Component {
     constructor(props, context) {
         super(props);
 
-        this.state = {
-            showToolbarFilter: false
-        };
+        this.state = {};
 
         this.cameraOptions = {
             title: '选择照片',
@@ -56,71 +54,35 @@ class SelectPhotoPage extends Component {
             console.log('Response = ', response);
 
             if (response.didCancel) {
-                console.log('User cancelled image picker');
-            }
-            else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            }
-            else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            }
-            else {
+            } else if (response.error) {
+                Toast.show(response.error, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+            } else if (response.customButton) {
+            } else {
                 // You can display the image using either data...
-                const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-
-                // or a reference to the platform specific asset location
-                if (Platform.OS === 'ios') {
-                    const source = {uri: response.uri.replace('file://', ''), isStatic: true};
-                } else {
-                    const source = {uri: response.uri, isStatic: true};
-                }
+                //let source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
 
                 this.setState({
-                    avatarSource: source
+                    avatarSource: response
                 });
             }
         });
     }
 
     _onPressImageLib() {
-        // More info on all the options is below in the README...just some common use cases shown here
-        var options = {
-            title: 'Select Avatar',
-            customButtons: {
-                'Choose Photo from Facebook': 'fb',
-            },
-            storageOptions: {
-                skipBackup: true,
-                path: 'images'
-            }
-        };
 
         // Open Image Library:
         ImagePicker.launchImageLibrary(this.phoneLibOptions, (response)  => {
             console.log('Response = ', response);
 
             if (response.didCancel) {
-                console.log('User cancelled image picker');
-            }
-            else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
-            }
-            else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
-            }
-            else {
+            } else if (response.error) {
+                Toast.show(response.error, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+            } else if (response.customButton) {
+            } else {
                 // You can display the image using either data...
-                const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-
-                // or a reference to the platform specific asset location
-                if (Platform.OS === 'ios') {
-                    const source = {uri: response.uri.replace('file://', ''), isStatic: true};
-                } else {
-                    const source = {uri: response.uri, isStatic: true};
-                }
-
+                //let source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
                 this.setState({
-                    avatarSource: source
+                    avatarSource: response
                 });
             }
         });
@@ -165,15 +127,13 @@ class SelectPhotoPage extends Component {
         }
     }
 
-    _showFilter() {
-        this.setState({showToolbarFilter: true});
-    }
-
     componentDidMount() {
+        // only fetch JPEG images.
         var fetchParams: Object = {
             first: 1,
             groupTypes: 'SavedPhotos',
-            assetType: "Photos"
+            assetType: "Photos",
+            mimeTypes: ['image/jpeg']
         };
 
         if (Platform.OS === 'android') {

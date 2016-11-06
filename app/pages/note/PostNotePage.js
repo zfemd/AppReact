@@ -14,6 +14,7 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
+import Toast from 'react-native-root-toast';
 import Geolocation from 'react-native/Libraries/Geolocation/Geolocation';
 import { connect } from 'react-redux';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
@@ -116,7 +117,7 @@ class PostNotePage extends Component {
                     })
                 }
             } else {
-                alert(responseJson.resultErrorMessage);
+                Toast.show(responseJson.resultErrorMessage, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             }
         }).catch((error) => {
             console.error(error);
@@ -150,7 +151,7 @@ class PostNotePage extends Component {
             if (responseJson.ok) {
                 this._sendPhotos(responseJson.noteId);
             } else {
-                alert(responseJson.resultErrorMessage);
+                Toast.show(responseJson.resultErrorMessage, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             }
         }).catch((error) => {
             console.error(error);

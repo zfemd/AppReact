@@ -19,7 +19,7 @@ import {
     TouchableHighlight,
     View
 } from 'react-native';
-
+import Toast from 'react-native-root-toast';
 import { connect } from 'react-redux';
 import WebViewBridge from 'react-native-webview-bridge';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
@@ -284,16 +284,6 @@ class PhotoEditPage extends Component {
                     }
                     break;
             }
-        }
-
-        switch (message) {
-
-            case "Image loading":
-                console.log("Loading image! yeah");
-                break;
-            case "got the message inside webview":
-                console.log("we have got a message from webview! yeah");
-                break;
         }
     }
 
@@ -641,7 +631,6 @@ var injectScript = fabrics + fabricContrast + `
                     WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'jpeg'})}));
 
                 } else if (message.type === 'imageLoaded') {
-                    WebViewBridge.send('Image loading');
 
                     imgElementOrigin.addEventListener('load', function(){
                         imgFab = new fabric.Image(imgElementOrigin, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
@@ -696,7 +685,9 @@ var injectScript = fabrics + fabricContrast + `
                     }
 
                 } else if (message.type === "changeTab") {
+
                     imageClickable = !!message.imageClickable;
+
                 } else if (message.type === "addTag") {
                     WebViewBridge.send(JSON.stringify(message));
                     var position =  {offsetX:message.data.x, offsetY:message.data.y};
@@ -719,10 +710,6 @@ var injectScript = fabrics + fabricContrast + `
                     tags[circle.id] = {circle: circle, group:group};
                     //var textFab = new fabric.Text(message.data.name, {left: message.data.position.left, top: message.data.position.top, selectable:false});
                     //canvasFab.add(textFab);
-                }
-            } else {
-                if (message === "hello from react-native") {
-                  WebViewBridge.send("got the message inside webview");
                 }
             }
         };
