@@ -167,7 +167,7 @@ class Detail extends React.Component {
         const {detail, route, comments} = this.props;
         const noteId = route.note.noteId;
         let images = [];
-        if (detail.note[noteId]) {
+        if (detail.note[noteId] && detail.note[noteId].images[0].url) {
             detail.note[noteId].images.map((val, key) => {
                 let image = {
                     width: val.width,
@@ -179,9 +179,9 @@ class Detail extends React.Component {
             }, this);
         } else {
             let image = {
-                width: 478,
-                height: 418,
-                uri: 'https://hbimg.b0.upaiyun.com/be437a14550ce40dd0967e26bc4dd72dc2acdd88c418-TfAcUn_fw658'
+                width: 376,
+                height: 288,
+                uri: 'http://img.hb.aicdn.com/58373a70edfbcc1bc71bee64521b09f8ba228ff21848d2-qHcWbh_fw658'
             };
             images.push(image);
         }

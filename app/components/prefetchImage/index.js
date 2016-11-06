@@ -29,7 +29,7 @@ class PrefetchImage extends React.Component {
             events: [],
             isLoading: false,
             prefetchTask: _hasPrefetched ? null : Image.prefetch(this.props.imageUri),
-            height: prefetchedHeight ? prefetchedHeight : this.props.width
+            height: prefetchedHeight ? prefetchedHeight : this.props.height
         };
 
     }

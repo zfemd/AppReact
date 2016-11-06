@@ -155,17 +155,18 @@ class Flow extends React.Component {
 
     _renderChildren(tag){
         return this.props.flow.flowList[tag].map((val, key) => {
-            val.imageHeight = val.imageHeight !==0 ? val.imageHeight : 100;
-            val.imageWidth = val.imageWidth !==0 ? val.imageWidth : 100;
+            val.imageHeight = val.imageHeight !==0 ? val.imageHeight : 376;
+            val.imageWidth = val.imageWidth !==0 ? val.imageWidth : 288;
             let height = val.imageHeight / val.imageWidth * ((width/100)*47);
             return (
                 <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent" activeOpacity={0.5}>
                     <View>
                         <PrefetchImage
-                            imageUri={val.image?val.image:'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'}
+                            imageUri={val.image?val.image:'http://img.hb.aicdn.com/58373a70edfbcc1bc71bee64521b09f8ba228ff21848d2-qHcWbh_fw658'}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
                             width={(width/100)*47}
+                            height={height}
                             />
                         <View style={styles.price}>
                             <Text style={styles.priceText}>￥100</Text>
@@ -177,7 +178,7 @@ class Flow extends React.Component {
                             </View>
                         </TouchableWithoutFeedback>
                         <View>
-                            <Text style={styles.text} lineBreakMode={'middle'}>
+                            <Text style={[styles.text,styles.title]} lineBreakMode={'middle'}  numberOfLines={2} lineBreakMode='tail'>
                                 {val.title}
                             </Text>
                         </View>
@@ -235,7 +236,7 @@ class Flow extends React.Component {
             width: (width / 100) * 47,
             marginLeft: width / 100 * 2,
             backgroundColor: '#fff',
-            height: height + 70
+            height: height + 84
         };
     }
 
@@ -389,7 +390,7 @@ var styles = StyleSheet.create({
         borderBottomRightRadius: 11,
         borderTopRightRadius: 11,
         backgroundColor: 'rgba(109, 109, 109, 0.8)',
-
+        opacity: 0
     },
     priceText: {
         color: '#fc7d30',
@@ -447,6 +448,9 @@ var styles = StyleSheet.create({
     heart: {
         width: 20,
         height: 20
+    },
+    title: {
+        height: 28
     }
 });
 
