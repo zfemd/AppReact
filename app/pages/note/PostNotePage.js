@@ -92,9 +92,8 @@ class PostNotePage extends Component {
             images: this.state.draftNote.notePhotos
         };
 
-        console.log(data);
         fetch(configs.serviceUrl + 'notes/' + noteId + '/images', {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'multipart/form-data',
@@ -134,7 +133,9 @@ class PostNotePage extends Component {
             content: this.state.nodeContent
         };
 
-        fetch(configs.serviceUrl + 'notes/', {
+        console.log("token:" + this.state.token);
+
+        fetch(configs.serviceUrl + 'user/notes/', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -143,9 +144,9 @@ class PostNotePage extends Component {
             },
             body: JSON.stringify(data)
         }).then((response) => {
-            console.log(response);
             return response.json();
         }).then((responseJson) => {
+            console.log(responseJson);
             if (responseJson.ok) {
                 this._sendPhotos(responseJson.noteId);
             } else {

@@ -129,8 +129,9 @@ class PhotoEditPage extends Component {
         const { navigator, dispatch } = this.props;
         const { webviewbridge } = this.refs;
 
-        webviewbridge.sendToBridge(JSON.stringify({type:'continue'}));
         dispatch({type:StoreActions.ADD_TAGS, tags: this.state.tags.slice()});
+
+        webviewbridge.sendToBridge(JSON.stringify({type:'continue'}));
     }
 
     /**
@@ -287,8 +288,8 @@ class PhotoEditPage extends Component {
 
         switch (message) {
 
-            case "hello from webview":
-                webviewbridge.sendToBridge("hello from react-native");
+            case "Image loading":
+                console.log("Loading image! yeah");
                 break;
             case "got the message inside webview":
                 console.log("we have got a message from webview! yeah");
@@ -636,8 +637,8 @@ var injectScript = fabrics + fabricContrast + `
                 } else if (message.type == 'continue') {
 
                     // remove controls before export to data url.
-                    canvasFab.getActiveObject().setOptions({hasControls:false});
-                    WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'png'})}));
+                    canvasFab.getActiveObject() && canvasFab.getActiveObject().setOptions({hasControls:false});
+                    WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'jpeg'})}));
 
                 } else if (message.type === 'imageLoaded') {
                     WebViewBridge.send('Image loading');
@@ -680,19 +681,20 @@ var injectScript = fabrics + fabricContrast + `
                             if (activeTag != null) {
                                 var target = data.target, e = data.e, group = activeTag.group, downEvent = activeTag.downEvent, groupOriginPos = activeTag.groupOriginPos;
                                 if (group != null)    {
-                                    group.setLeft(groupOriginPos.left + e.offsetX - downEvent.offsetX);
-                                    group.setTop(groupOriginPos.top + e.offsetY - downEvent.offsetY);
+                                    group.setLeft(groupOriginPos.left + e.offsetX - downEvent.layerX);
+                                    group.setTop(groupOriginPos.top + e.offsetY - downEvent.layerY);
                                 }
                             }
                         });
                     });
+
                     if (message.data) {
                         imgElementOrigin.src = message.data;
                         imgElement.src = message.data;
                         canvasFab.setDimensions({width:message.image.width, height:message.image.height}, {backstoreOnly:true});
+                        WebViewBridge.send(JSON.stringify({type:"imageUpdated",data:message.data}));
                     }
 
-                    WebViewBridge.send(JSON.stringify({type:"imageUpdated",data:message.data}));
                 } else if (message.type === "changeTab") {
                     imageClickable = !!message.imageClickable;
                 } else if (message.type === "addTag") {

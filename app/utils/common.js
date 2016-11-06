@@ -20,9 +20,7 @@ export function naviGoBack(navigator) {
     return false;
 };
 
-export class Token {
-}
-;
+export class Token {};
 
 Token.getToken = async function (navigator) {
     var token = null;
