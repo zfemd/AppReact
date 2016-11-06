@@ -130,8 +130,8 @@ class PostNotePage extends Component {
         }
 
         let data = {
-            title: this.state.nodeTitle,
-            content: this.state.nodeContent
+            title: this.refs['titleInput']._getText(),
+            content: this.refs['contentInput']._getText()
         };
 
         console.log("token:" + this.state.token);
@@ -156,14 +156,6 @@ class PostNotePage extends Component {
         }).catch((error) => {
             console.error(error);
         });
-    }
-
-    _onTitleEndEditing(event) {
-        this.state.nodeTitle = event.nativeEvent.text;
-    }
-
-    _onContentEndEditing(event) {
-        this.state.nodeContent = event.nativeEvent.text;
     }
 
     _renderPhotosRow(photos, photosPerRow, fromIndex) {
@@ -243,12 +235,13 @@ class PostNotePage extends Component {
                     />
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', paddingVertical:10, margin: 15}}>
-                    <TextInput placeholder='添加标题' maxLength={30} style={{flex:1}} onEndEtiting={this._onTitleEndEditing.bind(this)}/>
+                    <TextInput ref='titleInput' placeholder='添加标题' defaultValue='我的好东西'
+                               returnKeyType="next" maxLength={30} style={{flex:1}}/>
                     <Text>30</Text>
                 </View>
                 <View style={{flexDirection: 'row', paddingVertical:10, marginHorizontal: 15}}>
-                    <TextInput placeholder='说点你的新得吧' multiline={true} onEndEditing={this._onContentEndEditing.bind(this)}
-                               style={{flex:1, height: 180}}/>
+                    <TextInput ref='contentInput' placeholder='说点你的心得吧' defaultValue='好'
+                               returnKeyType="next" multiline={true} style={{flex:1, height: 180}}/>
                 </View>
                 <View style={[{borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical:10, marginHorizontal: 15}]}>
                     {this._renderSelectedPhotos()}
