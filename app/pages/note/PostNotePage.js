@@ -37,6 +37,8 @@ class PostNotePage extends Component {
         super(props);
 
         this.state = {
+            title: '我的好东西',
+            content: '好',
             position: '正在获取当前位置...',
             draftNote: this.props.draftNote,
             token: null
@@ -73,6 +75,16 @@ class PostNotePage extends Component {
         //}, {timeout: 20000,
         //    maximumAge: 1000,
         //    enableHighAccuracy: true});
+    }
+
+    _onCancel() {
+        const { navigator, dispatch } = this.props;
+
+        if (navigator) {
+            // remove draft note since user canceled.
+            dispatch({type:StoreActions.RESET_DRAFT_NOTE});
+            navigator.popToTop();
+        }
     }
 
     _addMorePhoto() {
@@ -117,7 +129,7 @@ class PostNotePage extends Component {
                     })
                 }
             } else {
-                Toast.show(responseJson.resultErrorMessage, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                Toast.show('发送笔记图片失败，请确认有添加图片。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             }
         }).catch((error) => {
             console.error(error);
@@ -126,15 +138,19 @@ class PostNotePage extends Component {
 
     _sendNote() {
         if (this.state.draftNote == null || this.state.draftNote.notePhotos == null) {
+            Toast.show('没有笔记图片不能发送笔记。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             return;
         }
 
         let data = {
-            title: this.refs['titleInput']._getText(),
-            content: this.refs['contentInput']._getText()
+            title: this.state.title,
+            content: this.state.content
         };
 
-        console.log("token:" + this.state.token);
+        if (!data.title || !data.content) {
+            Toast.show('标题和内容都不能为空。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+            return;
+        }
 
         fetch(configs.serviceUrl + 'user/notes/', {
             method: 'POST',
@@ -151,10 +167,10 @@ class PostNotePage extends Component {
             if (responseJson.ok) {
                 this._sendPhotos(responseJson.noteId);
             } else {
-                Toast.show(responseJson.resultErrorMessage, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                Toast.show('发送笔记失败，注意，标题和内容不能为空。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             }
         }).catch((error) => {
-            console.error(error);
+            Toast.show('发送失败，可能是网络中断。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
         });
     }
 
@@ -232,15 +248,16 @@ class PostNotePage extends Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     rightText='取消'
+                    rightImgPress={this._onCancel.bind(this)}
                     />
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', paddingVertical:10, margin: 15}}>
-                    <TextInput ref='titleInput' placeholder='添加标题' defaultValue='我的好东西'
+                    <TextInput ref='titleInput' placeholder='添加标题' defaultValue={this.state.title} onChangeText={(value) => this.state.title = value}
                                returnKeyType="next" maxLength={30} style={{flex:1}}/>
                     <Text>30</Text>
                 </View>
                 <View style={{flexDirection: 'row', paddingVertical:10, marginHorizontal: 15}}>
-                    <TextInput ref='contentInput' placeholder='说点你的心得吧' defaultValue='好'
+                    <TextInput ref='contentInput' placeholder='说点你的心得吧' defaultValue={this.state.content} onChangeText={(value) => this.state.content = value}
                                returnKeyType="next" multiline={true} style={{flex:1, height: 180}}/>
                 </View>
                 <View style={[{borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical:10, marginHorizontal: 15}]}>
