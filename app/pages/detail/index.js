@@ -27,7 +27,7 @@ import {fetchCommentsList} from '../../actions/comments';
 import {fetchRecommendList} from '../../actions/recommend';
 import { connect } from 'react-redux';
 import React_Native_Taobao_Baichuan_Api from 'react-native-taobao-baichuan-api';
-import { Token,follow } from '../../utils/common';
+import {Token, follow, timeFormat } from '../../utils/common';
 import _ from 'lodash';
 
 const shareImg = require('../../assets/note/transfer.png');
@@ -47,7 +47,7 @@ class Detail extends React.Component {
             commendTaobaoSource: this.ds.cloneWithRows([]),
             showShare: false,
             position: 0,
-            note: null
+            noteUpdated: false
         };
     }
 
@@ -155,9 +155,11 @@ class Detail extends React.Component {
             if (token) {
                 follow(userId, token).then((res) => {
                     console.log(res);
-                    let note = _.find(detail.note,{userId:userId});
-                    note.followed = true;
-                    this.setState({note: note});
+                    let notes = _.filter(detail.note,{userId:userId});
+                    _.each(notes,function(note){
+                        note.followed = true;
+                    });
+                    this.setState({noteUpdated: true});
                 });
             }
         });
@@ -205,7 +207,7 @@ class Detail extends React.Component {
                                 <View style={styles.info}>
                                     <Text
                                         style={styles.nick}>{detail.note[noteId] ? detail.note[noteId].nickname : '' }</Text>
-                                    <Text style={styles.date}>5月26日 11:29</Text>
+                                    <Text style={styles.date}>{detail.note[noteId] ? timeFormat(detail.note[noteId].publishTime,'yyyy年MM月dd日 hh:mm:ss') : ''}</Text>
                                 </View>
                             </TouchableOpacity>
 
@@ -229,7 +231,7 @@ class Detail extends React.Component {
 
                         </View>
                         <View style={styles.description}>
-                            <Text style={[styles.dTitle,styles.baseText]}>miya2016夏装新品宽松镂空短袖</Text>
+                            <Text style={[styles.dTitle,styles.baseText]}>{detail.note[noteId] ? detail.note[noteId].title : ''}</Text>
                             <Text
                                 style={[styles.dContent,styles.baseText]}>{detail.note[noteId] ? detail.note[noteId].content : '' }</Text>
                         </View>
