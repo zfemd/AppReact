@@ -27,7 +27,7 @@ import {fetchCommentsList} from '../../actions/comments';
 import {fetchRecommendList} from '../../actions/recommend';
 import { connect } from 'react-redux';
 import React_Native_Taobao_Baichuan_Api from 'react-native-taobao-baichuan-api';
-import {Token, follow, timeFormat } from '../../utils/common';
+import {Token, follow, timeFormat, like } from '../../utils/common';
 import _ from 'lodash';
 
 const shareImg = require('../../assets/note/transfer.png');
@@ -154,15 +154,30 @@ class Detail extends React.Component {
         Token.getToken(navigator).then((token) => {
             if (token) {
                 follow(userId, token).then((res) => {
-                    console.log(res);
-                    let notes = _.filter(detail.note,{userId:userId});
-                    _.each(notes,function(note){
+                    let notes = _.filter(detail.note, {userId: userId});
+                    _.each(notes, function (note) {
                         note.followed = true;
                     });
                     this.setState({noteUpdated: true});
                 });
             }
         });
+    }
+
+    _like(noteId) {
+        const { navigator, detail } = this.props;
+        let the = this;
+        Token.getToken(navigator).then((token) => {
+                if (token) {
+                    like(noteId, token).then((res) => {
+                        let note = detail.note[noteId];
+                        note.liked = true;
+                        note.likeCount++;
+                        this.setState({noteUpdated: true});
+                    });
+                }
+            }
+        );
     }
 
     render() {
@@ -201,20 +216,23 @@ class Detail extends React.Component {
 
                     <View style={[styles.note,styles.block]}>
                         <View style={styles.user}>
-                            <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this._jumpToUserPage(detail.note[noteId].userId)}>
+                            <TouchableOpacity style={{flexDirection: 'row'}}
+                                              onPress={() => this._jumpToUserPage(detail.note[noteId].userId)}>
                                 <Image style={styles.portrait}
                                        source={{uri: (detail.note[noteId] ? detail.note[noteId].portrait : 'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'), width:34, height:34 }}/>
                                 <View style={styles.info}>
                                     <Text
                                         style={styles.nick}>{detail.note[noteId] ? detail.note[noteId].nickname : '' }</Text>
-                                    <Text style={styles.date}>{detail.note[noteId] ? timeFormat(detail.note[noteId].publishTime,'yyyy年MM月dd日 hh:mm:ss') : ''}</Text>
+                                    <Text
+                                        style={styles.date}>{detail.note[noteId] ? timeFormat(detail.note[noteId].publishTime, 'yyyy年MM月dd日 hh:mm:ss') : ''}</Text>
                                 </View>
                             </TouchableOpacity>
 
                             {
-                                !detail.note[noteId].followed?
-                                    <TouchableOpacity style={styles.follow} onPress={() => this._follow(detail.note[noteId].userId)}>
-                                        <Image  source={require('../../assets/note/follow.png')}/>
+                                !detail.note[noteId].followed ?
+                                    <TouchableOpacity style={styles.follow}
+                                                      onPress={() => this._follow(detail.note[noteId].userId)}>
+                                        <Image source={require('../../assets/note/follow.png')}/>
                                     </TouchableOpacity>
                                     :
                                     <View></View>
@@ -231,7 +249,8 @@ class Detail extends React.Component {
 
                         </View>
                         <View style={styles.description}>
-                            <Text style={[styles.dTitle,styles.baseText]}>{detail.note[noteId] ? detail.note[noteId].title : ''}</Text>
+                            <Text
+                                style={[styles.dTitle,styles.baseText]}>{detail.note[noteId] ? detail.note[noteId].title : ''}</Text>
                             <Text
                                 style={[styles.dContent,styles.baseText]}>{detail.note[noteId] ? detail.note[noteId].content : '' }</Text>
                         </View>
@@ -375,9 +394,15 @@ class Detail extends React.Component {
                     </View>
                 </ScrollView>
                 <View style={styles.float}>
-                    <TouchableOpacity style={styles.floatOp}>
+                    <TouchableOpacity style={styles.floatOp} onPress={()=> this._like(noteId)}>
                         <View style={styles.floatOpView}>
-                            <Image style={styles.floatOpImage} source={require('../../assets/note/heart.png')}/>
+                            {
+                                detail.note[noteId]&&detail.note[noteId].liked ?(
+                                    <Image style={styles.floatOpImage} source={ require('../../assets/note/heart.png') }/>
+                                ):(
+                                    <Image style={styles.floatOpImage} source={ require('../../assets/note/heart.png')}/>
+                                )
+                            }
                             <Text
                                 style={styles.floatOpText}>{detail.note[noteId] ? detail.note[noteId].likeCount : 0 }</Text>
                         </View>
