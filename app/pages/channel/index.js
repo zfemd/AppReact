@@ -49,11 +49,11 @@ class Channel extends React.Component {
                              this.props.channel.channelList.map((val, key) => {
                                 return(
                                     <View
-                                        key={val.identifier}
+                                        key={val.id}
                                         tabLabel={val.name}
                                         style={{ flex: 1 }}
                                         >
-                                        <Flow tag={val.identifier}  navigator={this.props.navigator}/>
+                                        <Flow tag={val.id}  navigator={this.props.navigator}/>
                                     </View>
                                 )
                             })
