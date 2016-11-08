@@ -87,6 +87,11 @@ const ChannelTabBar = React.createClass({
         }
     },
 
+    _onScroll(event) {
+        let offset = event.nativeEvent.contentOffset.x;
+        this.setState({barLeft: offset});
+    },
+
     render() {
         //const containerWidth = this.props.containerWidth;
         numberOfTabs = this.props.tabs.length;
@@ -113,6 +118,8 @@ const ChannelTabBar = React.createClass({
                         contentContainerStyle={[styles.tabs, {width: tabsLength}]}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
+                        scrollEventThrottle={200}
+                        onScroll={this._onScroll}
                         >
                         {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
                         <Animated.View style={[tabUnderlineStyle, { left, }, styles.tabUnderline ]} />
@@ -137,7 +144,7 @@ const styles = StyleSheet.create({
     tab: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 2,
+        paddingTop: 4,
         paddingBottom: 10,
         //marginRight: 10
     },
