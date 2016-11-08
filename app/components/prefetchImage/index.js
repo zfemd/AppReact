@@ -29,7 +29,8 @@ class PrefetchImage extends React.Component {
             events: [],
             isLoading: false,
             prefetchTask: _hasPrefetched ? null : Image.prefetch(this.props.imageUri),
-            height: prefetchedHeight ? prefetchedHeight : this.props.height
+            height: prefetchedHeight ? prefetchedHeight : this.props.height,
+            imageUri : this.props.imageUri
         };
 
     }
@@ -74,6 +75,8 @@ class PrefetchImage extends React.Component {
                 });
             }, error => {
                 console.log('error fetching image', error);
+                this._onPrefetchComplete(100, 100);
+                this.setState({imageUri: 'http://findicons.com/files/icons/2198/dark_glass/128/file_broken.png'})
             });
         }
     }
@@ -81,7 +84,7 @@ class PrefetchImage extends React.Component {
     render() {
         return (
             <Image
-                source={{uri:this.props.imageUri}}
+                source={{uri:this.state.imageUri}}
                 resizeMode={this.props.resizeMode}
                 style={[this.props.imageStyle, {height: this.state.height}]}
                 >
