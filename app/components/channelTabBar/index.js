@@ -12,6 +12,10 @@ const {
     } = ReactNative;
 const Button = require('./Button');
 var {height, width} = Dimensions.get('window');
+let numberOfTabs ;
+let tabsLength ;
+let tabLength ;
+let arrowWidth = 38;
 
 const ChannelTabBar = React.createClass({
     propTypes: {
@@ -45,7 +49,12 @@ const ChannelTabBar = React.createClass({
 
     goToPage(page) {
         this.props.goToPage(page);
-        this.setState({barLeft: (width/ 5-1)*page});
+        const scrollLength =  tabLength*(page-1);
+        if((scrollLength + tabLength) > 0 && (scrollLength + width - arrowWidth) < tabsLength){
+            this.setState({barLeft: scrollLength});
+            _scrollView.scrollTo({x: scrollLength});
+        }
+
     },
 
     renderTabOption(name, page) {
@@ -62,7 +71,7 @@ const ChannelTabBar = React.createClass({
             accessibilityTraits='button'
             onPress={() => this.goToPage(page)}
             >
-            <View style={[styles.tab, this.props.tabStyle]}>
+            <View style={[styles.tab, this.props.tabStyle,{width: tabLength}]}>
                 <Text style={[styles.textStyle, {color: textColor, fontWeight, }, textStyle, ]} ellipsizeMode="tail" numberOfLines={1}>
                     {name}
                 </Text>
@@ -72,38 +81,43 @@ const ChannelTabBar = React.createClass({
 
     _scrollTo(_scrollView ) {
         let left = this.state.barLeft;
-        this.setState({barLeft: left + width/ 5});
-        _scrollView.scrollTo({x: this.state.barLeft});
+        if((left + width - arrowWidth)< tabsLength){
+            this.setState({barLeft: left + tabLength});
+            _scrollView.scrollTo({x: left + tabLength});
+        }
     },
 
     render() {
-        const containerWidth = this.props.containerWidth;
-        const numberOfTabs = this.props.tabs.length;
-        const tabLength = Math.ceil(numberOfTabs/5) * width;
+        //const containerWidth = this.props.containerWidth;
+        numberOfTabs = this.props.tabs.length;
+        tabsLength = Math.ceil(numberOfTabs/5) * (width -arrowWidth);
+        tabLength = tabsLength / numberOfTabs;
         const tabUnderlineStyle = {
             position: 'absolute',
-            width: tabLength / numberOfTabs,
+            width: tabLength,
             height: this.props.underlineHeight,
             backgroundColor: this.props.underlineColor,
             bottom: 0,
         };
 
         const left = this.props.scrollValue.interpolate({
-            inputRange: [0, 1, ], outputRange: [0,  tabLength / numberOfTabs, ],
+            inputRange: [0, 1, ], outputRange: [0,  tabLength, ],
         });
 
-        let _scrollView =  ScrollView;
+
         return (
             <View style={[styles.tabView, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
-                <ScrollView
-                    ref={(scrollView) => { _scrollView = scrollView; }}
-                    contentContainerStyle={[styles.tabs, {width: tabLength + 38}]}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                    >
-                    {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
-                    <Animated.View style={[tabUnderlineStyle, { left, }, styles.tabUnderline ]} />
-                </ScrollView>
+                <View style={{width: width - arrowWidth}}>
+                    <ScrollView
+                        ref={(scrollView) => { _scrollView = scrollView; }}
+                        contentContainerStyle={[styles.tabs, {width: tabsLength}]}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        >
+                        {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
+                        <Animated.View style={[tabUnderlineStyle, { left, }, styles.tabUnderline ]} />
+                    </ScrollView>
+                </View>
 
                 <Button
                     style={styles.arrow}
@@ -115,7 +129,7 @@ const ChannelTabBar = React.createClass({
         );
     },
 });
-
+let _scrollView =  ScrollView;
 const styles = StyleSheet.create({
     tabView: {
         width: width,
@@ -123,8 +137,9 @@ const styles = StyleSheet.create({
     tab: {
         flex: 1,
         alignItems: 'center',
+        paddingTop: 2,
         paddingBottom: 10,
-        marginRight: 10
+        //marginRight: 10
     },
     tabs: {
         flexDirection: 'row',
@@ -134,8 +149,8 @@ const styles = StyleSheet.create({
         borderLeftWidth: 0,
         borderRightWidth: 0,
         borderBottomColor: '#ccc',
-        minWidth: width,
-        paddingRight: 38
+        minWidth: width-arrowWidth,
+        //paddingRight: arrowWidth
     },
     textStyle: {
         minWidth: 10,
@@ -146,9 +161,9 @@ const styles = StyleSheet.create({
         borderLeftWidth: 1,
         borderColor: '#f4f4f4',
         position: 'absolute',
-        width: 38,
-        height: 38,
-        marginTop: -38,
+        width: arrowWidth,
+        height: arrowWidth,
+        marginTop: -arrowWidth,
         right: 0,
         alignItems: 'center',
         justifyContent: 'center'

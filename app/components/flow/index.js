@@ -174,7 +174,9 @@ class Flow extends React.Component {
                         <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
                             <View style={styles.portrait}>
                                 <Image
-                                    source={{uri: val.portrait , width: 30, height: 30}}/>
+                                    source={{uri: val.portrait , width: 30, height: 30}}
+                                    style={styles.portraitImg}
+                                    />
                             </View>
                         </TouchableWithoutFeedback>
                         <View>
@@ -376,10 +378,13 @@ var styles = StyleSheet.create({
         backgroundColor: '#d8d8d8',
         borderRadius: 30,
         borderColor: '#fff',
-        borderWidth: 2,
+        borderWidth: 1.5,
         marginTop: -15,
         marginRight: 15,
         alignSelf: 'flex-end',
+    },
+    portraitImg: {
+        borderRadius: 15,
     },
     price: {
         position: 'absolute',
