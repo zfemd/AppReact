@@ -33,7 +33,6 @@ const propTypes = {
     onLeftIconClicked: PropTypes.func,
     hideDrop: PropTypes.bool,
     onRightIconClicked: PropTypes.func,
-    rightImgPress: PropTypes.func,
     showFilter: PropTypes.func,
     onTitlePress: PropTypes.func
 };
@@ -58,7 +57,9 @@ class Toolbar extends React.Component {
     }
 
     _onRightIconClicked() {
-        this.props.rightImgPress();
+        if (this.props.onRightIconClicked) {
+            this.props.onRightIconClicked();
+        }
     }
 
     _onArrowClicked() {
