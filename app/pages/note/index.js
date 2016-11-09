@@ -51,8 +51,6 @@ class SelectPhotoPage extends Component {
         // The first arg is the options object for customization (it can also be null or omitted for default options),
         // Launch Camera:
         ImagePicker.launchCamera(this.cameraOptions, (response)  => {
-            console.log('Response = ', response);
-
             if (response.didCancel) {
             } else if (response.error) {
                 Toast.show(response.error, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
@@ -69,11 +67,8 @@ class SelectPhotoPage extends Component {
     }
 
     _onPressImageLib() {
-
         // Open Image Library:
         ImagePicker.launchImageLibrary(this.phoneLibOptions, (response)  => {
-            console.log('Response = ', response);
-
             if (response.didCancel) {
             } else if (response.error) {
                 Toast.show(response.error, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
@@ -89,8 +84,6 @@ class SelectPhotoPage extends Component {
     }
     
     _onPressImage(imageNode) {
-        console.log(imageNode);
-
         this.setState({
             avatarSource: imageNode.image
         });

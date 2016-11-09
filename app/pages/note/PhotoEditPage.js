@@ -117,10 +117,12 @@ class PhotoEditPage extends Component {
     }
 
     _onCancel() {
-        this.setState({tagOverlayVisible:false});
-        const { navigator } = this.props;
+        const { navigator, dispatch } = this.props;
+        let {currentPhotoIndex} = this.props.draftNote;
 
-        if(navigator) {
+        dispatch({type:StoreActions.REMOVE_NOTE_PHOTO, index: currentPhotoIndex});
+
+        if (navigator) {
             navigator.pop();
         }
     }
@@ -257,6 +259,8 @@ class PhotoEditPage extends Component {
             '</body></html>'
         };
 
+        console.log("source");
+
         return obj;
     }
 
@@ -326,7 +330,8 @@ class PhotoEditPage extends Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     rightText='继续'
-                    rightImgPress={this._onContinue.bind(this)}
+                    onLeftIconClicked={this._onCancel.bind(this)}
+                    onRightIconClicked={this._onContinue.bind(this)}
                     />
 
                 <View style={styles.selectedPhotoContainer}>
@@ -635,12 +640,12 @@ var injectScript = fabrics + fabricContrast + `
                     imgElementOrigin.addEventListener('load', function(){
                         imgFab = new fabric.Image(imgElementOrigin, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
                         canvasFab.backgroundImage = imgFab;
+                        canvasFab.renderAll();
                     });
 
                     imgElement.addEventListener('load', function(){
                         scale = message.image.width / imgElement.width;
                         canvasFab.setDimensions({width:imgElement.width, height:imgElement.height}, {cssOnly:true});
-                        canvasFab.renderAll();
 
                         canvasFab.on("mouse:up", function(data){
                             if (!imageClickable) {return}
@@ -662,8 +667,6 @@ var injectScript = fabrics + fabricContrast + `
                             } else {
                                 activeTag = null;
                             }
-
-                            canvas.getActiveObject().borderScaleFactor = 20;
                         });
 
                         canvasFab.on("mouse:move", function(data){
@@ -675,13 +678,14 @@ var injectScript = fabrics + fabricContrast + `
                                 }
                             }
                         });
+
+                        WebViewBridge.send(JSON.stringify({type:"imageUpdated",data:message.data}));
                     });
 
                     if (message.data) {
                         imgElementOrigin.src = message.data;
                         imgElement.src = message.data;
                         canvasFab.setDimensions({width:message.image.width, height:message.image.height}, {backstoreOnly:true});
-                        WebViewBridge.send(JSON.stringify({type:"imageUpdated",data:message.data}));
                     }
 
                 } else if (message.type === "changeTab") {

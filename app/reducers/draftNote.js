@@ -20,7 +20,6 @@ const draftNote = function (state = initialState, action = {}) {
         case Actions.ADD_NOTE_PHOTO_DATA:
             if (state.currentPhotoIndex >= 0) {
                 state.notePhotos[state.currentPhotoIndex].imageData = action.imageData;
-                console.log(state.notePhotos[state.currentPhotoIndex]);
             }
             break;
         case Actions.EDIT_NOTE_PHOTO:
@@ -36,7 +35,6 @@ const draftNote = function (state = initialState, action = {}) {
         case Actions.ADD_TAGS:
             if (state.currentPhotoIndex >= 0) {
                 state.notePhotos[state.currentPhotoIndex].tags = action.tags;
-                console.log(state.notePhotos[state.currentPhotoIndex]);
             }
             break;
         case Actions.RESET_DRAFT_NOTE:
@@ -47,7 +45,6 @@ const draftNote = function (state = initialState, action = {}) {
             return state;
     }
 
-    console.log(state);
     return state;
 };
 

@@ -109,7 +109,7 @@ class PostNotePage extends Component {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'application/json',
                 'X-App-Token': this.state.token
             },
             body: JSON.stringify(data)
@@ -147,31 +147,35 @@ class PostNotePage extends Component {
             content: this.state.content
         };
 
+        console.log(data);
+
         if (!data.title || !data.content) {
             Toast.show('标题和内容都不能为空。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             return;
         }
 
-        fetch(configs.serviceUrl + 'user/notes/', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'X-App-Token': this.state.token
-            },
-            body: JSON.stringify(data)
-        }).then((response) => {
-            return response.json();
-        }).then((responseJson) => {
-            console.log(responseJson);
-            if (responseJson.ok) {
-                this._sendPhotos(responseJson.noteId);
-            } else {
-                Toast.show('发送笔记失败，注意，标题和内容不能为空。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
-            }
-        }).catch((error) => {
-            Toast.show('发送失败，可能是网络中断。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
-        });
+        //fetch(configs.serviceUrl + 'user/notes/', {
+        //    method: 'POST',
+        //    headers: {
+        //        'Accept': 'application/json',
+        //        'Content-Type': 'application/json',
+        //        'X-App-Token': this.state.token
+        //    },
+        //    body: JSON.stringify(data)
+        //}).then((response) => {
+        //    return response.json();
+        //}).then((responseJson) => {
+        //    console.log(responseJson);
+        //    if (responseJson && responseJson.resultCode == 0 && responseJson.resultValues) {
+        //        this._sendPhotos(responseJson.resultValues.noteId);
+        //    } else {
+        //        Toast.show('发送笔记失败，注意，标题和内容不能为空。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+        //    }
+        //}).catch((error) => {
+        //    Toast.show('发送失败，可能是网络中断。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+        //});
+
+        this._sendPhotos(1000000000013);
     }
 
     _renderPhotosRow(photos, photosPerRow, fromIndex) {
