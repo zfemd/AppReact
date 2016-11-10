@@ -368,23 +368,7 @@ class Detail extends React.Component {
                                 enableEmptySections={true}
                                 />
                         </View>
-                        <View style={styles.sysFromFrame}>
-                            <View style={styles.sysFrom}>
-                                <Text style={[styles.baseText, styles.sysFromText]}>来自京东</Text>
-                                <TouchableOpacity style={styles.sysFromMore}>
-                                    <Text style={[styles.baseText, styles.dimText]}>更多</Text>
-                                    <Image source={require('../../assets/note/rg_right.png')}/>
-                                </TouchableOpacity>
-                            </View>
-                            <ListView
-                                contentContainerStyle={styles.sysList}
-                                dataSource={this.state.commendTaobaoSource}
-                                renderRow={this._renderRow}
-                                horizontal={true}
-                                showsHorizontalScrollIndicator={false}
-                                enableEmptySections={true}
-                                />
-                        </View>
+                        
                     </View>
                     <View style={[styles.block, styles.relatedNote]}>
                         <View style={[styles.blockTitle,styles.relatedNoteTitle]}>
