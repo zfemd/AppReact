@@ -33,36 +33,30 @@ class Splash extends React.Component {
             });
         });
 
-        //Token.getToken(navigator).then((token) => {
-        //        console.log(token);
-        //        if (token) {
-        //            InteractionManager.runAfterInteractions(() => {
-        //                navigator.resetTo({
-        //                    component: Home,
-        //                    name: 'Home',
-        //                    params: {store: this.props.store}
-        //                });
-        //            });
-        //        } else {
-        //            InteractionManager.runAfterInteractions(() => {
-        //                navigator.resetTo({
-        //                    component: LoginPage,
-        //                    name: 'LoginPage',
-        //                    params: {store: this.props.store}
-        //                });
-        //            });
-        //        }
-        //    }
-        //);
+        //this.timer = setTimeout(() => {
+        //    InteractionManager.runAfterInteractions(() => {
+        //        navigator.resetTo({
+        //            component: Home,
+        //            name: 'Home',
+        //            params: {store: this.props.store}
+        //        });
+        //    });
+        //}, 2000);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
     }
 
     render() {
+        // This will be replaced to webView for ads or user guide
         return (
             <Image
                 style={{ width: 284, height: 200, top: (maxHeight-200)/2, left: (maxWidth-284)/2, borderRadius: 20 }}
                 source={splashImg}
                 />
         );
+
     }
 }
 
