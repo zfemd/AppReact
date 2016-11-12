@@ -39,7 +39,7 @@ class PostNotePage extends Component {
         this.state = {
             title: '我的好东西',
             content: '好',
-            position: '正在获取当前位置...',
+            address: '正在尝试获取当前位置...',
             draftNote: this.props.draftNote,
             token: null
         };
@@ -54,27 +54,30 @@ class PostNotePage extends Component {
 
     componentDidMount() {
         let that = this;
-        //Geolocation.getCurrentPosition(function(position){
-        //    let {coords} = position;
-        //
-        //    //that.setState({position: '维度：' + coords.latitude + ',经度：' + coords.longitude});
-        //    let url = 'http://apis.juhe.cn/geo/?lat=' + coords.latitude + '&lng=' + coords.longitude + '&type=&dtype=&key=a8c5e6bd35a994d9b56abd530c6e9e76';
-        //
-        //    fetch(url, {
-        //        method: 'GET',
-        //        }).then((response) => response.json())
-        //        .then((responseJson) => {
-        //            that.setState({position: responseJson.result.address});
-        //        })
-        //        .catch((error) => {
-        //            console.error(error);
-        //        });
-        //
-        //}, function(error){
-        //    error.message;
-        //}, {timeout: 20000,
-        //    maximumAge: 1000,
-        //    enableHighAccuracy: true});
+        Geolocation.getCurrentPosition(function(position){
+            let {coords} = position;
+            let url = 'http://api.map.baidu.com/geocoder/v2/?output=json&ak=D8c7c1411571551ef8fe556f08c594bd&location=' + coords.latitude + ',' + coords.longitude;
+
+            fetch(url, { method: 'GET' })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                let address = responseJson.result.formatted_address;
+                if (!address) {
+                    address = '定位失败';
+                }
+                that.setState({address: address, latitude:coords.latitude, longitude: coords.longitude});
+            })
+            .catch((error) => {
+                    Toast.show('可能是网络问题，无法定位。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                    that.setState({address: '定位失败'});
+            });
+        }, function(error){
+            that.setState({address: '定位失败'});
+        }, {
+            timeout: 20000,
+            maximumAge: 1000,
+            enableHighAccuracy: true
+        });
     }
 
     _onCancel() {
@@ -105,8 +108,12 @@ class PostNotePage extends Component {
             images: this.state.draftNote.notePhotos
         };
 
-        fetch(configs.serviceUrl + 'notes/' + noteId + '/images', {
-            method: 'PUT',
+        if (data.images.length <= 0) return;
+
+        data.images = data.images.map(image => {return {"image":image.image, "marks":image.marks}});
+
+        fetch(configs.imageSeriveUrl + 'notes/' + noteId + '/images', {
+            method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
@@ -114,68 +121,66 @@ class PostNotePage extends Component {
             },
             body: JSON.stringify(data)
         }).then((response) => {
-            console.log(response);
             return response.json();
         }).then((responseJson) => {
-            console.log(responseJson);
-            if (responseJson.ok) {
+            if (responseJson.resultCode == 0) {
                 // remove draft note since it has been post to server.
                 dispatch({type:StoreActions.RESET_DRAFT_NOTE});
 
                 if(navigator) {
-                    navigator.push({
-                        name: 'Home',
-                        component: Home
-                    })
+                    navigator.popToTop();
                 }
             } else {
-                Toast.show('发送笔记图片失败，请确认有添加图片。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                Toast.show('抱歉，笔记图片发布失败。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             }
         }).catch((error) => {
             console.error(error);
         });
+
+        Toast.show('笔记正在发布，图片数量不同，发送时间可长可短，请耐心等待。', {duration:Toast.durations.LONG, position:Toast.positions.CENTER});
     }
 
     _sendNote() {
         if (this.state.draftNote == null || this.state.draftNote.notePhotos == null) {
-            Toast.show('没有笔记图片不能发送笔记。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+            Toast.show('发送笔记前，请先选择需要上传的图片。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             return;
         }
 
         let data = {
             title: this.state.title,
-            content: this.state.content
+            content: this.state.content,
+            address: this.state.address,
+            latitude: this.state.latitude,
+            longitude: this.state.longitude
         };
 
-        console.log(data);
-
         if (!data.title || !data.content) {
-            Toast.show('标题和内容都不能为空。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+            Toast.show('发布笔记需要您输入标题和内容。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             return;
         }
 
-        //fetch(configs.serviceUrl + 'user/notes/', {
-        //    method: 'POST',
-        //    headers: {
-        //        'Accept': 'application/json',
-        //        'Content-Type': 'application/json',
-        //        'X-App-Token': this.state.token
-        //    },
-        //    body: JSON.stringify(data)
-        //}).then((response) => {
-        //    return response.json();
-        //}).then((responseJson) => {
-        //    console.log(responseJson);
-        //    if (responseJson && responseJson.resultCode == 0 && responseJson.resultValues) {
-        //        this._sendPhotos(responseJson.resultValues.noteId);
-        //    } else {
-        //        Toast.show('发送笔记失败，注意，标题和内容不能为空。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
-        //    }
-        //}).catch((error) => {
-        //    Toast.show('发送失败，可能是网络中断。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
-        //});
+        fetch(configs.serviceUrl + 'user/notes/', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-App-Token': this.state.token
+            },
+            body: JSON.stringify(data)
+        }).then((response) => {
+            return response.json();
+        }).then((responseJson) => {
+            console.log(responseJson);
+            if (responseJson && responseJson.resultCode == 0 && responseJson.resultValues) {
+                this._sendPhotos(responseJson.resultValues.noteId);
+            } else {
+                Toast.show('发送笔记失败。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+            }
+        }).catch((error) => {
+            Toast.show('发送失败，可能是网络中断。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+        });
 
-        this._sendPhotos(1000000000013);
+        //this._sendPhotos(1000000000013);
     }
 
     _renderPhotosRow(photos, photosPerRow, fromIndex) {
@@ -224,7 +229,7 @@ class PostNotePage extends Component {
             notePhotos.forEach(function(notePhoto, index){
                 let image = (
                     <TouchableHighlight key={notePhoto.photo.uri+index} onPress={() => that._onPressPhoto.call(that, index)} >
-                        <Image source={{uri:notePhoto.imageData}} style={styles.uploadAvatar} width={imageWidth} height={imageHeight} />
+                        <Image source={{uri:notePhoto.image}} style={styles.uploadAvatar} width={imageWidth} height={imageHeight} />
                     </TouchableHighlight>
                 );
                 photos.push(image);
@@ -252,7 +257,7 @@ class PostNotePage extends Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     rightText='取消'
-                    rightImgPress={this._onCancel.bind(this)}
+                    onRightIconClicked={this._onCancel.bind(this)}
                     />
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', paddingVertical:10, margin: 15}}>
@@ -269,7 +274,7 @@ class PostNotePage extends Component {
                 </View>
 
                 <View style={{flexDirection: 'row', alignItems: 'center', padding:10, marginHorizontal: 15}}>
-                    <Image source={locationImg} style={{marginRight: 10}} /><Text>发布于：</Text><Text style={{color: colors.orange}}>{this.state.position}</Text>
+                    <Image source={locationImg} style={{marginRight: 10}} /><Text>发布于：</Text><Text style={{color: colors.orange}}>{this.state.address}</Text>
                 </View>
 
                 <TouchableHighlight onPress={this._sendNote.bind(this)}

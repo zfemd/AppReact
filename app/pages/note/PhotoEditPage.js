@@ -97,15 +97,23 @@ class PhotoEditPage extends Component {
             let {currentPhotoIndex, notePhotos} = this.props.draftNote;
             if (notePhotos && notePhotos.length > currentPhotoIndex) {
                 this.state.avatarSource = notePhotos[currentPhotoIndex].photo;
-                let imageProps = {uri,width,height} = this.state.avatarSource;
+                let imageSize = {width,height} = this.state.avatarSource;
+                let displaySize = {};
+
+                if (imageSize.width > imageSize.height && imageSize.width > 1024) {
+                    displaySize = {width:1024, height: 1024 / imageSize.width * imageSize.height};
+                } else if (imageSize.height > 1024) {
+                    displaySize = {height:1024, width: 1024 / imageSize.height * imageSize.width};
+                }
 
                 // get base64data of image
-                ImageEditor.cropImage(imageProps.uri, {offset:{x:0, y:0},size:{width: imageProps.width, height: imageProps.height}}, (url) => {
+                ImageEditor.cropImage(this.state.avatarSource.uri, {offset:{x:0, y:0},size:imageSize, displaySize:displaySize}, (url) => {
                     ImageStore.getBase64ForTag(url, (base64Data) => {
                         const { webviewbridge } = this.refs;
                         let {height, width} = Dimensions.get('window');
                         let sImageBase64Data = 'data:image/jpg;base64,' + base64Data;
-                        webviewbridge.sendToBridge(JSON.stringify({type:"imageLoaded", window:{width:width, height:height}, image:imageProps, data: sImageBase64Data}));
+
+                        webviewbridge.sendToBridge(JSON.stringify({type:"imageLoaded", window:{width:width, height:height}, image:displaySize, data: sImageBase64Data}));
                     }, (error) => {
                         console.log(error);
                     });
@@ -553,12 +561,12 @@ var injectScript = fabrics + fabricContrast + `
         var addTagLabel = function(text, e, group, index){
             if (!text || !e) {return}
 
-            var textFab = new fabric.Text(text, {selectable:false, fill:"#fff", fontSize:12, evented:true});
+            var textFab = new fabric.Text(text, {selectable:false, fill:"#fff", fontSize:12 * scale, evented:true});
             var posSet = getPosSet1(textFab.getWidth(), textFab.getHeight());
             textFab.setLeft(e.offsetX + posSet.textPositions[index].left);
             textFab.setTop(e.offsetY + posSet.textPositions[index].top);
 
-            var poly = new fabric.Polyline(posSet.polylines[index], {selectable:false,stroke: 'white',fill:null});
+            var poly = new fabric.Polyline(posSet.polylines[index], {selectable:false,stroke: 'white',fill:null, strokeWidth:scale});
             poly.setLeft(e.offsetX + posSet.polylinePositions[index].left);
             poly.setTop(e.offsetY + posSet.polylinePositions[index].top);
             group.add(textFab, poly);
@@ -645,6 +653,7 @@ var injectScript = fabrics + fabricContrast + `
 
                     imgElement.addEventListener('load', function(){
                         scale = message.image.width / imgElement.width;
+                        padding *= scale;
                         canvasFab.setDimensions({width:imgElement.width, height:imgElement.height}, {cssOnly:true});
 
                         canvasFab.on("mouse:up", function(data){
@@ -660,10 +669,10 @@ var injectScript = fabrics + fabricContrast + `
                         });
 
                         canvasFab.on("mouse:down", function(data){
-                            var target = data.target, e = data.e;
+                            var target = data.target, e = data.e.targetTouches[0];
                             if (target != null && target.type == 'circle' && target.id){
                                 var group = tags[target.id].group;
-                                activeTag = {tag: target, group: group, downEvent: e, groupOriginPos: {left: group.getLeft(), top: group.getTop()}};
+                                activeTag = {tag: target, group: group, downPos: {offsetX: e.pageX, offsetY: e.pageY}, groupOriginPos: {left: group.getLeft(), top: group.getTop()}};
                             } else {
                                 activeTag = null;
                             }
@@ -671,10 +680,10 @@ var injectScript = fabrics + fabricContrast + `
 
                         canvasFab.on("mouse:move", function(data){
                             if (activeTag != null) {
-                                var target = data.target, e = data.e, group = activeTag.group, downEvent = activeTag.downEvent, groupOriginPos = activeTag.groupOriginPos;
-                                if (group != null)    {
-                                    group.setLeft(groupOriginPos.left + e.offsetX - downEvent.layerX);
-                                    group.setTop(groupOriginPos.top + e.offsetY - downEvent.layerY);
+                                var target = data.target, e = data.e.targetTouches[0], group = activeTag.group, downPos = activeTag.downPos, groupOriginPos = activeTag.groupOriginPos;
+                                if (group != null) {
+                                    group.setLeft(groupOriginPos.left + (e.pageX - downPos.offsetX) * scale);
+                                    group.setTop(groupOriginPos.top + (e.pageY - downPos.offsetY) * scale);
                                 }
                             }
                         });
@@ -695,7 +704,8 @@ var injectScript = fabrics + fabricContrast + `
                 } else if (message.type === "addTag") {
                     WebViewBridge.send(JSON.stringify(message));
                     var position =  {offsetX:message.data.x, offsetY:message.data.y};
-                    var circle = new fabric.Circle({radius: 6,fill:"#fff", left:(position.offsetX-6), top:(position.offsetY-6), selectable:true, evented:true, hasControls:false});
+                    var radius = 6 * scale;
+                    var circle = new fabric.Circle({radius: radius,fill:"#fff", left:(position.offsetX-radius), top:(position.offsetY-radius), selectable:true, evented:true, hasControls:false});
                     circle.id = ++tagUID;
 
                     var group = new fabric.Group(null,{subTargetCheck:true, evented:true, selectable:true}, false);

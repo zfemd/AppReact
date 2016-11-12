@@ -149,7 +149,7 @@ class SelectPhotoPage extends Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     rightText='继续'
-                    rightImgPress={this._onContinue.bind(this)}
+                    onRightIconClicked={this._onContinue.bind(this)}
                     />
                 <View>
                     <Image source={this.state.avatarSource} style={styles.uploadAvatar} width={width} height={200} />

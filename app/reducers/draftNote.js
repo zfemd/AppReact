@@ -19,7 +19,7 @@ const draftNote = function (state = initialState, action = {}) {
             break;
         case Actions.ADD_NOTE_PHOTO_DATA:
             if (state.currentPhotoIndex >= 0) {
-                state.notePhotos[state.currentPhotoIndex].imageData = action.imageData;
+                state.notePhotos[state.currentPhotoIndex].image = action.imageData;
             }
             break;
         case Actions.EDIT_NOTE_PHOTO:
@@ -34,7 +34,7 @@ const draftNote = function (state = initialState, action = {}) {
             break;
         case Actions.ADD_TAGS:
             if (state.currentPhotoIndex >= 0) {
-                state.notePhotos[state.currentPhotoIndex].tags = action.tags;
+                state.notePhotos[state.currentPhotoIndex].marks = action.tags;
             }
             break;
         case Actions.RESET_DRAFT_NOTE:

@@ -62,6 +62,16 @@
           <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
           <true/>
         </dict>
+        <key>api.map.baidu.com</key>
+        <dict>
+          <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+          <true/>
+        </dict>
+        <key>postimage.share68.com</key>
+        <dict>
+          <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+          <true/>
+        </dict>
       </dict>
     </dict>
     <key>UIAppFonts</key>
