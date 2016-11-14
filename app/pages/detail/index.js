@@ -184,12 +184,12 @@ class Detail extends React.Component {
         const {detail, route, comments} = this.props;
         const noteId = route.note.noteId;
         let images = [];
-        if (detail.note[noteId] && detail.note[noteId].images[0].url) {
+        if (detail.note[noteId] && detail.note[noteId].images[0].image.url) {
             detail.note[noteId].images.map((val, key) => {
                 let image = {
-                    width: val.width,
-                    height: val.height,
-                    uri: val.url
+                    width: val.image.width,
+                    height: val.image.height,
+                    uri: val.image.url
                 };
 
                 images.push(image);
@@ -368,7 +368,7 @@ class Detail extends React.Component {
                                 enableEmptySections={true}
                                 />
                         </View>
-                        
+
                     </View>
                     <View style={[styles.block, styles.relatedNote]}>
                         <View style={[styles.blockTitle,styles.relatedNoteTitle]}>

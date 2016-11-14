@@ -172,7 +172,6 @@ export default class ImageSlider extends Component {
                 }
                 const originH = this._scaleHeight(this.props.images[position]);
                 const scaleH = this._scaleHeight(this.props.images[position + change]);
-                console.log(dx)
                 Animated.timing(this.state.height, {
                     toValue: (scaleH - originH)*Math.abs(dx/width) + originH,
                     friction: 10,
