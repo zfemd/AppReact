@@ -16,7 +16,8 @@ import {
     ScrollView,
     InteractionManager,
     Navigator,
-    ActivityIndicator
+    ActivityIndicator,
+    Button
 } from 'react-native';
 
 import AutoResponsive from '../autoResponsive';
@@ -30,6 +31,7 @@ import { Token,like, toast } from '../../utils/common';
 import {fetchDetail} from '../../actions/detail';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Spinner from 'react-native-spinkit';
 
 const {height, width} = Dimensions.get('window');
 let fetchParams = {
@@ -53,7 +55,8 @@ class Flow extends React.Component {
             dataSource: new ListView.DataSource({
                 rowHasChanged: (row1, row2) => row1 !== row2,
             }),
-            list: this.props.flow
+            list: this.props.flow,
+            noteUpdated: false
         };
         fetchParams.myFollowOnly = this.props.home.isFollowed;
     }
@@ -78,9 +81,14 @@ class Flow extends React.Component {
             params.flowRefreshing = true;
             dispatch(fetchList(params));
         } else {
-            params.flowRefreshing = false;
-            dispatch(fetchList(params));
+            setTimeout(()=>{
+                params.flowRefreshing = false;
+                dispatch(fetchList(params));
+                this.setState({offlineReloading: false});
+            },2000);
+            this.setState({offlineReloading: true});
         }
+
     }
 
     _jumpToDetailPage(note) {
@@ -287,27 +295,29 @@ class Flow extends React.Component {
 
         if (!list || list.length === 0) {
             return (
-                <ScrollView
-                    automaticallyAdjustContentInsets={false}
-                    horizontal={false}
-                    contentContainerStyle={styles.dataEmpty}
-                    refreshControl={
-                        <RefreshControl
-                          refreshing={flow.refreshing}
-                          onRefresh={() => this._onRefresh(false)}
-                          title="努力加载中..."
-                          titleColor="#fc7d30"
-                          colors={['#fc7d30']}
-                          tintColor={['#fc7d30']}
-                        />
-                      }
-                    >
-                    <View style={styles.center}>
-                        <Text style={{ fontSize: 16 }}>
-                            目前没有数据，请刷新重试……
-                        </Text>
-                    </View>
-                </ScrollView>
+                <View>
+                    {
+                        flow.refreshing || this.state.offlineReloading?(
+                            <View style={[styles.center,{marginTop: 40}]}><
+                                Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt" color={'#fc7d30'}/>
+                            </View>
+                        ) : (
+                            <View>
+                                <View style={[styles.center,{marginTop: 40}]}>
+                                    <Text style={{ fontSize: 16, color: '#bdbdbd' }}>
+                                        目前没有数据，请刷新重试……
+                                    </Text>
+                                </View>
+                                <TouchableOpacity style={styles.button} onPress={() => this._onRefresh(false)}>
+                                    <Text style={styles.buttonFont}>刷新</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    }
+
+
+                </View>
+
             )
         }
 
@@ -447,8 +457,9 @@ var styles = StyleSheet.create({
     },
     footerText: {
         textAlign: 'center',
-        fontSize: 14,
-        marginLeft: 10
+        fontSize: 12,
+        marginLeft: 10,
+        color: '#bdbdbd'
     },
     heart: {
         width: 20,
@@ -456,6 +467,19 @@ var styles = StyleSheet.create({
     },
     title: {
         height: 28
+    },
+    button: {
+        height: 36,
+        backgroundColor: '#fc7d30',
+        margin: 80,
+        marginTop: 40,
+        borderRadius: 4,
+        alignItems: 'center',
+    },
+    buttonFont: {
+        fontSize: 16,
+        lineHeight: 26,
+        color: '#fff'
     }
 });
 
