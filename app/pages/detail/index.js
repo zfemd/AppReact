@@ -210,7 +210,7 @@ class Detail extends React.Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     rightImg={shareImg}
-                    rightImgPress={this._onSharePress}
+                    onRightIconClicked={this._onSharePress}
                     />
                 <ScrollView style={styles.main}>
 

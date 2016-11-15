@@ -8,7 +8,8 @@ import {
     View,
     Text,
     Alert,
-    Dimensions
+    Dimensions,
+    TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { naviGoBack } from '../../utils/common';
@@ -86,23 +87,24 @@ class Toolbar extends React.Component {
                     onPress={this._onLeftIconClicked}
                     />
 
-                <View style={styles.titleViewIOS}>
-                    <Text
-                        style={styles.titleIOS}
-                        onPress={this._onTitleClicked}
-                        >
-                        {this.props.title}
-                    </Text>
-                    {
-                        !this.props.hideDrop?
-                            <ImageButton
-                            source={arrowImg}
-                            style={styles.arrowIOS}
-                            onPress={this._onTitleClicked}
-                            /> : <View/>
-                    }
+                <TouchableOpacity style={styles.titleViewIOS} onPress={this._onTitleClicked}>
+                    <View style={styles.titleViewIOSClick}>
+                        <Text
+                            style={styles.titleIOS}
+                            >
+                            {this.props.title}
+                        </Text>
+                        {
+                            !this.props.hideDrop?
+                                <ImageButton
+                                    source={arrowImg}
+                                    onPress={this._onTitleClicked}
+                                    style={styles.arrowIOS}
+                                    /> : <View/>
+                        }
+                    </View>
 
-                </View>
+                </TouchableOpacity>
 
                 {
                     this.props.rightText ?
@@ -164,6 +166,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
+    },
+    titleViewIOSClick:{
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 120,
+        height: 40
     }
 });
 
