@@ -32,6 +32,7 @@ import ImageButton from '../../components/toolbar/ImageButton';
 import BrandOptionList from './BrandOptionList';
 import CurrencyOptionList from './CurrencyOptionList';
 import NationOptionList from './NationOptionList';
+import CategoryOptionList from './CategoryOptionList';
 import PostNotePage from './PostNotePage';
 import {fabrics} from '../../constants/fabrics';
 import {fabricContrast} from '../../constants/imageFilters';
@@ -64,6 +65,7 @@ class PhotoEditPage extends Component {
             sImageBase64Data: null,
             avatarSource: this.props.photo,
             optionsModalVisible:false,
+            categoryOptionsVisible: false,
             currencyOptionsVisible: false,
             brandOptionsVisible: false,
             nationOptionsVisible: false,
@@ -165,11 +167,19 @@ class PhotoEditPage extends Component {
         this.showNationModal(true);
     }
 
+    _onCategorySelect(rowData) {
+        this.state.currentTag.category = rowData.title;
+        this.showBrandModal(false);
+    }
+
     _onBrandSelect(rowData) {
         this.state.currentTag.brand = rowData.title;
         this.showBrandModal(false);
     }
 
+    /*
+     * @deprecated
+     */
     _onCurrencySelect(rowData) {
         this.state.currentTag.currency = rowData.title;
         this.showCurrencyModal(false);
@@ -266,8 +276,6 @@ class PhotoEditPage extends Component {
             '<div><image id="image-origin" style="display:none;"/></div>' +
             '</body></html>'
         };
-
-        console.log("source");
 
         return obj;
     }
@@ -453,7 +461,7 @@ class PhotoEditPage extends Component {
                 {this.state.tagOverlayVisible ?
                     (<View style={[styles.overlay]}>
                         <View style={styles.formRow}>
-                            <TextInput value={this.state.currentTag.brand} placeholder='品牌' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
+                            <TextInput value={this.state.currentTag.brand} placeholder='品类' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
                             <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} onSubmitEditing={(event) => {this.state.currentTag.name = event.nativeEvent.text;}} />
                         </View>
                         <View style={styles.formRow}>
@@ -482,6 +490,7 @@ class PhotoEditPage extends Component {
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
                     <View style={[styles.container, {height: height, marginTop:21}]}>
+                        { this.state.categoryOptionsVisible ? <CategoryOptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onCategorySelect.call(this, rowData) }/> : null}
                         { this.state.brandOptionsVisible ? <BrandOptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
                         { this.state.currencyOptionsVisible ? <CurrencyOptionList onCancel={() => this.showCurrencyModal.call(this, false)} onSelect={(rowData)=> this._onCurrencySelect.call(this, rowData) }/> : null}
                         { this.state.nationOptionsVisible ? <NationOptionList onCancel={() => this.showNationModal.call(this, false)} onSelect={(rowData)=> this._onNationSelect.call(this, rowData) }/> : null}
