@@ -87,8 +87,8 @@ class Toolbar extends React.Component {
                     onPress={this._onLeftIconClicked}
                     />
 
-                <TouchableOpacity style={styles.titleViewIOS} onPress={this._onTitleClicked}>
-                    <View style={styles.titleViewIOSClick}>
+                <View style={styles.titleViewIOS} >
+                    <TouchableOpacity style={styles.titleViewIOSClick} onPress={this._onTitleClicked}>
                         <Text
                             style={styles.titleIOS}
                             >
@@ -102,9 +102,9 @@ class Toolbar extends React.Component {
                                     style={styles.arrowIOS}
                                     /> : <View/>
                         }
-                    </View>
+                    </TouchableOpacity>
 
-                </TouchableOpacity>
+                </View>
 
                 {
                     this.props.rightText ?

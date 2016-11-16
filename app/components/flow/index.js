@@ -188,7 +188,7 @@ class Flow extends React.Component {
                             </View>
                         </TouchableWithoutFeedback>
                         <View>
-                            <Text style={[styles.text,styles.title]} lineBreakMode={'middle'}  numberOfLines={2} lineBreakMode='tail'>
+                            <Text style={[styles.text,styles.title]}  numberOfLines={2} lineBreakMode='tail'>
                                 {val.title}
                             </Text>
                         </View>
