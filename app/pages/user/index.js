@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
+import MyPage from '../my'
 
 class User extends React.Component {
     constructor(props) {
@@ -15,14 +16,7 @@ class User extends React.Component {
 
     render() {
         return(
-            <View style={{backgroundColor: '#fc7d30', flex: 1}}>
-                <Toolbar
-                    title="用户"
-                    navigator={this.props.navigator}
-                    hideDrop={true}
-                    />
-                <Text>detail</Text>
-            </View>
+            <MyPage></MyPage>
         )
 
     }

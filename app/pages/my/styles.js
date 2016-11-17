@@ -15,6 +15,7 @@ export default styles = StyleSheet.create({
         flexDirection:'column',
         alignItems: 'center',
         marginTop: 10,
+        backgroundColor: '#fff'
     },
     portrait: {
         borderRadius: 45,
