@@ -8,14 +8,18 @@ var {
 } = React;
 
 export default styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#f1f1f1'
+    },
     text:{
         color: '#4a4a4a'
     },
     userContainer: {
         flexDirection:'column',
         alignItems: 'center',
-        marginTop: 10,
-        backgroundColor: '#fff'
+        paddingTop: 10,
+        backgroundColor: '#f1f1f1'
     },
     portrait: {
         borderRadius: 45,
@@ -65,7 +69,7 @@ export default styles = StyleSheet.create({
     },
     myNotesTitle: {
         backgroundColor: '#fff',
-        padding: 16
+        padding: 16,
     },
     myNote:{
         borderTopWidth: 1,
