@@ -24,12 +24,19 @@ export default styles = StyleSheet.create({
     portrait: {
         borderRadius: 45,
         borderColor: '#fff',
-        borderWidth: 2
+        borderWidth: 2,
+    },
+    portraitImg: {
+        borderRadius: 22.5,
     },
     user: {
         flexDirection:'row',
         justifyContent: 'center',
+        alignItems:'center',
         marginTop:5
+    },
+    gender: {
+        marginLeft: 4,
     },
     income: {
         flexDirection:'row',
@@ -58,10 +65,10 @@ export default styles = StyleSheet.create({
         borderLeftWidth:1,
         borderLeftColor:'#ccc'
     },
-    separatorHorizontal: {
-        borderBottomWidth:1,
-        borderBottomColor:'#ccc'
-    },
+    //separatorHorizontal: {
+    //    borderBottomWidth:1,
+    //    borderBottomColor:'#ccc'
+    //},
     count: {
         fontSize:20,
         color:'#FC4D30',
@@ -71,12 +78,14 @@ export default styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 16,
     },
+    myNoteContainer: {
+        paddingBottom: 60,
+    },
     myNote:{
         borderTopWidth: 1,
         borderTopColor: '#ccc',
         backgroundColor: '#fff',
         padding: 20,
-        paddingBottom: 60
     },
     noteUserBox: {
         flexDirection: 'row'

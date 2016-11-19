@@ -3,7 +3,8 @@
 import React  from 'react';
 import {
     View,
-    Text
+    Text,
+    ScrollView
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -16,13 +17,15 @@ class User extends React.Component {
 
     render() {
         return(
-            <View>
+            <View style={{flex: 1}}>
                 <Toolbar
                     title="Ta的主页"
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />
-                <Content></Content>
+                <ScrollView>
+                    <Content/>
+                </ScrollView>
             </View>
         )
 

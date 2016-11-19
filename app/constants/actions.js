@@ -22,7 +22,8 @@ export default keyMirror({
     RECEIVE_NOTE_DETAIL: null,
     SHOW_FOLLOW: null,
     SHOW_FILTER: null,
-    PAGE_REFRESH: null
+    PAGE_REFRESH: null,
+    RECEIVE_USER_INFO: null
 });
 
 

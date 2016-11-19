@@ -9,6 +9,7 @@ import channel from './channel';
 import detail from './detail';
 import comments from './comments';
 import recommend from './recommend';
+import user from './user';
 
 const rootReducer = combineReducers({
     home,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     channel,
     detail,
     comments,
-    recommend
+    recommend,
+    user
 });
 
 export default rootReducer;

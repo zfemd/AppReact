@@ -20,7 +20,8 @@ import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import StorageKeys from '../../constants/StorageKeys';
 import {
-    getToken
+    getToken,
+    toast
 } from '../../utils/common';
 
 var womanIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="venus"/>;
@@ -329,16 +330,32 @@ export default class HomePage extends Component {
 
         this.user = this.state.user;
 
+        if(this.props.userInfo){
+            let userInfo = this.props.userInfo;
+            this.user = {
+                name: userInfo.nickname,
+                gender: userInfo.gender == 'FEMALE'? 'women' : 'man',
+                income: userInfo.totalRevenue,
+                thumbUri: userInfo.portraitUrl,
+                summary: {
+                    noteNum: userInfo.publishedNoteCount,
+                    transNum: userInfo.transactionCount,
+                    watcherNum: userInfo.watchCount,
+                    fansNum: userInfo.fanCount
+                }
+            }
+        }
+
         return (
             <View style={styles.container}>
 
                 <View style={styles.userContainer}>
                     <View style={styles.portrait}>
-                        <Image source={{uri: this.user.thumbUri, width: 45, height: 45}} />
+                        <Image style={styles.portraitImg} source={{uri: this.user.thumbUri, width: 45, height: 45}} />
                     </View>
                     <View style={styles.user}>
                         <Text style={{fontSize:16}}>{this.user.name}</Text>
-                        <Image source={ this.user.gender == 'women' ? womanImg : manImg } />
+                        <Image style={styles.gender} source={ this.user.gender == 'women' ? womanImg : manImg } />
 
                     </View>
                     <View style={styles.income}>
@@ -376,7 +393,9 @@ export default class HomePage extends Component {
                           renderRow={this._renderNote.bind(this)}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
                           renderSeparator={this._renderSeparator}
-                          onEndReached={this._getMoreNotes.bind(this)}/>
+                          onEndReached={this._getMoreNotes.bind(this)}
+                          style={styles.myNoteContainer}
+                        />
 
             </View>
         );
