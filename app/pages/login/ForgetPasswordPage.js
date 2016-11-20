@@ -13,6 +13,7 @@ import {
     Modal,
     NavigatorIOS,
     Picker,
+    Platform,
     ActivityIndicatorIOS,
     InteractionManager
 } from 'react-native';
@@ -147,7 +148,7 @@ export default class ForgetPasswordPage extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, Platform.OS === 'android' ? null : {marginTop: 21}]}>
 
                 <View style={styles.navigator}>
                     <Icon.Button name="angle-left" size={32} color="#4a4a4a" backgroundColor="transparent" onPress={this._onPasswordLoginLink.bind(this)}>
@@ -157,7 +158,8 @@ export default class ForgetPasswordPage extends Component {
 
                 <View style={[styles.fieldContainer,{marginTop:60}, this.state.focus == 'phone' ? styles.activeFieldContainer : {}]}>
                     <TextInput placeholder="请输入手机号码" maxLength={13}
-                               style={[styles.textInput, {borderRightWidth:1}]}
+                               clearButtonMode='while-editing' underlineColorAndroid='transparent'
+                               style={[styles.textInput, Platform.OS === 'android' ? null : {height: 26}]}
                                onChangeText={(text) => {this.state.phone=text, this.validate()}}
                                value={this.state.text} autoFocus={true} keyboardType="numeric"
                                onFocus={(e) => {this.setState({focus:'phone'})}}/>
@@ -166,7 +168,8 @@ export default class ForgetPasswordPage extends Component {
 
                 <View style={[styles.fieldContainer,{marginTop:20}, this.state.focus == 'code' ? styles.activeFieldContainer : {}]}>
                     <TextInput placeholder="请输入验证码" maxLength={6}
-                               style={[styles.textInput]}
+                               clearButtonMode='while-editing' underlineColorAndroid='transparent'
+                               style={[styles.textInput, Platform.OS === 'android' ? null : {height: 26}]}
                                keyboardType="numeric"
                                onChangeText={(text) => {this.state.code=text; this.validate();}}
                                value={this.state.text}
@@ -213,8 +216,7 @@ var styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         padding: 30,
-        marginTop: 21,
-        alignItems: 'stretch',
+        alignItems: 'stretch'
     },
     navigator: {
         flexDirection: 'row',
@@ -223,21 +225,23 @@ var styles = StyleSheet.create({
     fieldContainer: {
         borderColor: 'gray',
         borderBottomWidth: 1,
-        paddingVertical:3,
-        flexDirection:'row'
+        flexDirection:'row',
+        paddingVertical:3
     },
     activeFieldContainer: {
         borderColor: '#F37D30',
     },
     textInput: {
-        height: 26,
-        borderColor: 'gray',
         flex:1,
         fontSize:18,
-        color:'#696969'
+        color:'#696969',
+        borderWidth: 0,
+        marginVertical: 0,
+        paddingVertical: 0
     },
     button: {
         paddingVertical:9,
+        textAlignVertical: 'center', /* android */
         backgroundColor: '#DFDFDF',
         borderRadius:2,
         fontSize:18,

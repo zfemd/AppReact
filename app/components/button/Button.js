@@ -23,6 +23,7 @@ export default class Button extends Component {
         let touchableProps = {
             activeOpacity: this._computeActiveOpacity(),
         };
+
         if (!this.props.disabled) {
             touchableProps.onPress = this.props.onPress;
             touchableProps.onPressIn = this.props.onPressIn;
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
         fontFamily: '.HelveticaNeueInterface-MediumP4',
         fontSize: 17,
         fontWeight: 'bold',
-        textAlign: 'center',
+        textAlign: 'center'
     },
     disabledText: {
         color: '#dcdcdc',

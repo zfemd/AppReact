@@ -13,6 +13,7 @@ import {
     Image,
     NavigatorIOS,
     Picker,
+    Platform,
     ActivityIndicatorIOS,
     Navigator
 } from 'react-native';
@@ -110,7 +111,7 @@ export default class LoginPage extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <View style={styles.navigator}>
                     <Text style={{fontSize:24, flex:1, color:'#4a4a4a'}}>登录</Text>
                     <TouchableOpacity onPress={this._onPressCancel.bind(this)}>
@@ -118,33 +119,37 @@ export default class LoginPage extends Component {
                     </TouchableOpacity>
                 </View>
 
-                <View ref={(component) => this.phoneField = component} style={[styles.fieldContainer,{marginTop:60}, this.state.focus == 'phone' ? styles.activeFieldContainer : {}]}>
-                    <TextInput placeholder="请输入手机号码" maxLength={13}
-                        style={[styles.textInput, {borderRightWidth:1}]} keyboardType="numeric"
-                        value={this.state.text} autoFocus={true} onChangeText={(text) => {this.state.phone=text, this.validate()}}
-                               onFocus={(e) => {this.setState({focus:'phone'})}}
+                <View style={[styles.fieldContainer, {marginTop:60}, this.state.focus == 'phone' ? styles.activeFieldContainer : {}]}>
+                    <TextInput placeholder="请输入手机号码" maxLength={13} keyboardType="numeric" value={this.state.text}
+                               clearButtonMode='while-editing'underlineColorAndroid='transparent'
+                               autoFocus={true} style={[styles.textInput, Platform.OS === 'android' ? null : {height: 26}]}
+                               onChangeText={(text) => {this.state.phone=text, this.validate()}} onFocus={(e) => {this.setState({focus:'phone'})}}
                     />
                 </View>
 
-                <View style={[styles.fieldContainer,{marginTop:20}, this.state.focus == 'password' ? styles.activeFieldContainer : {}]}>
-                    <TextInput placeholder="请输入密码"
-                               style={[styles.textInput]}
-                               value={this.state.text}
+                <View style={[styles.fieldContainer, {marginTop:20}, this.state.focus == 'password' ? styles.activeFieldContainer : {}]}>
+                    <TextInput placeholder="请输入密码" secureTextEntry={true} value={this.state.text}
+                               clearButtonMode='while-editing' underlineColorAndroid='transparent'
+                               style={[styles.textInput, Platform.OS === 'android' ? null : {height: 26}]}
                                onChangeText={(text) => {this.state.password =text, this.validate()}}
                                onFocus={(e) => this.setState({focus:'password'})}
                     />
                 </View>
 
                 <View style={{justifyContent:'space-between', flexDirection:'row'}}>
-                    <Button style={{ textAlign:'left', fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
-                            onPress={this._onPressForgetLink.bind(this)} >快速注册</Button>
-                    <Button style={{ fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
-                            onPress={this._onPressForgetLink.bind(this)} >忘记密码</Button>
+                    <TouchableHighlight>
+                        <Text style={{ fontSize: 14, padding:3, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
+                              onPress={this._onPressForgetLink.bind(this)} >快速注册</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight>
+                        <Text style={{ fontSize: 14, padding:3, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
+                              onPress={this._onPressForgetLink.bind(this)} >忘记密码</Text>
+                    </TouchableHighlight>
                 </View>
 
                 <View style={{marginTop:40, flexDirection:'row'}}>
-                    <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
-                        onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
+                    <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1, justifyContent: 'center', backgroundColor:'red'}}
+                            onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
                 </View>
 
                 <View style={{marginTop:60, flexDirection:'row'}}>
@@ -164,18 +169,11 @@ export default class LoginPage extends Component {
 }
 
 var styles = StyleSheet.create({
-    description: {
-        marginBottom: 20,
-        fontSize: 18,
-        textAlign: 'center',
-        color: '#656565'
-    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
         padding: 30,
-        marginTop: 21,
-        alignItems: 'stretch',
+        alignItems: 'stretch'
     },
     navigator: {
         flexDirection: 'row',
@@ -191,21 +189,23 @@ var styles = StyleSheet.create({
         borderColor: '#F37D30',
     },
     textInput: {
-        height: 26,
-        borderColor: 'gray',
         flex:1,
         fontSize:18,
-        color:'#696969'
+        color:'#696969',
+        borderWidth: 0,
+        marginVertical: 0,
+        paddingVertical: 0
     },
     button: {
         paddingVertical:9,
         backgroundColor: '#DFDFDF',
         borderRadius:2,
         fontSize:18,
+        textAlignVertical: 'center', /* android */
         color:'#fff',
         fontFamily:'STHeitiSC-Medium',
         alignItems:'center',
-        justifyContent:"center"
+        justifyContent:'center'
     },
     activeButton: {
         backgroundColor: '#F37D30',

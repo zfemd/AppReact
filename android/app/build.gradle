@@ -83,6 +83,14 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
+    signingConfigs {
+        duoshouji {
+            keyAlias 'duoshouji'
+            keyPassword '111111'
+            storeFile file('/Users/lyan2/git/AppReact/android/keystores/demo.keystore')
+            storePassword '111111'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
     defaultConfig {
@@ -94,6 +102,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        signingConfig signingConfigs.duoshouji
     }
     splits {
         abi {
