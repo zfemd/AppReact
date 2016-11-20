@@ -38,6 +38,8 @@ class MyHomePage extends Component {
                     fetchUserInfo(params).then(()=>{
                         this.setState({init: true});
                     });
+                } else {
+                    this.setState({init: true});
                 }
             });
 

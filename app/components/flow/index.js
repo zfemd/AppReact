@@ -128,7 +128,7 @@ class Flow extends React.Component {
                     like(noteId,token).then((res) => {
                         let list = the.props.flow.flowList[tag];
                         let note = _.find(list,{noteId:noteId});
-                        note.liked = true;
+                        note.isLikedByVisitor = true;
                         note.likeCount++;
                         this.setState({list: this.props.flow});
                     });
@@ -216,7 +216,7 @@ class Flow extends React.Component {
                                         name={'ios-heart'}
                                         size={18}
 
-                                        color={ val.liked?'#fc7d30':'#bebdbd'}
+                                        color={ val.isLikedByVisitor?'#fc7d30':'#bebdbd'}
                                         style={{marginTop : -4}}
                                         />
                                 </TouchableOpacity>

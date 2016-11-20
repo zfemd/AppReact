@@ -141,7 +141,8 @@ class Detail extends React.Component {
                         navigator.push({
                             component: UserPage,
                             name: 'UserPage',
-                            sceneConfigs: Navigator.SceneConfigs.FloatFromRight
+                            sceneConfigs: Navigator.SceneConfigs.FloatFromRight,
+                            userId: userId
                         });
                     });
                 }
@@ -156,7 +157,7 @@ class Detail extends React.Component {
                 follow(userId, token).then((res) => {
                     let notes = _.filter(detail.note, {userId: userId});
                     _.each(notes, function (note) {
-                        note.followed = true;
+                        note.isAuthorFollowedByVisitor = true;
                     });
                     this.setState({noteUpdated: true});
                 });
@@ -171,7 +172,7 @@ class Detail extends React.Component {
                 if (token) {
                     like(noteId, token).then((res) => {
                         let note = detail.note[noteId];
-                        note.liked = true;
+                        note.isLikedByVisitor = true;
                         note.likeCount++;
                         this.setState({noteUpdated: true});
                     });
@@ -229,7 +230,7 @@ class Detail extends React.Component {
                             </TouchableOpacity>
 
                             {
-                                !detail.note[noteId].followed ?
+                                !detail.note[noteId].isAuthorFollowedByVisitor ?
                                     <TouchableOpacity style={styles.follow}
                                                       onPress={() => this._follow(detail.note[noteId].userId)}>
                                         <Image source={require('../../assets/note/follow.png')}/>
@@ -381,7 +382,7 @@ class Detail extends React.Component {
                     <TouchableOpacity style={styles.floatOp} onPress={()=> this._like(noteId)}>
                         <View style={styles.floatOpView}>
                             {
-                                detail.note[noteId]&&detail.note[noteId].liked ?(
+                                detail.note[noteId]&&detail.note[noteId].isLikedByVisitor ?(
                                     <Image style={styles.floatOpImage} source={ require('../../assets/note/heart.png') }/>
                                 ):(
                                     <Image style={styles.floatOpImage} source={ require('../../assets/note/heart.png')}/>
