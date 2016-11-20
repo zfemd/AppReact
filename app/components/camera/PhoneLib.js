@@ -7,6 +7,7 @@ const {
     Dimensions,
     Image,
     Navigator,
+    ScrollView,
     StyleSheet,
     Text,
     TouchableHighlight,
@@ -58,8 +59,10 @@ class PhoneLib extends Component {
     }
     
     render() {
+        let containerStyle = [styles.container, this.props.contentContainerStyle];
+
         return (
-            <View style={styles.container}>
+            <ScrollView contentContainerStyle={containerStyle} scrollEnabled={true} showsVerticalScrollIndicator={true}>
                 <CameraRollView
                     batchSize={9}
                     groupTypes="SavedPhotos"
@@ -67,17 +70,14 @@ class PhoneLib extends Component {
                     assetType="Photos"
                     renderImage={this._renderImage.bind(this)}
                 />
-            </View>
+            </ScrollView>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        backgroundColor: '#F5FCFF'
     },
     image: {
         margin: 4

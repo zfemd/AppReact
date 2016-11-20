@@ -340,7 +340,7 @@ class PhotoEditPage extends Component {
         let choseFilterStyle = {backgroundColor: '#ccc'};
 
         return (
-            <View style={[styles.container, {minHeight: height}]}>
+            <View style={[styles.container, {height: height - 21}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="编辑照片"
                     navigator={this.props.navigator}
@@ -359,6 +359,7 @@ class PhotoEditPage extends Component {
                 <ScrollableTabView
                     tabBarPosition='bottom'
                     initialPage={0}
+
                     renderTabBar={this.state.oTabsBar}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
@@ -368,7 +369,7 @@ class PhotoEditPage extends Component {
                             initialPage={0}
                             renderTabBar={() => <DefaultTabBar {...this.props}/>}
                             >
-                            <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true}>
+                            <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true} style={{flex:1}}>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={originImg} style={styles.filterImage} resizeMode="contain" />

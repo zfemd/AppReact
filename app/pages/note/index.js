@@ -140,9 +140,10 @@ class SelectPhotoPage extends Component {
 
     render() {
         let {height, width} = Dimensions.get('window');
-        
+        height -= 21; // top navigator
+
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, {height}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="所有照片"
                     onTitlePress = {this._onPressImageLib.bind(this)}
@@ -151,10 +152,11 @@ class SelectPhotoPage extends Component {
                     rightText='继续'
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
-                <View>
+                <View style={{marginBottom: 4}}>
                     <Image source={this.state.avatarSource} style={styles.uploadAvatar} width={width} height={200} />
                 </View>
-                <PhoneLib ref={(component) => this.phoneLib = component} navigator={this.props.navigator} onPressCamera={this._onPressCamera} onPressImage={this._onPressImage.bind(this)} />
+                <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
+                          onPressCamera={this._onPressCamera} onPressImage={this._onPressImage.bind(this)} />
 
             </View>
         );

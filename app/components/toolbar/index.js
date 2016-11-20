@@ -119,7 +119,7 @@ class Toolbar extends React.Component {
 
     render() {
         let Toolbar = Platform.select({
-            android: () => this._renderToolbarAndroid(),
+            android: () => this._renderToolbarIOS(),
             ios: () => this._renderToolbarIOS()
         });
         return <Toolbar />;
@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
     toolbar: {
         backgroundColor: '#fff',
         alignItems: 'center',
-        height: 58,
+        justifyContent: 'center',
+        //height: 58,
         shadowOffset: {width: 0, height: .2,},
         shadowOpacity: .3,
         shadowColor: '#555',
@@ -147,11 +148,9 @@ const styles = StyleSheet.create({
     leftIOS: {
         //height: 18,
         //width: 24,
-        marginTop: 20,
         marginLeft: 10
     },
     rightIOS: {
-        marginTop: 20,
         marginRight: 10,
         right: 0
     },
@@ -162,7 +161,6 @@ const styles = StyleSheet.create({
     },
     titleViewIOS: {
         flex: 2,
-        marginTop: 20,
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',

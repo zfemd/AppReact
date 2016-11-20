@@ -3,6 +3,7 @@
 import React from 'react';
 const ReactNative = require('react-native');
 const {
+    Platform,
     ScrollView,
     Text,
     View,
@@ -120,7 +121,7 @@ class Home extends React.Component {
 
     render() {
         return (
-            <View style={styles.container} visible='hidden'>
+            <View style={[styles.container, Platform.OS === 'android' ? null : {marginTop: 21}]} visible='hidden'>
                 {
                     this.state.showToolbar ? (
                         <Toolbar

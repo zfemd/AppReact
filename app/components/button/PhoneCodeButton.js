@@ -74,6 +74,7 @@ var styles = StyleSheet.create({
         borderRadius:2,
         color:'#888',
         lineHeight:23,
+        textAlignVertical: 'center', /* android */
         fontFamily:'ArialMT',
         width:80
     }
