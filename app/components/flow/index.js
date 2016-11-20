@@ -103,7 +103,7 @@ class Flow extends React.Component {
         });
     }
 
-    _jumpToUserPage() {
+    _jumpToUserPage(userId) {
         const { navigator } = this.props;
         Token.getToken(navigator).then((token) => {
                 if (token) {
@@ -111,7 +111,8 @@ class Flow extends React.Component {
                         navigator.push({
                             component: UserPage,
                             name: 'UserPage',
-                            sceneConfigs: Navigator.SceneConfigs.FloatFromRight
+                            sceneConfigs: Navigator.SceneConfigs.FloatFromRight,
+                            userId: userId
                         });
                     });
                 }
@@ -179,7 +180,7 @@ class Flow extends React.Component {
                         <View style={styles.price}>
                             <Text style={styles.priceText}>￥100</Text>
                         </View>
-                        <TouchableWithoutFeedback onPress={() => this._jumpToUserPage()}>
+                        <TouchableWithoutFeedback onPress={() => this._jumpToUserPage(val.authorId?val.authorId:13585979772)}>
                             <View style={styles.portrait}>
                                 <Image
                                     source={{uri: val.portrait , width: 30, height: 30}}

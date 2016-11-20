@@ -8,7 +8,8 @@ const {
     View,
     InteractionManager,
     Navigator,
-    TouchableOpacity
+    TouchableOpacity,
+    AsyncStorage
 } = ReactNative;
 import { connect } from 'react-redux';
 import styles from './style';

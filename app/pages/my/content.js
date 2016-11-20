@@ -60,13 +60,13 @@ export default class HomePage extends Component {
         });
 
         this.state = {
-            dataSource: ds
+            dataSource: ds,
         };
     }
 
     async componentWillMount () {
         // load old data to display
-        await this._loadInitialState();
+        this._loadInitialState();
     }
 
     componentDidMount() {
@@ -78,7 +78,6 @@ export default class HomePage extends Component {
 
     async _loadInitialState() {
         try {
-            await getToken();
 
             let meDetail = await AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY);
             if (meDetail !== null){
@@ -95,7 +94,7 @@ export default class HomePage extends Component {
     }
 
     async updateFromServer(){
-        await this._getAboutMe();
+        //await this._getAboutMe();
         await this._getMyNotes();
     }
 
@@ -190,69 +189,6 @@ export default class HomePage extends Component {
                 income: 3
             }
         }}});
-    }
-
-    async _getMoreNotes(){
-        // fetch('https://duoshouji.com/endpoint/aboutme', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         token: this.state.token
-        //     })
-        // }).then((response) => response.json())
-        // .then((responseJson) => {
-        //     this._updateUserSource(responseJson);
-        // })
-        // .catch((error) => {
-        //     console.error(error);
-        // });
-        this._onDataArrived({'noteId3': {
-            user: {
-                name: '天才小熊猫2',
-                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
-            },
-            detail: {
-                title: '最新入手羊毛线',
-                createTime: '05-28 08:29'
-            },
-            summary: {
-                zanNum: 28,
-                commentNum: 8,
-                income: 32
-            }
-        },'noteId4': {
-            user: {
-                name: '天才小子2',
-                thumbUri: 'https://facebook.github.io/react/img/logo_small_2x.png'
-            },
-            detail: {
-                title: '滚出',
-                createTime: '05-28 08:29'
-            },
-            summary: {
-                zanNum: 8,
-                commentNum: 8,
-                income: 3
-            }
-        }});
-    }
-
-    _onDataArrived(newData) {
-        let _this = this;
-        Object.keys(newData).forEach(function(key){
-            _this.state.notes[key] = newData[key];
-        });
-
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(this.state.notes)
-        });
-
-        // Image.getSize(this.props.source.uri, (width, height) => {
-        //     this.setState({width, height});
-        // });
     }
 
     /**
@@ -393,7 +329,6 @@ export default class HomePage extends Component {
                           renderRow={this._renderNote.bind(this)}
                           renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
                           renderSeparator={this._renderSeparator}
-                          onEndReached={this._getMoreNotes.bind(this)}
                           style={styles.myNoteContainer}
                         />
 

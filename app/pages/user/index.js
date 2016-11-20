@@ -9,10 +9,25 @@ import {
 import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Content from '../my/content';
+import {Token} from '../../utils/common';
+import {fetchUserInfo} from '../../actions/user';
+import { connect } from 'react-redux';
 
 class User extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    componentWillMount() {
+        const { dispatch ,route } = this.props;
+        Token.getToken(navigator).then((token) => {
+            let params = {
+                token: token,
+                userId: route.userId
+            };
+            dispatch(fetchUserInfo(params));
+        });
+
     }
 
     render() {
@@ -24,7 +39,7 @@ class User extends React.Component {
                     hideDrop={true}
                     />
                 <ScrollView>
-                    <Content/>
+                    <Content userInfo={this.props.user.userInfo}/>
                 </ScrollView>
             </View>
         )
@@ -32,4 +47,11 @@ class User extends React.Component {
     }
 }
 
-export default User;
+function mapStateToProps(state) {
+    const { user } = state;
+    return {
+        user
+    };
+}
+
+export default connect(mapStateToProps)(User);

@@ -5,7 +5,8 @@ import {
     ScrollView,
     InteractionManager,
     Navigator,
-    Text
+    Text,
+    AsyncStorage
 } from 'react-native';
 import Content from './content';
 import Toolbar from '../../components/toolbar';
@@ -14,6 +15,7 @@ import {Token} from '../../utils/common';
 import AddFriends from '../addFriends';
 import {fetchUserInfo} from '../../actions/user';
 import { connect } from 'react-redux';
+import StorageKeys from '../../constants/StorageKeys';
 
 const addImg = require('../../assets/header/add.png');
 const settingImg = require('../../assets/personal/setting.png');
@@ -21,17 +23,26 @@ const settingImg = require('../../assets/personal/setting.png');
 class MyHomePage extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            init: false
+        }
     }
 
     componentWillMount() {
-        const { dispatch } = this.props;
         Token.getToken(navigator).then((token) => {
             let params = {
-              token: token
+                token: token
             };
-            dispatch(fetchUserInfo(params));
-        });
+            AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY,(err,result)=>{
+                if(!result){
+                    fetchUserInfo(params).then(()=>{
+                        this.setState({init: true});
+                    });
+                }
+            });
 
+        });
+        //AsyncStorage.removeItem(StorageKeys.ME_STORAGE_KEY);
     }
 
     _onClickSettingIcon() {
@@ -72,7 +83,12 @@ class MyHomePage extends Component {
                     onRightIconClicked={this._onClickSettingIcon.bind(this)}
                     />
                 <ScrollView>
-                    <Content userInfo={this.props.user.userInfo}/>
+                    {this.state.init? (
+                        <Content/>
+                    ):(
+                        <View/>
+                    )}
+
                 </ScrollView>
 
 
