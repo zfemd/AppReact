@@ -10,7 +10,8 @@ import {
     ListView,
     InteractionManager,
     Navigator,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Platform
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -88,7 +89,7 @@ class CommentList extends React.Component {
 
     render() {
         return(
-            <View style={styles.container}>
+            <View style={[styles.container, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="评论"
                     navigator={this.props.navigator}

@@ -6,7 +6,8 @@ import {
     View,
     Text,
     TouchableHighlight,
-    Alert
+    Alert,
+    Platform
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -41,7 +42,11 @@ class SettingPage extends React.Component {
                         if(ret.resultCode === 0){
                             removeAllStorage();
                             toast('登出成功');
-                            navigator.resetTo(navigator.getCurrentRoutes()[0]);
+                            navigator.resetTo({
+                                component: Home,
+                                name: 'Home'
+                            });
+
                         } else {
                             Alert.alert('登出失败', "登出失败");
                         }
@@ -71,7 +76,7 @@ class SettingPage extends React.Component {
 
     render() {
         return(
-            <View style={{backgroundColor: '#f5f5f5', flex: 1}}>
+            <View style={[{backgroundColor: '#f5f5f5', flex: 1},Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="设置"
                     navigator={this.props.navigator}

@@ -4,7 +4,8 @@ import React  from 'react';
 import {
     View,
     Text,
-    ScrollView
+    ScrollView,
+    Platform
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -32,7 +33,7 @@ class User extends React.Component {
 
     render() {
         return(
-            <View style={{flex: 1}}>
+            <View style={[{flex: 1},Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="Ta的主页"
                     navigator={this.props.navigator}

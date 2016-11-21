@@ -11,7 +11,8 @@ import {
     TouchableWithoutFeedback,
     ListView,
     InteractionManager,
-    Navigator
+    Navigator,
+    Platform
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -205,7 +206,7 @@ class Detail extends React.Component {
         }
 
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="笔记详情"
                     navigator={this.props.navigator}

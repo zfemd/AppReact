@@ -5,7 +5,8 @@ import React  from 'react';
 import {
     View,
     Text,
-    TouchableHighlight
+    TouchableHighlight,
+    Platform
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -20,7 +21,7 @@ class SecurityPage extends React.Component {
 
     render() {
         return(
-            <View style={{backgroundColor: '#f5f5f5', flex: 1}}>
+            <View style={[{backgroundColor: '#f5f5f5', flex: 1},Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="账号与安全"
                     navigator={this.props.navigator}
