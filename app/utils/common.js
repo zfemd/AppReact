@@ -11,6 +11,7 @@ import StorageKeys from '../constants/StorageKeys';
 import configs from '../constants/configs';
 import LoginPage from '../pages/login/LoginPage';
 import Toast from 'react-native-root-toast';
+import _ from 'lodash';
 
 export function naviGoBack(navigator) {
     if (navigator && navigator.getCurrentRoutes().length > 1) {
@@ -221,4 +222,15 @@ export function timeFormat(time,parrent) {
         return fmt;
     };
     return cal(parrent);
+}
+
+export function removeAllStorage() {
+   _.each(StorageKeys, function(v,k){
+       try {
+           AsyncStorage.removeItem(v);
+       } catch (error) {
+           console.error('Failed to remove token, AsyncStorage error: ' + error.message);
+       }
+
+   });
 }

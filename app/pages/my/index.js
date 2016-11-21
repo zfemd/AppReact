@@ -44,7 +44,6 @@ class MyHomePage extends Component {
             });
 
         });
-        //AsyncStorage.removeItem(StorageKeys.ME_STORAGE_KEY);
     }
 
     _onClickSettingIcon() {

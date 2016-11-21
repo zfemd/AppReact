@@ -143,6 +143,7 @@ class Home extends React.Component {
                     initialPage={0}
                     renderTabBar={() => <TabBar {...this.props}/>}
                     onChangeTab={this._onChangeTab.bind(this)}
+                    locked={true}
                     >
                     <Flow tag='all' navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
 
