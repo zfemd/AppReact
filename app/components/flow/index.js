@@ -286,8 +286,8 @@ class Flow extends React.Component {
         let list = null;
         if (flow.loading && !flow.refreshing) {
             return (
-                <View style={styles.center}>
-                    <Text>loading...</Text>
+                <View style={[styles.center,{marginTop: 10}]}>
+                    <Text style={{color: '#bdbdbd'}}>加载中...</Text>
                 </View>
             )
         } else {

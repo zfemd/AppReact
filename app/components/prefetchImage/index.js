@@ -30,7 +30,7 @@ class PrefetchImage extends React.Component {
             isLoading: false,
             prefetchTask: _hasPrefetched ? null : Image.prefetch(this.props.imageUri),
             height: prefetchedHeight ? prefetchedHeight : this.props.height,
-            imageUri : this.props.imageUri
+            imageUri : 'http://'
         };
 
     }
@@ -63,16 +63,20 @@ class PrefetchImage extends React.Component {
         if (!this._hasPrefetched){
             this.props.dispatch(prefetchImageAction(this.props.imageUri, width, height));
         }
-
+        this.setState({imageUri: this.props.imageUri});
     }
 
     _onPrefetchStart ()  {
         if (this.state.prefetchTask) {
             this.setState({isLoading: true });
             this.state.prefetchTask.then(() => {
-                Image.getSize(this.props.imageUri, (width, height) => {
-                    this._onPrefetchComplete(width, height);
-                });
+                if(this.props.height){
+                    this._onPrefetchComplete(100, 100);
+                } else {
+                    Image.getSize(this.props.imageUri, (width, height) => {
+                        this._onPrefetchComplete(width, height);
+                    });
+                }
             }, error => {
                 console.log('error fetching image', error);
                 this._onPrefetchComplete(100, 100);
