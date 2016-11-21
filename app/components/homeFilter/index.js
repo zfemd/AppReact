@@ -68,7 +68,7 @@ class HomeFilter extends React.Component {
         return (
             <TouchableWithoutFeedback onPress={this.props.click}>
                 <View style={styles.cate}>
-                    <Animated.View style={[styles.cateList, {marginTop: this.state.dropAnim}]}>
+                    <Animated.View style={[styles.cateList, {marginTop:0}]}>
                         <TouchableOpacity style={styles.cateItem} onPress={()=>this._filter(0)}>
                             <Text style={[styles.cateFont, !this.props.home.isFollowed? styles.active : '']}>全部</Text>
                         </TouchableOpacity>

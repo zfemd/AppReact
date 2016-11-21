@@ -87,7 +87,7 @@ class HomeFilter extends React.Component {
 const styles = StyleSheet.create({
     share: {
         flex: 1,
-        top: 0,
+        top: -21,
         left: 0,
         zIndex: 10,
         flexDirection: 'column',
