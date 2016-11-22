@@ -59,6 +59,7 @@ class Flow extends React.Component {
             noteUpdated: false
         };
         fetchParams.myFollowOnly = this.props.home.isFollowed;
+        this._scrollView=null;
     }
 
     componentDidMount() {
@@ -67,6 +68,17 @@ class Flow extends React.Component {
         params.tag = tag;
         if(typeof tag !== 'undefined')
             dispatch(fetchList(params));
+    }
+
+    componentWillReceiveProps() {
+        if(this.props.tabForRefresh){
+            this._scrollView.scrollTo({y: 0});
+            setTimeout(() => {
+                this._onRefresh(true);
+            },200)
+
+        }
+
     }
 
     _onRefresh(isFlow) {
@@ -324,6 +336,7 @@ class Flow extends React.Component {
 
         return (
             <ScrollView
+                ref={(scrollView) => { this._scrollView = scrollView; }}
                 showsVerticalScrollIndicator={false}
                 refreshControl={
                           <RefreshControl

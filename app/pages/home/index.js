@@ -40,7 +40,9 @@ class Home extends React.Component {
         this._onRightIconClicked = this._onRightIconClicked.bind(this);
         this.state = {
             showToolbar: this.props.home.showToolbar,
-            filterMounted: false
+            filterMounted: false,
+            currentTab: 0,
+            tabForRefresh: false,
         }
     }
 
@@ -89,6 +91,14 @@ class Home extends React.Component {
      * @private
      */
     _onChangeTab(data) {
+        if(data.i !== this.state.currentTab) {
+            this.setState({currentTab: data.i});
+        } else {
+            this.setState({tabForRefresh: true});
+            setTimeout(()=>{
+                this.setState({tabForRefresh: false});
+            },10)
+        }
         if (data.i == 3 || data.i == 4) {
             this.setState({showToolbar: false});
         } else {
@@ -146,7 +156,7 @@ class Home extends React.Component {
                     onChangeTab={this._onChangeTab.bind(this)}
                     locked={true}
                     >
-                    <Flow tag='all' navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
+                    <Flow tabForRefresh={this.state.tabForRefresh} tag='all' navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
 
                     <Channel navigator={this.props.navigator} tabLabel="ios-compass-outline" style={styles.tabView}></Channel>
 
