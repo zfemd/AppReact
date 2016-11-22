@@ -23,7 +23,8 @@ export default keyMirror({
     SHOW_FOLLOW: null,
     SHOW_FILTER: null,
     PAGE_REFRESH: null,
-    RECEIVE_USER_INFO: null
+    RECEIVE_USER_INFO: null,
+    RECEIVE_USER_NOTES: null
 });
 
 

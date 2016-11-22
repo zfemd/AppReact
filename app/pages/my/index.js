@@ -13,7 +13,7 @@ import Toolbar from '../../components/toolbar';
 import SettingPage from '../settings';
 import {Token} from '../../utils/common';
 import AddFriends from '../addFriends';
-import {fetchUserInfo} from '../../actions/user';
+import {fetchUserInfo, fetchUserNotes} from '../../actions/user';
 import { connect } from 'react-redux';
 import StorageKeys from '../../constants/StorageKeys';
 
@@ -29,6 +29,7 @@ class MyHomePage extends Component {
     }
 
     componentWillMount() {
+        const { dispatch } = this.props;
         Token.getToken(navigator).then((token) => {
             let params = {
                 token: token
@@ -43,6 +44,7 @@ class MyHomePage extends Component {
                 }
             });
 
+            dispatch(fetchUserNotes(params));
         });
     }
 

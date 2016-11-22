@@ -54,9 +54,43 @@ export function fetchUserInfo(params) {
     };
 }
 
+export function fetchUserNotes(params){
+    const timestamp = (new Date()).getTime();
+    const pageSize = 100;
+    const loadedSize = 0;
+    return dispatch => {
+        return request('/user/notes?'+
+            'timestamp=' + timestamp
+            + '&pageSize=' + pageSize
+            + '&loadedSize=' + loadedSize, 'get', '', params.token)
+            .then((list) => {
+                if(list.resultCode == 0){
+                    dispatch(receiveNotes(list.resultValues));
+                } else {
+                    dispatch(receiveNotes([]));
+                }
+
+            }, function (error) {
+                dispatch(receiveNotes([]));
+                console.log(error);
+            })
+            .catch(() => {
+                dispatch(receiveNotes([]));
+                console.log('network error');
+            });
+    };
+}
+
 function receiveInfo(info) {
     return {
         type: types.RECEIVE_USER_INFO,
         info
+    };
+}
+
+function receiveNotes(list) {
+    return {
+        type: types.RECEIVE_USER_NOTES,
+        list
     };
 }
