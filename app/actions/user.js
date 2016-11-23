@@ -19,7 +19,9 @@ export function fetchUserInfo(params) {
                             transNum: userInfo.transactionCount,
                             watcherNum: userInfo.watchCount,
                             fansNum: userInfo.fanCount
-                        }
+                        },
+                        portraitHeight: userInfo.portraitHeight,
+                        portraitWidth: userInfo.portraitWidth
                     };
                     return AsyncStorage.setItem(StorageKeys.ME_STORAGE_KEY, JSON.stringify(source));
                 }

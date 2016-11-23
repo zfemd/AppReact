@@ -12,7 +12,8 @@ import {
     TouchableOpacity,
     Image,
     NavigatorIOS,
-    RecyclerViewBackedScrollView
+    RecyclerViewBackedScrollView,
+    Navigator
 } from 'react-native';
 
 import Button from '../../../app/components/button/Button';
@@ -23,6 +24,7 @@ import {
     getToken,
     toast
 } from '../../utils/common';
+import portraitPage from '../settings/portrait';
 
 var womanIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="venus"/>;
 var manIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="mars"/>;
@@ -48,12 +50,8 @@ export default class HomePage extends Component {
     constructor(props) {
         super(props);
 
-        /* we used the defaultGetRowData, this requires dataBlob has below structure:
-         * dataBlob = {section:{rowID_1: rowData1, rowID_2: rowData2,...},...};
-         *
-         * Todo
-         * We need to make sure rowID is noteID
-         */
+        this._updatePortrait = this._updatePortrait.bind(this);
+
         var ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2,
             sectionHeaderHasChanged: (s1, s2) => s1 != s2
@@ -206,6 +204,18 @@ export default class HomePage extends Component {
         );
     }
 
+    _updatePortrait(info) {
+        const { navigator } = this.props;
+        if(navigator) {
+            navigator.push({
+                name: 'portraitPage',
+                component: portraitPage,
+                sceneConfigs: Navigator.SceneConfigs.FadeAndroid,
+                info: info
+            })
+        }
+    }
+
     _renderNote(rowData, sectionID, rowID, highlightRow) {
         return (
             <View>
@@ -286,9 +296,10 @@ export default class HomePage extends Component {
             <View style={styles.container}>
 
                 <View style={styles.userContainer}>
-                    <View style={styles.portrait}>
+                    <TouchableHighlight onPress={()=>this._updatePortrait(this.user)} style={styles.portrait}>
                         <Image style={styles.portraitImg} source={{uri: this.user.thumbUri, width: 45, height: 45}} />
-                    </View>
+                    </TouchableHighlight>
+
                     <View style={styles.user}>
                         <Text style={{fontSize:16}}>{this.user.name}</Text>
                         <Image style={styles.gender} source={ this.user.gender == 'women' ? womanImg : manImg } />

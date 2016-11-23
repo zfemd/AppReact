@@ -87,7 +87,7 @@ class MyHomePage extends Component {
                     />
                 <ScrollView>
                     {this.state.init? (
-                        <Content/>
+                        <Content {...this.props}/>
                     ):(
                         <View/>
                     )}
