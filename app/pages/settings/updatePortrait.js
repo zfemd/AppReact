@@ -19,9 +19,10 @@ import Toolbar from '../../components/toolbar';
 import PhoneLib from '../../components/camera/PhoneLib';
 import StoreActions from '../../constants/actions';
 import ImageButton from '../../components/toolbar/ImageButton';
-const arrowImg = require('../../assets/header/arrow.png');
 import styles from '../note/style';
 import { request, Token, toast } from '../../utils/common';
+import configs from '../../constants/configs';
+const arrowImg = require('../../assets/header/arrow.png');
 
 
 class UpdatePortrait extends Component {
@@ -112,17 +113,25 @@ class UpdatePortrait extends Component {
                 body = JSON.stringify(body);
                 Token.getToken(navigator).then((token) => {
                     if (token) {
-                        request('/user/settings/personal-information/portrait', 'POST', body, token)
-                            .then((res) => {
-                                if (res.resultCode === 0) {
-                                    toast('修改头像成功')
-                                }
-                            }, function (error) {
-                                console.log(error);
-                            })
-                            .catch(() => {
-                                console.log('network error');
-                            });
+                        fetch(configs.imageSeriveUrl + '/user/settings/personal-information/portrait', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-App-Token': token
+                            },
+                            body: JSON.stringify(body)
+                        }).then((response) => {
+                            return response.json();
+                        }).then((responseJson) => {
+                            if (responseJson.resultCode == 0) {
+                                toast('修改头像成功');
+                            } else {
+                                toast('修改头像失败');
+                            }
+                        }).catch((error) => {
+                            console.error(error);
+                        });
                     }
                 });
             }, (error) => {
