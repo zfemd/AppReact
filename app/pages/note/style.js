@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
         width: 100,
         marginHorizontal: 10,
         //backgroundColor:'#eee',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flex: 1
     },
     filterImageFrame: {
         alignItems:'center',
