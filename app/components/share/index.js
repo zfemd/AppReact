@@ -18,7 +18,7 @@ const propTypes = {
     press: PropTypes.func
 };
 
-class HomeFilter extends React.Component {
+class Share extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -147,4 +147,4 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(HomeFilter);
+export default connect(mapStateToProps)(Share);

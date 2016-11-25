@@ -22,6 +22,7 @@ import ImageButton from '../../components/toolbar/ImageButton';
 import styles from '../note/style';
 import { request, Token, toast } from '../../utils/common';
 import configs from '../../constants/configs';
+import Loading from '../../components/loading';
 const arrowImg = require('../../assets/header/arrow.png');
 
 
@@ -35,7 +36,8 @@ class UpdatePortrait extends Component {
             title: '选择照片',
             storageOptions: {
                 skipBackup: true,
-                path: 'images'
+                path: 'images',
+                loading: false,
             }
         };
 
@@ -104,6 +106,7 @@ class UpdatePortrait extends Component {
         const photo = this.state.avatarSource;
         const imageSize = {width,height} = photo;
         const {navigator} = this.props;
+        this.setState({loading: true})
         ImageEditor.cropImage(photo.uri, {offset: {x: 0, y: 0}, size: imageSize, displaySize: imageSize}, (url) => {
             ImageStore.getBase64ForTag(url, (base64) => {
                 base64 = 'data:image/jpg;base64,' + base64;
@@ -182,7 +185,7 @@ class UpdatePortrait extends Component {
                 </View>
                 <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
                           onPressCamera={this._onPressCamera} onPressImage={this._onPressImage.bind(this)}/>
-
+                {this.state.loading? (<Loading/>): null}
             </View>
         );
     }
