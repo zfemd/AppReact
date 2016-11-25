@@ -103,7 +103,7 @@ class UpdatePortrait extends Component {
     _onContinue() {
         const photo = this.state.avatarSource;
         const imageSize = {width,height} = photo;
-
+        const {navigator} = this.props;
         ImageEditor.cropImage(photo.uri, {offset: {x: 0, y: 0}, size: imageSize, displaySize: imageSize}, (url) => {
             ImageStore.getBase64ForTag(url, (base64) => {
                 base64 = 'data:image/jpg;base64,' + base64;
@@ -113,7 +113,7 @@ class UpdatePortrait extends Component {
                 body = JSON.stringify(body);
                 Token.getToken(navigator).then((token) => {
                     if (token) {
-                        fetch(configs.imageSeriveUrl + '/user/settings/personal-information/portrait', {
+                        fetch(configs.imageSeriveUrl + 'user/settings/personal-information/portrait', {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json',
@@ -129,6 +129,7 @@ class UpdatePortrait extends Component {
                             } else {
                                 toast('修改头像失败');
                             }
+                            navigator.popToTop();
                         }).catch((error) => {
                             console.error(error);
                         });

@@ -108,7 +108,11 @@ class Toolbar extends React.Component {
 
                 {
                     this.props.rightText ?
-                        (<Text style={styles.rightIOS} onPress={this._onRightIconClicked}>{this.props.rightText}</Text>)
+                        (
+                            <TouchableOpacity style={[styles.rightIOS,styles.rightText]} onPress={this._onRightIconClicked}>
+                                <Text >{this.props.rightText}</Text>
+                            </TouchableOpacity>
+                        )
                         : (<ImageButton source={this.props.rightImg} style={styles.rightIOS} onPress={this._onRightIconClicked} />)
                 }
 
@@ -155,6 +159,12 @@ const styles = StyleSheet.create({
     rightIOS: {
         marginRight: 10,
         right: 0
+    },
+    rightText: {
+        flexDirection: 'row',
+        height: 40,
+        alignItems: 'center',
+        paddingLeft: 8,
     },
     arrowIOS: {
         marginLeft: 10,
