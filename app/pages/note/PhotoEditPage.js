@@ -114,7 +114,7 @@ class PhotoEditPage extends Component {
                     ImageStore.getBase64ForTag(url, (base64Data) => {
                         const { webviewbridge } = this.refs;
                         let {height, width} = Dimensions.get('window');
-                        let sImageBase64Data = "data:image/jpg;base64," + base64Data;
+                        let sImageBase64Data = "data:image/jpg;base64," + base64Data.replace(/\n|\r/g, "");
 
                         webviewbridge.sendToBridge(JSON.stringify({type:"imageReady", window:{width:width, height:height}, image:displaySize, data: sImageBase64Data}));
                     }, (error) => {
@@ -348,7 +348,6 @@ class PhotoEditPage extends Component {
                     <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
                                    scrollEnabled={true} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
                                    onError={(e) => {console.log(e);}} domStorageEnabled={true}
-                                   onLoadStart={(e) => {console.log(e);}}
                                    source={photoHtml} injectedJavaScript={Platform.OS == 'ios' ? null : null}
                                    style={[{height:300, padding: 0}]}>
                     </WebViewBridge>

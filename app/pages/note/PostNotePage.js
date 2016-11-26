@@ -249,9 +249,10 @@ class PostNotePage extends Component {
 
     render() {
         let {height, width} = Dimensions.get('window');
+        height -= 21;
 
         return (
-            <View style={[styles.container, {minHeight: height}]}>
+            <View style={[styles.container, {minHeight: height}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="发布笔记"
                     navigator={this.props.navigator}
@@ -261,20 +262,26 @@ class PostNotePage extends Component {
                     />
 
                 <View style={{borderBottomWidth: 1, borderBottomColor: '#ccc', flexDirection: 'row', paddingVertical:10, margin: 15}}>
-                    <TextInput ref='titleInput' placeholder='添加标题' defaultValue={this.state.title} onChangeText={(value) => this.state.title = value}
-                               returnKeyType="next" maxLength={30} style={{flex:1}}/>
+                    <TextInput ref='titleInput' placeholder='添加标题' defaultValue={this.state.title}
+                               clearButtonMode='while-editing' underlineColorAndroid='transparent'
+                               onChangeText={(value) => this.state.title = value}
+                               returnKeyType="next" maxLength={30} style={[styles.textInput, {flex:1}]}/>
                     <Text>30</Text>
                 </View>
                 <View style={{flexDirection: 'row', paddingVertical:10, marginHorizontal: 15}}>
-                    <TextInput ref='contentInput' placeholder='说点你的心得吧' defaultValue={this.state.content} onChangeText={(value) => this.state.content = value}
-                               returnKeyType="next" multiline={true} style={{flex:1, height: 180}}/>
+                    <TextInput ref='contentInput' placeholder='说点你的心得吧' defaultValue={this.state.content}
+                               clearButtonMode='while-editing' underlineColorAndroid='transparent'
+                               returnKeyType="next" multiline={true} numberOfLines = {8} style={[styles.textInput, {flex:1}]}
+                               onChangeText={(value) => this.state.content = value} />
                 </View>
                 <View style={[{borderBottomWidth: 1, borderBottomColor: '#ccc', paddingVertical:10, marginHorizontal: 15}]}>
                     {this._renderSelectedPhotos()}
                 </View>
 
                 <View style={{flexDirection: 'row', alignItems: 'center', padding:10, marginHorizontal: 15}}>
-                    <Image source={locationImg} style={{marginRight: 10}} /><Text>发布于：</Text><Text style={{color: colors.orange}}>{this.state.address}</Text>
+                    <Image source={locationImg} style={{marginRight: 10}} />
+                    <Text>发布于：</Text>
+                    <Text style={{color: colors.orange}}>{this.state.address}</Text>
                 </View>
 
                 <TouchableHighlight onPress={this._sendNote.bind(this)}

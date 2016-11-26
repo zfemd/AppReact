@@ -121,16 +121,12 @@
             };
 
             WebViewBridge.onMessage = function (message) {
-                WebViewBridge.send(JSON.toString());
-
                 try {
                     message = JSON.parse(message);
                 } catch(e) {
                     WebViewBridge.send(e.message);
                     return;
                 }
-
-                WebViewBridge.send("on message");
 
                 if (message.type === 'beautify') {
                     if (message.beautify == 'brightness') {

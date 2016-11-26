@@ -100,6 +100,15 @@ const styles = StyleSheet.create({
     },
     filterImage: {
         width: 100
+    },
+    textInput: {
+        flex:1,
+        fontSize:18,
+        color:'#696969',
+        borderWidth: 0,
+        marginVertical: 0,
+        paddingVertical: 0,
+        textAlignVertical: 'top'
     }
 });
 
