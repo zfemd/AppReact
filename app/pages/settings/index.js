@@ -15,6 +15,7 @@ import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import SecurityPage from './security';
 import { request, Token, toast, removeAllStorage } from '../../utils/common';
 import Home from '../home';
+import * as CacheManager from 'react-native-http-cache';
 
 var chevronRightIcon = <Icon style={[styles.messageLinkIcon]} size={16} name="angle-right"/>;
 
@@ -63,13 +64,29 @@ class SettingPage extends React.Component {
 
     }
 
-    __onPressSignOut() {
+    _onPressSignOut() {
         Alert.alert(
             '登出',
             '确定要退出登录吗？',
             [
                 {text: 'Cancel', onPress: () => console.log('still sign in')},
                 {text: 'OK', onPress: () => this._signOut()},
+            ]
+        )
+    }
+
+    _clearCache() {
+        Alert.alert(
+            '缓存',
+            '确定要清除缓存吗？',
+            [
+                {text: 'Cancel', onPress: () => console.log('still sign in')},
+                {text: 'OK', onPress: () =>
+                    CacheManager.clearCache()
+                        .then(()=>{
+                            toast('清除成功');
+                     })
+                },
             ]
         )
     }
@@ -115,7 +132,15 @@ class SettingPage extends React.Component {
                 </TouchableHighlight>
                 <View style={styles.separatorHorizontal} />
 
-                <TouchableHighlight onPress={this.__onPressSignOut.bind(this)}>
+                <TouchableHighlight onPress={this._clearCache.bind(this)}>
+                    <View style={styles.row}>
+                        <Text style={styles.text}>清除缓存</Text>
+                        {chevronRightIcon}
+                    </View>
+                </TouchableHighlight>
+                <View style={styles.separatorHorizontal} />
+
+                <TouchableHighlight onPress={this._onPressSignOut.bind(this)}>
                     <View style={styles.row}>
                         <Text style={styles.text}>登出</Text>
                         {chevronRightIcon}

@@ -101,19 +101,17 @@ class UpdatePortrait extends Component {
         }
     }
 
-
     _onContinue() {
         const photo = this.state.avatarSource;
         const imageSize = {width,height} = photo;
         const {navigator} = this.props;
-        this.setState({loading: true})
+        this.setState({loading: true});
         ImageEditor.cropImage(photo.uri, {offset: {x: 0, y: 0}, size: imageSize, displaySize: imageSize}, (url) => {
             ImageStore.getBase64ForTag(url, (base64) => {
                 base64 = 'data:image/jpg;base64,' + base64;
                 let body = {
                     image: base64
                 };
-                body = JSON.stringify(body);
                 Token.getToken(navigator).then((token) => {
                     if (token) {
                         fetch(configs.imageSeriveUrl + 'user/settings/personal-information/portrait', {
