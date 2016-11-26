@@ -95,6 +95,13 @@ class PhotoEditPage extends Component {
         this.state.stickersDataSource = stickersDataSource.cloneWithRowsAndSections(this.state.stickers);
     }
 
+    componentDidMount() {
+        let nestedTabs = this.refs.nestedTabs;
+
+        console.log(nestedTabs);
+        nestedTabs.goToPage(0);
+    }
+
     _onWebViewLoadEnd() {
         if (this.props.draftNote) {
             let {currentPhotoIndex, notePhotos} = this.props.draftNote;
@@ -272,8 +279,6 @@ class PhotoEditPage extends Component {
         const { navigator, dispatch } = this.props;
         const { webviewbridge } = this.refs;
 
-        console.log(message);
-
         if (message.startsWith("{")) {
             message = JSON.parse(message);
             switch(message.type) {
@@ -355,18 +360,14 @@ class PhotoEditPage extends Component {
 
                 <ScrollableTabView
                     tabBarPosition='bottom'
-                    initialPage={0}
-
                     renderTabBar={this.state.oTabsBar}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
                     <ScrollView navigator={this.props.navigator}  tabLabel="美化" contentContainerStyle={{flex:1}}>
-                        <ScrollableTabView
+                        <ScrollableTabView ref="nestedTabs"
                             tabBarPosition='top'
-                            initialPage={0}
-                            renderTabBar={() => <DefaultTabBar {...this.props}/>}
                             >
-                            <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true} style={{flex:1}}>
+                            <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true} style={{flex:1}} contentContainerStyle={{flex: 1}}>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={originImg} style={styles.filterImage} resizeMode="contain" />
