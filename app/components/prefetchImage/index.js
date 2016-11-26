@@ -13,7 +13,7 @@ import {
 import Spinner from 'react-native-spinkit';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { prefetchImageAction } from '../../actions';
+import prefetchImageAction from '../../actions/prefetchImage';
 let prefetchedHeight = 0;
 
 class PrefetchImage extends React.Component {
@@ -29,7 +29,7 @@ class PrefetchImage extends React.Component {
             events: [],
             isLoading: false,
             prefetchTask: _hasPrefetched ? null : Image.prefetch(this.props.imageUri),
-            height: prefetchedHeight ? prefetchedHeight : this.props.height,
+            height: this.props.height ? this.props.height : prefetchedHeight  ,
             imageUri : 'http://'
         };
 
@@ -60,7 +60,7 @@ class PrefetchImage extends React.Component {
             this.setState({height: scaleHeight});
         }
         this.setState({isLoading: false });
-        if (!this._hasPrefetched){
+        if (!this._hasPrefetched()){
             this.props.dispatch(prefetchImageAction(this.props.imageUri, width, height));
         }
         this.setState({imageUri: this.props.imageUri});
@@ -82,14 +82,23 @@ class PrefetchImage extends React.Component {
                 this._onPrefetchComplete(100, 100);
                 this.setState({imageUri: 'http://findicons.com/files/icons/2198/dark_glass/128/file_broken.png'})
             });
+        } else {
+            if(this.props.height){
+                this._onPrefetchComplete(100, 100);
+            } else {
+                Image.getSize(this.props.imageUri, (width, height) => {
+                    this._onPrefetchComplete(width, height);
+                });
+            }
         }
     }
 
     render() {
+        const resizeMode = this.props.resizeMode;
         return (
             <Image
                 source={{uri:this.state.imageUri}}
-                resizeMode={this.props.resizeMode}
+                resizeMode={resizeMode}
                 style={[this.props.imageStyle, {height: this.state.height}]}
                 >
                 {this.state.isLoading ?
@@ -101,7 +110,7 @@ class PrefetchImage extends React.Component {
 
         );
     }
-};
+}
 
 var styles = StyleSheet.create({
     container: {

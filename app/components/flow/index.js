@@ -25,7 +25,7 @@ import PrefetchImage from '../prefetchImage';
 import DetailPage from '../../pages/detail';
 import UserPage from '../../pages/user';
 import LoginPage from '../../pages/login';
-import {fetchList} from '../../actions/flow';
+import {fetchList,pageRefresh} from '../../actions/flow';
 import { connect } from 'react-redux';
 import { Token,like, toast } from '../../utils/common';
 import {fetchDetail} from '../../actions/detail';
@@ -35,12 +35,12 @@ import Spinner from 'react-native-spinkit';
 
 const {height, width} = Dimensions.get('window');
 let fetchParams = {
-    refreshing : false,
-    loadingMore : false,
-    flowRefreshing : false,
-    tag : 'all',
-    loadedSize : 0,
-    timestamp : 0,
+    refreshing: false,
+    loadingMore: false,
+    flowRefreshing: false,
+    tag: 'all',
+    loadedSize: 0,
+    timestamp: 0,
     myFollowOnly: false
 };
 class Flow extends React.Component {
@@ -59,23 +59,23 @@ class Flow extends React.Component {
             noteUpdated: false
         };
         fetchParams.myFollowOnly = this.props.home.isFollowed;
-        this._scrollView=null;
+        this._scrollView = null;
     }
 
     componentDidMount() {
         const { dispatch ,tag} = this.props;
         let params = _.cloneDeep(fetchParams);
         params.tag = tag;
-        if(typeof tag !== 'undefined')
+        if (typeof tag !== 'undefined')
             dispatch(fetchList(params));
     }
 
     componentWillReceiveProps() {
-        if(this.props.tabForRefresh){
+        if (this.props.tabForRefresh) {
             this._scrollView.scrollTo({y: 0});
             setTimeout(() => {
                 this._onRefresh(true);
-            },200)
+            }, 200)
 
         }
 
@@ -89,15 +89,15 @@ class Flow extends React.Component {
         params.loadingMore = false;
         params.loadedSize = 0;
         params.myFollowOnly = this.props.home.isFollowed;
-        if (isFlow){
+        if (isFlow) {
             params.flowRefreshing = true;
             dispatch(fetchList(params));
         } else {
-            setTimeout(()=>{
+            setTimeout(()=> {
                 params.flowRefreshing = false;
                 dispatch(fetchList(params));
                 this.setState({offlineReloading: false});
-            },2000);
+            }, 2000);
             this.setState({offlineReloading: true});
         }
 
@@ -132,14 +132,14 @@ class Flow extends React.Component {
         );
     }
 
-    _like(noteId,tag) {
+    _like(noteId, tag) {
         const { navigator } = this.props;
         let the = this;
         Token.getToken(navigator).then((token) => {
                 if (token) {
-                    like(noteId,token).then((res) => {
+                    like(noteId, token).then((res) => {
                         let list = the.props.flow.flowList[tag];
-                        let note = _.find(list,{noteId:noteId});
+                        let note = _.find(list, {noteId: noteId});
                         note.isLikedByVisitor = true;
                         note.likeCount++;
                         this.setState({list: this.props.flow});
@@ -149,9 +149,9 @@ class Flow extends React.Component {
         );
     }
 
-    _renderFooter( noMoreData ) {
-        if(noMoreData){
-            return(
+    _renderFooter(noMoreData) {
+        if (noMoreData) {
+            return (
                 <View
                     style={styles.loadingFooter }
                     >
@@ -174,16 +174,19 @@ class Flow extends React.Component {
         );
     }
 
-    _renderChildren(tag){
+    _renderChildren(tag) {
         return this.props.flow.flowList[tag].map((val, key) => {
-            val.imageHeight = val.imageHeight !==0 ? val.imageHeight : 376;
-            val.imageWidth = val.imageWidth !==0 ? val.imageWidth : 288;
-            let height = val.imageHeight / val.imageWidth * ((width/100)*47);
+            val.imageHeight = val.imageHeight !== 0 ? val.imageHeight : 376;
+            val.imageWidth = val.imageWidth !== 0 ? val.imageWidth : 288;
+            let height = val.imageHeight / val.imageWidth * ((width / 100) * 47);
+            const image = val.image ? val.image : 'http://d.lanrentuku.com/down/png/1407/yuanjiao-bianping-tubiao/7.png';
             return (
-                <TouchableOpacity key={key} style={this._getChildrenStyle(height)} onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent" activeOpacity={0.5}>
+                <TouchableOpacity key={val.noteId} style={this._getChildrenStyle(height)}
+                                  onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent"
+                                  activeOpacity={0.5}>
                     <View>
                         <PrefetchImage
-                            imageUri={val.image?val.image:'http://img.hb.aicdn.com/58373a70edfbcc1bc71bee64521b09f8ba228ff21848d2-qHcWbh_fw658'}
+                            imageUri={image}
                             imageStyle={styles.thumb}
                             resizeMode="cover"
                             width={(width/100)*47}
@@ -192,7 +195,8 @@ class Flow extends React.Component {
                         <View style={styles.price}>
                             <Text style={styles.priceText}>￥100</Text>
                         </View>
-                        <TouchableWithoutFeedback onPress={() => this._jumpToUserPage(val.authorId?val.authorId:13585979772)}>
+                        <TouchableWithoutFeedback
+                            onPress={() => this._jumpToUserPage(val.authorId?val.authorId:13585979772)}>
                             <View style={styles.portrait}>
                                 <Image
                                     source={{uri: val.portrait , width: 30, height: 30}}
@@ -201,22 +205,24 @@ class Flow extends React.Component {
                             </View>
                         </TouchableWithoutFeedback>
                         <View>
-                            <Text style={[styles.text,styles.title]}  numberOfLines={2} lineBreakMode='tail'>
+                            <Text style={[styles.text,styles.title]} numberOfLines={2} lineBreakMode='tail'>
                                 {val.title}
                             </Text>
                         </View>
                         <View style={styles.interaction}>
                             <View style={styles.star}>
                                 {
-                                    (()=>{
+                                    (()=> {
                                         const rating = Math.ceil(val.rating);
                                         let stars = [];
-                                        for(let i = 0; i< rating; i++){
-                                            stars.push(<Image key={i} source={require('../../assets/flow/star_filled.png')}/>);
+                                        for (let i = 0; i < rating; i++) {
+                                            stars.push(<Image key={i}
+                                                              source={require('../../assets/flow/star_filled.png')}/>);
 
                                         }
-                                        for(let i = 5; i > rating; i--){
-                                            stars.push(<Image key={i} source={require('../../assets/flow/star_unfilled.png')}/>);
+                                        for (let i = 5; i > rating; i--) {
+                                            stars.push(<Image key={i}
+                                                              source={require('../../assets/flow/star_unfilled.png')}/>);
                                         }
                                         return stars;
                                     })()
@@ -246,7 +252,6 @@ class Flow extends React.Component {
             );
         }, this);
     }
-
 
     _getAutoResponsiveProps() {
         return {
@@ -283,9 +288,9 @@ class Flow extends React.Component {
         }
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         const {flow, tag, dispatch, home} = this.props;
-        if(flow.pageRefresh && flow.currentTag === tag){
+        if (flow.pageRefresh && flow.currentTag === tag) {
             let params = _.cloneDeep(fetchParams);
             params.myFollowOnly = home.isFollowed;
             params.tag = tag;
@@ -310,9 +315,10 @@ class Flow extends React.Component {
             return (
                 <View>
                     {
-                        flow.refreshing || this.state.offlineReloading?(
+                        flow.refreshing || this.state.offlineReloading ? (
                             <View style={[styles.center,{marginTop: 40}]}><
-                                Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt" color={'#fc7d30'}/>
+                                Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt"
+                                        color={'#fc7d30'}/>
                             </View>
                         ) : (
                             <View>
@@ -350,15 +356,15 @@ class Flow extends React.Component {
                 scrollEventThrottle={200}
                 style={styles.container}
                 >
-                    <View
-                        style={styles.row}
-                        onLayout={this._onLayout }
-                        >
-                        <AutoResponsive {...this._getAutoResponsiveProps()} >
-                            {this._renderChildren(tag)}
-                        </AutoResponsive>
-                        {this.props.flow.noMoreData ? this._renderFooter(true) : (this.props.flow.loadingMore ? this._renderFooter() : null) }
-                    </View>
+                <View
+                    style={styles.row}
+                    onLayout={this._onLayout }
+                    >
+                    <AutoResponsive {...this._getAutoResponsiveProps()} >
+                        {this._renderChildren(tag)}
+                    </AutoResponsive>
+                    {this.props.flow.noMoreData ? this._renderFooter(true) : (this.props.flow.loadingMore ? this._renderFooter() : null) }
+                </View>
 
             </ScrollView>
 
@@ -466,7 +472,7 @@ var styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: width,
-        marginTop: 10 ,
+        marginTop: 10,
         bottom: 10
     },
     footerText: {
