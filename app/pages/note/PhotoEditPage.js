@@ -346,8 +346,8 @@ class PhotoEditPage extends Component {
 
                 <View style={styles.selectedPhotoContainer}>
                     <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
-                                   scrollEnabled={true} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
-                                   onError={(e) => {console.log(e);}} domStorageEnabled={true}
+                                   scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
+                                   domStorageEnabled={true}
                                    source={photoHtml} injectedJavaScript={Platform.OS == 'ios' ? null : null}
                                    style={[{height:300, padding: 0}]}>
                     </WebViewBridge>
