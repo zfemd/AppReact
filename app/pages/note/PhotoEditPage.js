@@ -95,13 +95,6 @@ class PhotoEditPage extends Component {
         this.state.stickersDataSource = stickersDataSource.cloneWithRowsAndSections(this.state.stickers);
     }
 
-    componentDidMount() {
-        let nestedTabs = this.refs.nestedTabs;
-
-        console.log(nestedTabs);
-        nestedTabs.goToPage(0);
-    }
-
     _onWebViewLoadEnd() {
         if (this.props.draftNote) {
             let {currentPhotoIndex, notePhotos} = this.props.draftNote;
@@ -279,6 +272,8 @@ class PhotoEditPage extends Component {
         const { navigator, dispatch } = this.props;
         const { webviewbridge } = this.refs;
 
+        console.log(message);
+
         if (message.startsWith("{")) {
             message = JSON.parse(message);
             switch(message.type) {
@@ -359,19 +354,18 @@ class PhotoEditPage extends Component {
                 </View>
 
                 <ScrollableTabView
-                    tabBarPosition='bottom'
+                    tabBarPosition='bottom' locked={true}
                     renderTabBar={this.state.oTabsBar}
                     onChangeTab={this._onChangeTab.bind(this)}
                     >
                     <ScrollView navigator={this.props.navigator}  tabLabel="美化" contentContainerStyle={{flex:1}}>
-                        <ScrollableTabView ref="nestedTabs"
-                            tabBarPosition='top'
-                            >
-                            <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" horizontal={true} style={{flex:1}} contentContainerStyle={{flex: 1}}>
+                        <ScrollableTabView ref="nestedTabs" locked={true} tabBarPosition='top'>
+                            <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" removeClippedSubviews={false}
+                                        horizontal={true} style={{flex:1}} contentContainerStyle={{alignItems:'stretch'}}>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={originImg} style={styles.filterImage} resizeMode="contain" />
-                                        <Text>原图</Text>
+                                        <Text style={{marginTop: 0}}>原图</Text>
                                     </View>
                                 </TouchableHighlight>
                                 <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}>
@@ -450,11 +444,10 @@ class PhotoEditPage extends Component {
                         </View>
                     </ScrollView>
 
-                    <ScrollView horizontal={true} tabLabel="贴图" contentContainerStyle={{flex:1, justifyContent: 'center'}}>
-                        <ListView  horizontal={true} contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                   dataSource={this.state.stickersDataSource} enableEmptySections={true}
-                                   renderRow={this._renderSticker.bind(this)} />
-                    </ScrollView>
+                    <ListView tabLabel="贴图" style={{flex:1}} horizontal={true} contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                              dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                              renderRow={this._renderSticker.bind(this)} />
+
                 </ScrollableTabView>
 
                 {this.state.tagOverlayVisible ?
