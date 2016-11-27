@@ -32,6 +32,7 @@ import {fetchDetail} from '../../actions/detail';
 import _ from 'lodash';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-spinkit';
+import images from '../../constants/images';
 
 const {height, width} = Dimensions.get('window');
 let fetchParams = {
@@ -179,7 +180,7 @@ class Flow extends React.Component {
             val.imageHeight = val.imageHeight !== 0 ? val.imageHeight : 376;
             val.imageWidth = val.imageWidth !== 0 ? val.imageWidth : 288;
             let height = val.imageHeight / val.imageWidth * ((width / 100) * 47);
-            const image = val.image ? val.image : 'http://d.lanrentuku.com/down/png/1407/yuanjiao-bianping-tubiao/7.png';
+            const image = val.image ? val.image : images.DEFAULT_IMAGE;
             return (
                 <TouchableOpacity key={val.noteId} style={this._getChildrenStyle(height)}
                                   onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent"

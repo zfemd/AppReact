@@ -6,7 +6,8 @@ import {
     InteractionManager,
     Navigator,
     Text,
-    AsyncStorage
+    AsyncStorage,
+    DeviceEventEmitter
 } from 'react-native';
 import Content from './content';
 import Toolbar from '../../components/toolbar';
@@ -44,7 +45,9 @@ class MyHomePage extends Component {
                 }
             });
 
-            dispatch(fetchUserNotes(params));
+            //dispatch(fetchUserNotes(params)).then(() => {
+            //    DeviceEventEmitter.emit('receiveNotes', this.props.user);
+            //});
         });
     }
 
@@ -87,7 +90,7 @@ class MyHomePage extends Component {
                     />
                 <ScrollView>
                     {this.state.init? (
-                        <Content {...this.props}/>
+                        <Content {...this.props} key="1"/>
                     ):(
                         <View/>
                     )}

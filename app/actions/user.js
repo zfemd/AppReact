@@ -58,12 +58,13 @@ export function fetchUserInfo(params) {
 
 export function fetchUserNotes(params){
     const timestamp = (new Date()).getTime();
-    const pageSize = 100;
+    const pageSize = 10000;
     const loadedSize = 0;
     return dispatch => {
         return request('/user/notes?'+
             'timestamp=' + timestamp
             + '&pageSize=' + pageSize
+            + (params.userId ? ('&userId=' + params.userId) : '')
             + '&loadedSize=' + loadedSize, 'get', '', params.token)
             .then((list) => {
                 if(list.resultCode == 0){

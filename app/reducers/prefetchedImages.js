@@ -6,7 +6,7 @@ const initialState = {
     images: []
 };
 
-function prefetchedImages(state = initialState, action) {
+function prefetchedImages(state = initialState, action = {}) {
 
     switch(action.type) {
 

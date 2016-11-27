@@ -5,13 +5,14 @@ import {
     View,
     Text,
     ScrollView,
-    Platform
+    Platform,
+    DeviceEventEmitter
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Content from '../my/content';
 import {Token} from '../../utils/common';
-import {fetchUserInfo} from '../../actions/user';
+import {fetchUserInfo, fetchUserNotes} from '../../actions/user';
 import { connect } from 'react-redux';
 
 class User extends React.Component {
@@ -27,6 +28,9 @@ class User extends React.Component {
                 userId: route.userId
             };
             dispatch(fetchUserInfo(params));
+            //dispatch(fetchUserNotes(params)).then(() => {
+            //    DeviceEventEmitter.emit('receiveNotes', this.props.user);
+            //});
         });
 
     }
@@ -39,8 +43,8 @@ class User extends React.Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />
-                <ScrollView>
-                    <Content userInfo={this.props.user.userInfo}/>
+                <ScrollView style={{flex: 1,backgroundColor: '#fff'}}>
+                    <Content userInfo={this.props.user.userInfo} userId={this.props.route.userId} {...this.props} key="0"/>
                 </ScrollView>
             </View>
         )
