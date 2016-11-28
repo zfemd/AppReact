@@ -196,7 +196,7 @@ class Flow extends React.Component {
                         <View style={styles.price}>
                             <Text style={styles.priceText}>￥100</Text>
                         </View>
-                        <TouchableWithoutFeedback
+                        <TouchableOpacity
                             onPress={() => this._jumpToUserPage(val.authorId?val.authorId:13585979772)}>
                             <View style={styles.portrait}>
                                 <Image
@@ -204,7 +204,7 @@ class Flow extends React.Component {
                                     style={styles.portraitImg}
                                     />
                             </View>
-                        </TouchableWithoutFeedback>
+                        </TouchableOpacity>
                         <View>
                             <Text style={[styles.text,styles.title]} numberOfLines={2} lineBreakMode='tail'>
                                 {val.title}

@@ -7,7 +7,8 @@ import {
     Navigator,
     Text,
     AsyncStorage,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    RefreshControl
 } from 'react-native';
 import Content from './content';
 import Toolbar from '../../components/toolbar';
@@ -25,7 +26,8 @@ class MyHomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            init: false
+            init: false,
+            refreshing: false,
         }
     }
 
@@ -76,6 +78,23 @@ class MyHomePage extends Component {
         });
     }
 
+    _onRefresh(){
+        const { dispatch } = this.props;
+        this.setState({refreshing: true});
+        Token.getToken(navigator).then((token) => {
+            let params = {
+                token: token
+            };
+            fetchUserInfo(params).then(()=>{
+                dispatch(fetchUserNotes(params)).then(() => {
+                    this.setState({refreshing: false});
+                });
+            });
+
+        });
+
+    }
+
     render() {
         return (
             <View style={{flex: 1}}>
@@ -88,7 +107,16 @@ class MyHomePage extends Component {
                     rightImg={settingImg}
                     onRightIconClicked={this._onClickSettingIcon.bind(this)}
                     />
-                <ScrollView>
+                <ScrollView
+                    refreshControl={
+                          <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={() => this._onRefresh()}
+                            colors={['#fc7d30']}
+                            tintColor={['#fc7d30']}
+                          />
+                      }
+                    >
                     {this.state.init? (
                         <Content {...this.props} key="1"/>
                     ):(

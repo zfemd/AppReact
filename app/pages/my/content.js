@@ -67,7 +67,7 @@ export default class MyContent extends Component {
         };
     }
 
-    async componentWillMount () {
+    componentWillMount () {
         // load old data to display
         if(!this.props.userInfo)
             this._loadInitialState();
@@ -99,6 +99,10 @@ export default class MyContent extends Component {
         });
     }
 
+    componentWillReceiveProps() {
+        this._loadInitialState();
+    }
+
     async _loadInitialState() {
         try {
 
@@ -107,6 +111,7 @@ export default class MyContent extends Component {
                 this.setState({user: JSON.parse(meDetail)});
             }
 
+            this.setState({dataSource: this.ds.cloneWithRows(this.props.user.userNotes)});
             //let myNotes = await AsyncStorage.getItem(StorageKeys.MY_NOTES_STORAGE_KEY);
             //if (myNotes !== null){
             //    this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(JSON.parse(myNotes))});
