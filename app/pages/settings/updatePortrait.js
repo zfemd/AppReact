@@ -10,7 +10,8 @@ import {
     TouchableHighlight,
     View,
     ImageStore,
-    ImageEditor
+    ImageEditor,
+    DeviceEventEmitter
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import ImagePicker from 'react-native-image-picker';
@@ -127,6 +128,7 @@ class UpdatePortrait extends Component {
                         }).then((responseJson) => {
                             if (responseJson.resultCode == 0) {
                                 toast('修改头像成功');
+                                DeviceEventEmitter.emit('portraitUpdated', true);
                             } else {
                                 toast('修改头像失败');
                             }

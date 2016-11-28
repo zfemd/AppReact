@@ -38,10 +38,10 @@ class Channel extends React.Component {
                             underlineHeight={2}
                             textStyle={{ fontSize: 14, marginTop: 8 }}
                             style={styles.toolbar}
+                            underlineColor="#fc7d30"
                           />
                         }
                 tabBarBackgroundColor="rgba(255,255,255,0.9)"
-                tabBarUnderlineColor="#fc7d30"
                 tabBarActiveTextColor="#fc7d30"
                 tabBarInactiveTextColor="#9b9b9b"
                 >

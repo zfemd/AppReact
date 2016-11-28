@@ -51,6 +51,10 @@ class MyHomePage extends Component {
             //    DeviceEventEmitter.emit('receiveNotes', this.props.user);
             //});
         });
+
+        DeviceEventEmitter.addListener('portraitUpdated',()=>{
+            this._onRefresh();
+        });
     }
 
     _onClickSettingIcon() {
@@ -118,7 +122,7 @@ class MyHomePage extends Component {
                       }
                     >
                     {this.state.init? (
-                        <Content {...this.props} key="1"/>
+                        <Content {...this.props} key="1" />
                     ):(
                         <View/>
                     )}
