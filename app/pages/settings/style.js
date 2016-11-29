@@ -69,7 +69,41 @@ const styles = StyleSheet.create({
     profileText: {
         color:'#ccc',
         marginRight: 10,
-
+    },
+    genderPickerContainer: {
+        flex: 1,
+        position: 'absolute',
+        width: width,
+        height: 260,
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,.2)',
+        flexDirection: 'column',
+        justifyContent: 'center'
+    },
+    genderPicker: {
+        flex: 1,
+    },
+    genderPickerTab: {
+        width: width,
+        height: 40,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        flexDirection: 'row',
+        shadowOffset: {width: 0, height: -2,},
+        borderTopWidth: 1,
+        borderTopColor: '#ddd',
+        shadowColor: '#555',
+        shadowOpacity: .3,
+    },
+    genderButton: {
+        right: 10,
+        width: 60,
+        height: 30,
+        marginTop: 0,
+    },
+    genderButtonFont: {
+        lineHeight: 22,
     }
 });
 
