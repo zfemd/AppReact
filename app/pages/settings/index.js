@@ -13,6 +13,7 @@ import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import SecurityPage from './security';
+import ProfilePage from './profile';
 import { request, Token, toast, removeAllStorage } from '../../utils/common';
 import Home from '../home';
 import * as CacheManager from 'react-native-http-cache';
@@ -91,6 +92,16 @@ class SettingPage extends React.Component {
         )
     }
 
+    _onProfilePress() {
+        const { navigator } = this.props;
+        if(navigator) {
+            navigator.push({
+                name: 'ProfilePage',
+                component: ProfilePage
+            })
+        }
+    }
+
     render() {
         return(
             <View style={[{backgroundColor: '#f5f5f5', flex: 1},Platform.OS === 'android' ? null : {marginTop: 21}]}>
@@ -100,7 +111,7 @@ class SettingPage extends React.Component {
                     hideDrop={true}
                     />
 
-                <TouchableHighlight>
+                <TouchableHighlight onPress={this._onProfilePress.bind(this)}>
                     <View style={styles.row}>
                         <Text style={styles.text}>个人资料</Text>
                         {chevronRightIcon}

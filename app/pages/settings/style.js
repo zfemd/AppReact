@@ -58,6 +58,18 @@ const styles = StyleSheet.create({
     },
     buttonGrey: {
         backgroundColor: '#dbdbdb',
+    },
+    profilePortrait: {
+        borderRadius: 22.5
+    },
+    profileArrow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    profileText: {
+        color:'#ccc',
+        marginRight: 10,
+
     }
 });
 
