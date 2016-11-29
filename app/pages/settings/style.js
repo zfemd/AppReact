@@ -82,19 +82,23 @@ const styles = StyleSheet.create({
     },
     genderPicker: {
         flex: 1,
+        position: 'relative',
+        marginTop: 40
     },
     genderPickerTab: {
         width: width,
         height: 40,
         backgroundColor: '#fff',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         flexDirection: 'row',
         shadowOffset: {width: 0, height: -2,},
         borderTopWidth: 1,
         borderTopColor: '#ddd',
         shadowColor: '#555',
         shadowOpacity: .3,
+        position: 'absolute',
+        top: 0
     },
     genderButton: {
         right: 10,
@@ -103,6 +107,25 @@ const styles = StyleSheet.create({
         marginTop: 0,
     },
     genderButtonFont: {
+        lineHeight: 22,
+    },
+    nameText: {
+        height: 40,
+        width: width,
+        fontSize: 14,
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        backgroundColor: '#fff',
+    },
+    cancelButton: {
+        left: 10,
+        width: 60,
+        height: 30,
+        marginTop: 0,
+        backgroundColor: '#bdbdbd',
+
+    },
+    cancelButtonFont: {
         lineHeight: 22,
     }
 });

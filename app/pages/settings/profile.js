@@ -9,7 +9,8 @@ import {
     Navigator,
     Picker,
     TouchableOpacity,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    TextInput
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -28,7 +29,10 @@ class ProfilePage extends React.Component {
         this._updatePortrait = this._updatePortrait.bind(this);
         this.state = {
             user: {},
-            showPicker: false
+            cacheUser: {},
+            showPicker: false,
+            showInput: false,
+            showChanger: false,
         }
     }
 
@@ -39,6 +43,21 @@ class ProfilePage extends React.Component {
                 this.setState({user: detail});
             }
         })
+
+    }
+
+    _showChanger(name) {
+        this.setState({showChanger: true})
+        if(name === 'showInput'){
+            this.setState({showInput: true});
+            this.setState({showPicker: false});
+        }
+
+        if(name === 'showPicker')
+        {
+            this.setState({showPicker: true});
+            this.setState({showInput: false});
+        }
 
     }
 
@@ -56,23 +75,31 @@ class ProfilePage extends React.Component {
 
     _updateGender(gender) {
         this.setState({
-            user: Object.assign({}, this.state.user,{gender: gender})
+            cacheUser: Object.assign({}, this.state.user,{gender: gender})
         });
-
     }
 
-    _updateGenderOnServer() {
-        this.setState({showPicker: false});
+    _updateName(text) {
+        this.setState({
+            cacheUser: Object.assign({}, this.state.user,{name: text})
+        });
+    }
+
+    _updateOnServer() {
+        this.setState({showChanger: false});
         this._updateProfile();
     }
 
     _updateProfile() {
+        this.setState({
+            user: Object.assign({}, this.state.user,this.state.cacheUser)
+        });
         const {navigator } = this.props;
         Token.getToken(navigator).then((token) => {
                 if (token) {
                     let body = {
-                        nickname: this.state.user.name,
-                        gender: this.state.user.gender
+                        nickname: this.state.user.name ,
+                        gender: (this.state.user.gender === 'man' ? 'MALE' : 'FEMALE')
                     };
                     body = JSON.stringify(body);
                     request('/user/settings/personal-information', 'POST', body, token)
@@ -90,6 +117,10 @@ class ProfilePage extends React.Component {
                 }
             }
         );
+    }
+
+    _cancel() {
+        this.setState({showChanger: false});
     }
 
     render() {
@@ -117,7 +148,7 @@ class ProfilePage extends React.Component {
                 </TouchableHighlight>
                 <View style={styles.separatorHorizontal}/>
 
-                <TouchableHighlight>
+                <TouchableHighlight onPress={()=>this._showChanger('showInput')}>
                     <View style={styles.row}>
                         <Text style={styles.text}>昵称</Text>
                         <View style={styles.profileArrow}>
@@ -129,7 +160,7 @@ class ProfilePage extends React.Component {
                 </TouchableHighlight>
                 <View style={styles.separatorHorizontal}/>
 
-                <TouchableHighlight onPress={()=>{this.setState({showPicker: true})}}>
+                <TouchableHighlight onPress={()=>this._showChanger('showPicker')}>
                     <View style={styles.row}>
                         <Text style={styles.text}>性别</Text>
                         <View style={styles.profileArrow}>
@@ -143,23 +174,55 @@ class ProfilePage extends React.Component {
                 <View style={styles.separatorHorizontal}/>
 
                 {
-                    this.state.showPicker ? (
+                    this.state.showChanger && this.state.showPicker ?
                         <View style={styles.genderPickerContainer}>
                             <View style={styles.genderPickerTab}>
+                                <TouchableOpacity style={[styles.button,styles.cancelButton]}
+                                                  onPress={()=>this._cancel()}>
+                                    <Text style={[styles.buttonFont, styles.cancelButtonFont]}>取消</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity style={[styles.button,styles.genderButton]}
-                                                  onPress={()=>this._updateGenderOnServer()}>
+                                                  onPress={()=>this._updateOnServer()}>
                                     <Text style={[styles.buttonFont, styles.genderButtonFont]}>确定</Text>
                                 </TouchableOpacity>
                             </View>
                             <Picker
                                 selectedValue={this.state.user.gender}
-                                style={styles.genderPicker}
+                                style={[styles.genderPicker]}
                                 onValueChange={(gender) => this._updateGender(gender)}>
-                                <Picker.Item label="男" value="MALE"/>
-                                <Picker.Item label="女" value="FEMALE"/>
+                                <Picker.Item label="男" value="man"/>
+                                <Picker.Item label="女" value="women"/>
                             </Picker>
+
                         </View>
-                    ) : (
+                     : (
+                        <View></View>
+                    )
+                }
+
+                {
+                    this.state.showChanger &&  this.state.showInput ?
+                        <View style={styles.genderPickerContainer}>
+                            <View style={styles.genderPickerTab}>
+                                <TouchableOpacity style={[styles.button,styles.cancelButton]}
+                                                  onPress={()=>this._cancel()}>
+                                    <Text style={[styles.buttonFont, styles.cancelButtonFont]}>取消</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.button,styles.genderButton]}
+                                                  onPress={()=>this._updateOnServer()}>
+                                    <Text style={[styles.buttonFont, styles.genderButtonFont]}>确定</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <TextInput
+                                style={styles.nameText}
+                                placeholder={this.state.user.name}
+                                placeholderTextColor='#bebebe'
+                                multiline={false}
+                                onChangeText={(text) => this._updateName(text)}
+                                />
+
+                        </View>
+                        : (
                         <View></View>
                     )
                 }
