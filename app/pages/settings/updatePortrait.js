@@ -38,7 +38,6 @@ class UpdatePortrait extends Component {
             storageOptions: {
                 skipBackup: true,
                 path: 'images',
-                loading: false,
             }
         };
 
@@ -54,6 +53,7 @@ class UpdatePortrait extends Component {
     _onPressCamera() {
         // The first arg is the options object for customization (it can also be null or omitted for default options),
         // Launch Camera:
+        let the = this;
         ImagePicker.launchCamera(this.cameraOptions, (response)  => {
             if (response.didCancel) {
             } else if (response.error) {
@@ -63,7 +63,7 @@ class UpdatePortrait extends Component {
                 // You can display the image using either data...
                 //let source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
 
-                this.setState({
+                the.setState({
                     avatarSource: response
                 });
             }
@@ -72,6 +72,7 @@ class UpdatePortrait extends Component {
 
     _onPressImageLib() {
         // Open Image Library:
+        let the = this;
         ImagePicker.launchImageLibrary(this.phoneLibOptions, (response)  => {
             if (response.didCancel) {
             } else if (response.error) {
@@ -80,7 +81,7 @@ class UpdatePortrait extends Component {
             } else {
                 // You can display the image using either data...
                 //let source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-                this.setState({
+                the.setState({
                     avatarSource: response
                 });
             }
@@ -184,7 +185,7 @@ class UpdatePortrait extends Component {
                     <Image source={this.state.avatarSource} style={styles.uploadAvatar} width={width} height={200}/>
                 </View>
                 <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
-                          onPressCamera={this._onPressCamera} onPressImage={this._onPressImage.bind(this)}/>
+                          onPressCamera={this._onPressCamera.bind(this)} onPressImage={this._onPressImage.bind(this)}/>
                 {this.state.loading? (<Loading/>): null}
             </View>
         );

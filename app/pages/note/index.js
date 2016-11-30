@@ -156,7 +156,7 @@ class SelectPhotoPage extends Component {
                     <Image source={this.state.avatarSource} style={styles.uploadAvatar} width={width} height={200} />
                 </View>
                 <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
-                          onPressCamera={this._onPressCamera} onPressImage={this._onPressImage.bind(this)} />
+                          onPressCamera={this._onPressCamera.bind(this)} onPressImage={this._onPressImage.bind(this)} />
 
             </View>
         );
