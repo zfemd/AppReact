@@ -8,14 +8,13 @@ import {
     InteractionManager,
     StyleSheet,
     Text,
-    View
+    View,
+    Platform
 } from 'react-native';
 
 import styles from './styles';
-import StorageKeys from '../../constants/StorageKeys';
-import {
-    getToken
-} from '../../utils/common'
+import Toolbar from '../../components/toolbar';
+import WebViewBridge from 'react-native-webview-bridge';
 
 export default class MessageDetailPage extends Component {
     constructor(props) {
@@ -24,8 +23,16 @@ export default class MessageDetailPage extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Text>Message Detail</Text>
+            <View style={[{backgroundColor: '#f5f5f5', flex: 1},Platform.OS === 'android' ? null : {marginTop: 21}]}>
+                <Toolbar
+                    title="消息"
+                    navigator={this.props.navigator}
+                    hideDrop={true}
+                    />
+                <WebViewBridge
+                    ref="webviewbridge"
+                    source={{uri: "http://share68.com/message"}}/>
+
             </View>
         );
     }

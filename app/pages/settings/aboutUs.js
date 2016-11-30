@@ -3,8 +3,7 @@ import {
     View,
     Text,
     TouchableHighlight,
-    Platform,
-
+    Platform
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
