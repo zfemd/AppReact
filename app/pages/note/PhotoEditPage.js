@@ -107,6 +107,8 @@ class PhotoEditPage extends Component {
                     displaySize = {width:1024, height: 1024 / imageSize.width * imageSize.height};
                 } else if (imageSize.height > 1024) {
                     displaySize = {height:1024, width: 1024 / imageSize.height * imageSize.width};
+                } else {
+                    displaySize = {height: imageSize.height , width: imageSize.width}
                 }
 
                 // get base64data of image
