@@ -14,6 +14,7 @@ import Toolbar from '../../components/toolbar';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import SecurityPage from './security';
 import ProfilePage from './profile';
+import AboutUsPage from './aboutUs';
 import { request, Token, toast, removeAllStorage } from '../../utils/common';
 import Home from '../home';
 import * as CacheManager from 'react-native-http-cache';
@@ -31,6 +32,16 @@ class SettingPage extends React.Component {
             navigator.push({
                 name: 'SecurityPage',
                 component: SecurityPage
+            })
+        }
+    }
+
+    _onPressAboutUs() {
+        const { navigator } = this.props;
+        if(navigator) {
+            navigator.push({
+                name: 'AboutUsPage',
+                component: AboutUsPage
             })
         }
     }
@@ -127,7 +138,7 @@ class SettingPage extends React.Component {
                 </TouchableHighlight>
                 <View style={styles.separatorHorizontal} />
 
-                <TouchableHighlight>
+                <TouchableHighlight onPress={this._onPressAboutUs.bind(this)}>
                     <View style={styles.row}>
                         <Text style={styles.text}>关于我们</Text>
                         {chevronRightIcon}
