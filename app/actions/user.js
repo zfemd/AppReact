@@ -4,14 +4,14 @@ import StorageKeys from '../constants/StorageKeys';
 import { AsyncStorage } from 'react-native';
 export function fetchUserInfo(params) {
     // my info
-    if(!params.userId){
+    if (!params.userId) {
         return request('/user/profile', 'get', '', params.token)
             .then((list) => {
-                if(list.resultCode == 0){
+                if (list.resultCode == 0) {
                     let userInfo = list.resultValues;
                     const source = {
                         name: userInfo.nickname,
-                        gender: userInfo.gender == 'FEMALE'? 'women' : 'man',
+                        gender: userInfo.gender == 'FEMALE' ? 'women' : 'man',
                         income: userInfo.totalRevenue,
                         thumbUri: userInfo.portraitUrl,
                         summary: {
@@ -38,9 +38,9 @@ export function fetchUserInfo(params) {
     }
 
     return dispatch => {
-        return request('/user/profile?userId='+params.userId, 'get', '', params.token)
+        return request('/user/profile?userId=' + params.userId, 'get', '', params.token)
             .then((list) => {
-                if(list.resultCode == 0){
+                if (list.resultCode == 0) {
                     dispatch(receiveInfo(list.resultValues));
                 } else {
                     dispatch(receiveInfo({}));
@@ -57,19 +57,23 @@ export function fetchUserInfo(params) {
     };
 }
 
-export function fetchUserNotes(params){
+export function fetchUserNotes(params) {
     const timestamp = (new Date()).getTime();
     const pageSize = 10000;
     const loadedSize = 0;
     return dispatch => {
-        return request('/user/notes?'+
+        return request('/user/notes?' +
             'timestamp=' + timestamp
             + '&pageSize=' + pageSize
             + (params.userId ? ('&userId=' + params.userId) : '')
             + '&loadedSize=' + loadedSize, 'get', '', params.token)
             .then((list) => {
-                if(list.resultCode == 0){
-                    dispatch(receiveNotes(list.resultValues));
+                if (list.resultCode == 0) {
+                    if (params.userId) {
+                        dispatch(receiveNotes(list.resultValues));
+                    } else {
+                        dispatch(receiveMyNotes(list.resultValues));
+                    }
                 } else {
                     dispatch(receiveNotes([]));
                 }
@@ -95,6 +99,13 @@ function receiveInfo(info) {
 function receiveNotes(list) {
     return {
         type: types.RECEIVE_USER_NOTES,
+        list
+    };
+}
+
+function receiveMyNotes(list) {
+    return {
+        type: types.RECEIVE_MY_NOTES,
         list
     };
 }

@@ -30,6 +30,7 @@ import {
 import portraitPage from '../settings/portrait';
 import {fetchUserNotes} from '../../actions/user';
 import images from '../../constants/images';
+import Spinner from 'react-native-spinkit';
 
 var womanIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="venus"/>;
 var manIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="mars"/>;
@@ -63,55 +64,63 @@ export default class MyContent extends Component {
         });
 
         this.state = {
-            dataSource: this.ds.cloneWithRows([])
+            dataSource: this.ds.cloneWithRows([]),
+            loading: true
         };
     }
 
     componentWillMount () {
+        if(this.props.userInfo){
+            this.setState({dataSource: this.ds.cloneWithRows([])});
+            this.setState({loading: true});
+        }
         // load old data to display
         if(!this.props.userInfo)
             this._loadInitialState();
     }
 
     componentDidMount() {
-        // refresh data from server
-        //InteractionManager.runAfterInteractions(() => {
-        //    this.updateFromServer();
-        //});
+        setTimeout(()=>{
+            let the = this;
+            const { dispatch } = this.props;
+            Token.getToken(navigator).then((token) => {
+                let params = {
+                    token: token
+                };
+                if(this.props.userId) {
+                    params.userId =  this.props.userId;
+                }
+                dispatch(fetchUserNotes(params)).then(()=>{
+                    if(this.props.userInfo)
+                        the.setState({dataSource: the.ds.cloneWithRows(this.props.user.userNotes)});
+                    else
+                        this.setState({dataSource: this.ds.cloneWithRows(this.props.user.myNotes)});
+                    this.setState({loading: false});
+                })
+            });
+        },300);
 
-        //let the = this;
-        //DeviceEventEmitter.addListener('receiveNotes',()=>{
-        //    the.setState({dataSource: the.ds.cloneWithRows(this.props.user.userNotes)})
-        //});
-
-        let the = this;
-        const { dispatch } = this.props;
-        Token.getToken(navigator).then((token) => {
-            let params = {
-                token: token
-            };
-            if(this.props.userId) {
-                params.userId =  this.props.userId;
-            }
-            dispatch(fetchUserNotes(params)).then(()=>{
-                the.setState({dataSource: the.ds.cloneWithRows(this.props.user.userNotes)});
-            })
-        });
     }
 
     componentWillReceiveProps() {
         this._loadInitialState();
     }
 
-    async _loadInitialState() {
+    _loadInitialState() {
         try {
 
-            let meDetail = await AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY);
-            if (meDetail !== null){
-                this.setState({user: JSON.parse(meDetail)});
-            }
+            AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY).then((meDetail)=> {
+                if (meDetail !== null){
+                    this.setState({user: JSON.parse(meDetail)});
+                }
+            });
 
-            this.setState({dataSource: this.ds.cloneWithRows(this.props.user.userNotes)});
+
+            //if(this.props.userInfo)
+            //    this.setState({dataSource: this.ds.cloneWithRows(this.props.user.userNotes)});
+            //else
+            //    this.setState({dataSource: this.ds.cloneWithRows(this.props.user.myNotes)});
+
             //let myNotes = await AsyncStorage.getItem(StorageKeys.MY_NOTES_STORAGE_KEY);
             //if (myNotes !== null){
             //    this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(JSON.parse(myNotes))});
@@ -346,15 +355,24 @@ export default class MyContent extends Component {
                     </View>
                 </View>
 
-                <ListView dataSource={this.state.dataSource}
-                          contentContainerStyle={styles.list}
-                          renderSectionHeader={this._renderSectionHeader}
-                          renderRow={this._renderNote.bind(this)}
-                          renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
-                          renderSeparator={this._renderSeparator}
-                          style={styles.myNoteContainer}
-                          enableEmptySections={true}
-                        />
+                {
+                    !this.state.loading? (
+                        <ListView dataSource={this.state.dataSource}
+                                  contentContainerStyle={styles.list}
+                                  renderSectionHeader={this._renderSectionHeader}
+                                  renderRow={this._renderNote.bind(this)}
+                                  renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+                                  renderSeparator={this._renderSeparator}
+                                  style={styles.myNoteContainer}
+                                  enableEmptySections={true}
+                            />
+                    ) : (
+                        <View style={styles.loading}>
+                            <Spinner isVisible size={45} type="FadingCircleAlt" color={'#fc7d30'}/>
+                        </View>
+                    )
+                }
+
 
             </View>
         );

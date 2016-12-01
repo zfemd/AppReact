@@ -127,5 +127,12 @@ export default styles = StyleSheet.create({
     },
     noteAssetIcon: {
         color:'#FC4D30'  
+    },
+    loading: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        backgroundColor: '#f1f1f1',
+        marginTop: 20
     }
 });

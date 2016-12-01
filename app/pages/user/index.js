@@ -43,7 +43,7 @@ class User extends React.Component {
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />
-                <ScrollView style={{flex: 1,backgroundColor: '#fff'}}>
+                <ScrollView style={{flex: 1,backgroundColor: '#f1f1f1'}}>
                     <Content userInfo={this.props.user.userInfo} userId={this.props.route.userId} {...this.props} key="0"/>
                 </ScrollView>
             </View>
