@@ -81,7 +81,6 @@ export default class MyContent extends Component {
 
     componentDidMount() {
         setTimeout(()=>{
-            let the = this;
             const { dispatch } = this.props;
             Token.getToken(navigator).then((token) => {
                 let params = {
@@ -92,7 +91,7 @@ export default class MyContent extends Component {
                 }
                 dispatch(fetchUserNotes(params)).then(()=>{
                     if(this.props.userInfo)
-                        the.setState({dataSource: the.ds.cloneWithRows(this.props.user.userNotes)});
+                        this.setState({dataSource: this.ds.cloneWithRows(this.props.user.userNotes)});
                     else
                         this.setState({dataSource: this.ds.cloneWithRows(this.props.user.myNotes)});
                     this.setState({loading: false});
@@ -103,7 +102,25 @@ export default class MyContent extends Component {
     }
 
     componentWillReceiveProps() {
-        this._loadInitialState();
+        this._loadRefreshData();
+    }
+
+    _loadRefreshData() {
+        try {
+
+            AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY).then((meDetail)=> {
+                if (meDetail !== null){
+                    this.setState({user: JSON.parse(meDetail)});
+                }
+            });
+
+            if(this.props.userInfo)
+                this.setState({dataSource: this.ds.cloneWithRows(this.props.user.userNotes)});
+            else
+                this.setState({dataSource: this.ds.cloneWithRows(this.props.user.myNotes)});
+        } catch (error) {
+            console.log('AsyncStorage error: ' + error.message);
+        }
     }
 
     _loadInitialState() {
