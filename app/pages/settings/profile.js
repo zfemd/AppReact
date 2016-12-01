@@ -32,7 +32,7 @@ class ProfilePage extends React.Component {
             cacheUser: {},
             showPicker: false,
             showInput: false,
-            showChanger: false,
+            showChanger: false
         }
     }
 
@@ -41,6 +41,7 @@ class ProfilePage extends React.Component {
             if (meDetail !== null) {
                 const detail = JSON.parse(meDetail);
                 this.setState({user: detail});
+                this.setState({cacheUser: detail});
             }
         })
 
@@ -187,7 +188,7 @@ class ProfilePage extends React.Component {
                                 </TouchableOpacity>
                             </View>
                             <Picker
-                                selectedValue={this.state.user.gender}
+                                selectedValue={this.state.cacheUser.gender}
                                 style={[styles.genderPicker]}
                                 onValueChange={(gender) => this._updateGender(gender)}>
                                 <Picker.Item label="男" value="man"/>
