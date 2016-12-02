@@ -8,13 +8,12 @@
     <title></title>
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
-    <div style="overflow:hidden; height:300px;">
-        <div style="display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
-            <canvas id="c" style="border:1px solid #ccc;margin:0;padding:0;"></canvas>
+    <div style=" height:300px;">
+        <div style="border:1px solid #ccc;display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
+            <canvas id="c" style="margin:0;padding:0;"></canvas>
         </div>
-        <image id="image" style="max-width:100%;max-height: 300px;" />
         <div>
-            <image id="image-origin" style="display:none;"/>
+            <image id="image-origin" style="border:1px solid #ccc;"/>
         </div>
     </div>
     <script type="application/javascript">
@@ -25,7 +24,6 @@
 
             WebViewBridge.send('{"type":"bridgeReady"}');
             var imageClickable = false;
-            var imgElement = document.getElementById('image');
             var imgElementOrigin = document.getElementById('image-origin');
             var canvas = document.getElementById('c');
             var canvasFab = new fabric.Canvas('c', {isDrawingMode:false, renderOnAddRemove: true, controlsAboveOverlay:false});
@@ -55,7 +53,7 @@
                     0, -1,  0 ]
                 })
             };
-            WebViewBridge.send("hello from webview" + fabric);
+
             var getPosSet1 = function(textWidth, textHeight){
                 return {
                     textPositions: [
@@ -171,21 +169,10 @@
                 } else if (message.type === 'imageReady') {
 
                     imgElementOrigin.addEventListener('load', function(){
-                        imgFab = new fabric.Image(imgElementOrigin, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:true});
+
+                        imgFab = new fabric.Image(imgElementOrigin, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
                         canvasFab.backgroundImage = imgFab;
                         canvasFab.renderAll();
-                    });
-
-                    imgElement.addEventListener('load', function(){
-                        scale = message.image.width / imgElement.width;
-                        padding *= scale;
-
-//                        canvas.setAttribute("width", imgElement.width + 'px');
-//                        canvas.setAttribute("height", imgElement.height);
-                        canvasFab.setDimensions({width:imgElement.width, height:imgElement.height}, {cssOnly:true});
-                        canvasFab.renderAll();
-
-                        WebViewBridge.send(JSON.stringify({canvas:{width:imgElement.width, height:imgElement.height, scale:scale}}));
 
                         canvasFab.on("mouse:up", function(data){
                             if (!imageClickable) {return}
@@ -223,9 +210,24 @@
                     });
 
                     if (message.data) {
-                        imgElementOrigin.src = message.data;
-                        imgElement.src = message.data;
+
+                        var maxHeight = 300;
+                        var displaySize = {
+                            width:message.image.width,
+                            height:message.image.height
+                        };
+                        if (message.image.height > maxHeight) {
+                            displaySize.height = maxHeight;
+                            displaySize.width = Math.round(maxHeight / message.image.height * message.image.width);
+                        }
+
+                        canvasFab.setDimensions(displaySize, {cssOnly:true});
                         canvasFab.setDimensions({width:message.image.width, height:message.image.height}, {backstoreOnly:true});
+
+                        scale = message.image.width / displaySize.width;
+                        padding *= scale;
+
+                        imgElementOrigin.src = message.data;
 
                         WebViewBridge.send(JSON.stringify({canvasFab:{width:canvasFab.width, height:canvasFab.height}}));
                     }

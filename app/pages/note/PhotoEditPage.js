@@ -51,6 +51,7 @@ var clone = require('lodash/clone');
 
 var contrastIcon = <Icon name="adjust" size={30} color="#333" />;
 var brightnessIcon = <Icon name="sun-o" size={30} color="#333" />;
+var maxSize = 1024;
 
 class PhotoEditPage extends Component {
     constructor(props) {
@@ -103,20 +104,26 @@ class PhotoEditPage extends Component {
                 let imageSize = {width,height} = this.state.avatarSource;
                 let displaySize = {};
 
-                if (imageSize.width > imageSize.height && imageSize.width > 1024) {
-                    displaySize = {width:1024, height: 1024 / imageSize.width * imageSize.height};
-                } else if (imageSize.height > 1024) {
-                    displaySize = {height:1024, width: 1024 / imageSize.height * imageSize.width};
+                if (imageSize.width > imageSize.height && imageSize.width > maxSize) {
+                    displaySize = {width:maxSize, height: Math.round(maxSize / imageSize.width * imageSize.height)};
+                } else if (imageSize.height > maxSize) {
+                    displaySize = {height:maxSize, width: Math.round(maxSize / imageSize.height * imageSize.width)};
                 } else {
                     displaySize = {height: imageSize.height , width: imageSize.width}
                 }
 
+                //console.log(displaySize);
+
                 // get base64data of image
-                ImageEditor.cropImage(this.state.avatarSource.uri, {offset:{x:0, y:0},size:imageSize, displaySize:displaySize}, (url) => {
+                ImageEditor.cropImage(this.state.avatarSource.uri, {offset:{x:0, y:0},size:imageSize, displaySize:displaySize, resizeMode:'contain'}, (url) => {
                     ImageStore.getBase64ForTag(url, (base64Data) => {
                         const { webviewbridge } = this.refs;
                         let {height, width} = Dimensions.get('window');
                         let sImageBase64Data = "data:image/jpg;base64," + base64Data.replace(/\n|\r/g, "");
+                        //let sImageBase64Data = "data:image/jpg;base64," + base64Data;
+                        console.log('length:' + base64Data.length);
+                        console.log('length updated:' + (sImageBase64Data.length - 22));
+                        //console.log('data:' + sImageBase64Data);
 
                         webviewbridge.sendToBridge(JSON.stringify({type:"imageReady", window:{width:width, height:height}, image:displaySize, data: sImageBase64Data}));
                     }, (error) => {

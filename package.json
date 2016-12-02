@@ -16,7 +16,7 @@
     "react-native-image-picker": "^0.21.5",
     "react-native-root-toast": "^1.0.3",
     "react-native-scrollable-tab-view": "git+https://github.com/brentvatne/react-native-scrollable-tab-view.git",
-    "react-native-spinkit": "^0.1.2",
+    "react-native-spinkit": "^0.1.5",
     "react-native-vector-icons": "^2.0.3",
     "react-native-webview-bridge": "^0.33.0",
     "react-redux": "^4.4.5",
