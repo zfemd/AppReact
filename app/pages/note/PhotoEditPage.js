@@ -101,28 +101,25 @@ class PhotoEditPage extends Component {
             let {currentPhotoIndex, notePhotos} = this.props.draftNote;
             if (notePhotos && notePhotos.length > currentPhotoIndex) {
                 this.state.avatarSource = notePhotos[currentPhotoIndex].photo;
-                let imageSize = {width,height} = this.state.avatarSource;
+                let imageSize = {width,height} = this.state.avatarSource.image;
                 let displaySize = {};
 
                 if (imageSize.width > imageSize.height && imageSize.width > maxSize) {
                     displaySize = {width:maxSize, height: Math.round(maxSize / imageSize.width * imageSize.height)};
-                } else if (imageSize.height > maxSize) {
+                } else if (imageSize.height > imageSize.width && imageSize.height > maxSize) {
                     displaySize = {height:maxSize, width: Math.round(maxSize / imageSize.height * imageSize.width)};
                 } else {
                     displaySize = {height: imageSize.height , width: imageSize.width}
                 }
 
-                //console.log(displaySize);
+                console.log(this.state.avatarSource);
 
                 // get base64data of image
-                ImageEditor.cropImage(this.state.avatarSource.uri, {offset:{x:0, y:0},size:imageSize, displaySize:displaySize, resizeMode:'contain'}, (url) => {
+                ImageEditor.cropImage(this.state.avatarSource.image.uri, {offset:{x:0, y:0},size:imageSize, displaySize:displaySize, resizeMode:'contain'}, (url) => {
                     ImageStore.getBase64ForTag(url, (base64Data) => {
                         const { webviewbridge } = this.refs;
                         let {height, width} = Dimensions.get('window');
-                        let sImageBase64Data = "data:image/jpg;base64," + base64Data.replace(/\n|\r/g, "");
-                        //let sImageBase64Data = "data:image/jpg;base64," + base64Data;
-                        console.log('length:' + base64Data.length);
-                        console.log('length updated:' + (sImageBase64Data.length - 22));
+                        let sImageBase64Data = "data:" + this.state.avatarSource.type + ";base64," + base64Data.replace(/\n|\r/g, "");
                         //console.log('data:' + sImageBase64Data);
 
                         webviewbridge.sendToBridge(JSON.stringify({type:"imageReady", window:{width:width, height:height}, image:displaySize, data: sImageBase64Data}));
@@ -281,7 +278,7 @@ class PhotoEditPage extends Component {
         const { navigator, dispatch } = this.props;
         const { webviewbridge } = this.refs;
 
-        console.log(message);
+        //console.log(message);
 
         if (message.startsWith("{")) {
             message = JSON.parse(message);

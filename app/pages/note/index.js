@@ -28,7 +28,9 @@ class SelectPhotoPage extends Component {
     constructor(props, context) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            selectedPhoto: {}
+        };
 
         this.cameraOptions = {
             title: '选择照片',
@@ -60,7 +62,7 @@ class SelectPhotoPage extends Component {
                 //let source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
 
                 this.setState({
-                    avatarSource: response
+                    selectedPhoto: response
                 });
             }
         });
@@ -77,15 +79,16 @@ class SelectPhotoPage extends Component {
                 // You can display the image using either data...
                 //let source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
                 this.setState({
-                    avatarSource: response
+                    selectedPhoto: response
                 });
             }
         });
     }
     
     _onPressImage(imageNode) {
+        console.log(imageNode);
         this.setState({
-            avatarSource: imageNode.image
+            selectedPhoto: imageNode
         });
     }
 
@@ -93,7 +96,7 @@ class SelectPhotoPage extends Component {
         if (data != null) {
             let assets = data.edges;
             if (assets.length > 0) {
-                this.setState({avatarSource: assets[0].node.image});
+                this.setState({selectedPhoto: assets[0].node});
             }
         }
     }
@@ -109,13 +112,13 @@ class SelectPhotoPage extends Component {
     _onContinue() {
         const { navigator, dispatch } = this.props;
 
-        dispatch({type:StoreActions.ADD_NOTE_PHOTO, photo: this.state.avatarSource});
+        dispatch({type:StoreActions.ADD_NOTE_PHOTO, photo: this.state.selectedPhoto});
 
         if(navigator) {
             navigator.push({
                 name: 'PhotoEditPage',
                 component: PhotoEditPage,
-                params: {photo:this.state.avatarSource}
+                params: {photo:this.state.selectedPhoto}
             })
         }
     }
@@ -153,7 +156,7 @@ class SelectPhotoPage extends Component {
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
                 <View style={{marginBottom: 4}}>
-                    <Image source={this.state.avatarSource} style={styles.uploadAvatar} width={width} height={200} />
+                    <Image source={this.state.selectedPhoto.image} style={styles.uploadAvatar} width={width} height={200} />
                 </View>
                 <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
                           onPressCamera={this._onPressCamera.bind(this)} onPressImage={this._onPressImage.bind(this)} />

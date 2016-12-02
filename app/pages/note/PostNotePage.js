@@ -228,7 +228,7 @@ class PostNotePage extends Component {
         if (notePhotos != null && notePhotos.length > 0) {
             notePhotos.forEach(function(notePhoto, index){
                 let image = (
-                    <TouchableHighlight key={notePhoto.photo.uri+index} onPress={() => that._onPressPhoto.call(that, index)} >
+                    <TouchableHighlight key={notePhoto.photo.image.uri+index} onPress={() => that._onPressPhoto.call(that, index)} >
                         <Image source={{uri:notePhoto.image}} style={styles.uploadAvatar} width={imageWidth} height={imageHeight} />
                     </TouchableHighlight>
                 );
