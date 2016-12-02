@@ -340,7 +340,13 @@ export default class MyContent extends Component {
 
                     <View style={styles.user}>
                         <Text style={{fontSize:16}}>{this.user.name}</Text>
-                        <Image style={styles.gender} source={ this.user.gender == 'women' ? womanImg : manImg } />
+                        {
+                            this.user.gender == 'women'? (
+                                <Image style={styles.gender} key={1} source={ womanImg } />
+                            ) : (
+                                <Image style={styles.gender} key={2} source={ manImg } />
+                            )
+                        }
 
                     </View>
                     <View style={styles.income}>
