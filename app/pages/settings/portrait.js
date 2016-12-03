@@ -32,8 +32,12 @@ class Portrait extends React.Component {
 
     render() {
         const info = this.props.route.info;
-        const pHeight = width;
-        const pWidth = info.portraitWidth/info.portraitHeight*pHeight;
+        let pHeight = width;
+        let pWidth = info.portraitWidth/info.portraitHeight*pHeight;
+        if(pWidth > width){
+            pWidth = width;
+            pHeight = info.portraitHeight/info.portraitWidth*pWidth;
+        }
         return(
             <View style={styles.portraitContainer}>
 

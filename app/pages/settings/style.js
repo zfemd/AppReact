@@ -38,6 +38,9 @@ const styles = StyleSheet.create({
     fullPortrait: {
         width: width,
         height: width,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#000',
         marginTop: 50
     },
     fullPortraitImg: {
