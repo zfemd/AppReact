@@ -8,12 +8,12 @@ const photo = `<html lang="en">
     <title></title>
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
-    <div style=" height:300px;">
-        <div style="border:1px solid #ccc;display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
+    <div style="overflow:hidden; height:300px;">
+        <div style="display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
             <canvas id="c" style="margin:0;padding:0;"></canvas>
         </div>
         <div>
-            <image id="image-origin" style="border:1px solid #ccc;"/>
+            <image id="image-origin" style="display:none;"/>
         </div>
     </div>
     <script type="application/javascript">
