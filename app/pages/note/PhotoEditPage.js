@@ -43,7 +43,8 @@ const originImg = require('../../assets/photo/origin.png');
 const sepia2Img = require('../../assets/photo/sepia2.jpg');
 const sepiaImg = require('../../assets/photo/sepia.jpg');
 const sharpenImg = require('../../assets/photo/sharpen.jpg');
-const photoHtml = require('../../assets/html/photo.html');
+const photoHtmlAndroid = require('../../assets/html/photo.html');
+import photoHtmlIos from '../../assets/html/photo';
 
 import stickers from '../../assets/stickers.js';
 
@@ -351,12 +352,22 @@ class PhotoEditPage extends Component {
                     />
 
                 <View style={styles.selectedPhotoContainer}>
-                    <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
-                                   scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
-                                   domStorageEnabled={true}
-                                   source={photoHtml} injectedJavaScript={Platform.OS == 'ios' ? null : null}
-                                   style={[{height:300, padding: 0}]}>
-                    </WebViewBridge>
+                    {
+                        Platform.OS === 'android'?
+                            <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
+                                           scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
+                                           domStorageEnabled={true}
+                                           source={photoHtmlAndroid} injectedJavaScript={Platform.OS == 'ios' ? null : null}
+                                           style={[{height:300, padding: 0}]}>
+                            </WebViewBridge> :
+                            <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
+                                           scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
+                                           domStorageEnabled={true}
+                                           source={{html:photoHtmlIos}} injectedJavaScript={Platform.OS == 'ios' ? null : null}
+                                           style={[{height:300, padding: 0}]}>
+                            </WebViewBridge>
+                    }
+
                 </View>
 
                 <ScrollableTabView

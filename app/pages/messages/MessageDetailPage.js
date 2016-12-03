@@ -31,7 +31,7 @@ export default class MessageDetailPage extends Component {
                     />
                 <WebViewBridge
                     ref="webviewbridge"
-                    source={{uri: "http://share68.com/message"}}/>
+                    source={{uri: "http://share68.com"}}/>
 
             </View>
         );
