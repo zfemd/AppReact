@@ -41,7 +41,8 @@ class PostNotePage extends Component {
             content: '好',
             address: '正在尝试获取当前位置...',
             draftNote: this.props.draftNote,
-            token: null
+            token: null,
+            posting: false
         };
 
         Token.getToken(navigator).then((token) => {
@@ -126,21 +127,27 @@ class PostNotePage extends Component {
             if (responseJson.resultCode == 0) {
                 // remove draft note since it has been post to server.
                 dispatch({type:StoreActions.RESET_DRAFT_NOTE});
+                this.state.posting = false;
 
                 if(navigator) {
                     navigator.popToTop();
                 }
             } else {
                 Toast.show('抱歉，笔记图片发布失败。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                this.state.posting = false;
             }
         }).catch((error) => {
             console.error(error);
+            this.state.posting = false;
         });
 
         Toast.show('笔记正在发布，图片数量不同，发送时间可长可短，请耐心等待。', {duration:Toast.durations.LONG, position:Toast.positions.CENTER});
     }
 
     _sendNote() {
+        if (this.state.posting) return;
+        this.state.posting = true;
+
         if (this.state.draftNote == null || this.state.draftNote.notePhotos == null) {
             Toast.show('发送笔记前，请先选择需要上传的图片。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             return;
@@ -175,12 +182,12 @@ class PostNotePage extends Component {
                 this._sendPhotos(responseJson.resultValues.noteId);
             } else {
                 Toast.show('发送笔记失败。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                this.state.posting = false;
             }
         }).catch((error) => {
             Toast.show('发送失败，可能是网络中断。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+            this.state.posting = false;
         });
-
-        //this._sendPhotos(1000000000013);
     }
 
     _renderPhotosRow(photos, photosPerRow, fromIndex) {

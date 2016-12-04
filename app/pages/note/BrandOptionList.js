@@ -26,20 +26,9 @@ export default class BrandOptionList extends Component {
         this.state = {
             dataSource: ds
         };
-
-        this.state.optionsProps = {
-            onSelect: props.onSelect,
-            onCancel: props.onCancel,
-            onEditing: props.onEditing || this._defaultOnEditing,
-            renderRow: props.renderRow
-        };
     }
 
-    componentWillMount() {
-
-    }
-
-    _defaultOnEditing (text) {
+    _defaultOnTextInput (text) {
         // fetch('https://mywebsite.com/endpoint/', {
         //     method: 'POST',
         //     headers: {
@@ -76,7 +65,8 @@ export default class BrandOptionList extends Component {
 
     render() {
         return (
-            <OptionList dataSource={this.state.dataSource} {...this.state.optionsProps} />
+            <OptionList dataSource={this.state.dataSource} onTextInput={this._defaultOnTextInput.bind(this)}
+                        style={{flex:1}}  {...this.props} />
         );
     }
 }

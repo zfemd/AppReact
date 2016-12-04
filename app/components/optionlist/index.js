@@ -6,7 +6,7 @@ import {
     Animated,
     Dimensions,
     ListView,
-    RecyclerViewBackedScrollView,
+    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -22,43 +22,24 @@ class OptionList extends React.Component {
     constructor(props) {
         super(props);
 
-        /* we used the defaultGetRowData, this requires dataBlob has below structure:
-         * dataBlob = {section:{rowID_1: rowData1, rowID_2: rowData2,...},...};
-         *
-         * Todo
-         * We need to make sure rowID is noteID
-         */
-        var ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2,
-            sectionHeaderHasChanged: (s1, s2) => s1 != s2
-        });
-
-        if (this.props.dataSource) {
-            ds = this.props.dataSource;
-        }
-
-        this.state = {
-            dataSource: ds
-        }
-
         this._renderRow = this.props.renderRow || this._defaultRenderRow;
     }
 
-    _defaultOnEditing(text) {
-        if (typeof this.props.onEditing == 'function') {
-            this.props.onEditing.call(this, text);
+    _defaultTextInput(text) {
+        if (typeof this.props.onTextInput == 'function') {
+            this.props.onTextInput(text);
         }
     }
 
     _onPressOption(rowData) {
         if (typeof this.props.onSelect == 'function') {
-            this.props.onSelect.call(this, rowData);
+            this.props.onSelect(rowData);
         }
     }
 
     _onCancel() {
         if (typeof this.props.onCancel == 'function') {
-            this.props.onCancel.call(this);
+            this.props.onCancel();
         }
     }
 
@@ -81,20 +62,22 @@ class OptionList extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={this.props.style}>
                 <View style={styles.optionsHeader}>
                     <View style={styles.richTextInput}>
                         {searchIcon}
-                        <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={false} style={styles.textInput} onEndEditing={(text) => this._defaultOnEditing(text)}/>
+                        <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={true} style={styles.textInput}
+                                   underlineColorAndroid="transparent" selectTextOnFocus={true}
+                                   onTextInput={(text) => this._defaultTextInput(text)} />
                     </View>
                     <TouchableHighlight onPress={this._onCancel.bind(this)}>
                         <Text style={[styles.text, styles.cancelText]}>取消</Text>
                     </TouchableHighlight>
                 </View>
 
-                <ListView dataSource={this.state.dataSource}
+                <ListView dataSource={this.props.dataSource} style={{flex:1}}
                           renderRow={this._renderRow.bind(this)}
-                          renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+                          renderScrollComponent={props => <ScrollView style={{flex:1}}/>}
                           renderSeparator={this._renderSeparator}/>
             </View>
         )

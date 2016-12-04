@@ -26,20 +26,10 @@ export default class CategoryOptionList extends Component {
         this.state = {
             dataSource: ds
         };
-
-        this.state.optionsProps = {
-            onSelect: props.onSelect,
-            onCancel: props.onCancel,
-            onEditing: props.onEditing || this._defaultOnEditing,
-            renderRow: props.renderRow
-        };
     }
 
-    componentWillMount() {
-
-    }
-
-    _defaultOnEditing (text) {
+    _defaultOnTextInput (text) {
+        console.log(text);
         // fetch('https://mywebsite.com/endpoint/', {
         //     method: 'POST',
         //     headers: {
@@ -69,6 +59,36 @@ export default class CategoryOptionList extends Component {
             title: '家具'
         },"option5":{
             title: '鞋帽'
+        },"option6":{
+            title: '电子产品'
+        },"option7":{
+            title: '服饰'
+        },"option8":{
+            title: '办公用品'
+        },"option9":{
+            title: '家具'
+        },"option10":{
+            title: '鞋帽'
+        },"option11":{
+            title: '电子产品'
+        },"option12":{
+            title: '服饰'
+        },"option13":{
+            title: '办公用品'
+        },"option14":{
+            title: '家具'
+        },"option15":{
+            title: '鞋帽'
+        },"option16":{
+            title: '电子产品'
+        },"option17":{
+            title: '服饰'
+        },"option18":{
+            title: '办公用品'
+        },"option19":{
+            title: '家具'
+        },"option20":{
+            title: '鞋帽'
         }}};
 
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
@@ -76,8 +96,7 @@ export default class CategoryOptionList extends Component {
 
     render() {
         return (
-            <OptionList dataSource={this.state.dataSource} {...this.state.optionsProps} />
+            <OptionList style={{flex:1}} dataSource={this.state.dataSource} onTextInput={this._defaultOnTextInput.bind(this)} {...this.props} />
         );
     }
 }
-

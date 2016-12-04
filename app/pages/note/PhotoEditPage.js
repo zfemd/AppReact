@@ -202,6 +202,14 @@ class PhotoEditPage extends Component {
         this.setState({optionsModalVisible:flag});
     }
 
+    showCategoryModal(flag) {
+        this.state.categoryOptionsVisible = flag;
+        this.state.brandOptionsVisible = false;
+        this.state.nationOptionsVisible = false;
+        this.state.currencyOptionsVisible = false;
+        this.setOptionsModalVisible(flag);
+    }
+
     showBrandModal(flag) {
         this.state.brandOptionsVisible = flag;
         this.state.nationOptionsVisible = false;
@@ -339,6 +347,7 @@ class PhotoEditPage extends Component {
         let {height, width} = Dimensions.get('window');
 
         let choseFilterStyle = {backgroundColor: '#ccc'};
+        console.log(height);
 
         return (
             <View style={[styles.container, {height: height - 21}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
@@ -357,14 +366,12 @@ class PhotoEditPage extends Component {
                             <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
                                            scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
                                            domStorageEnabled={true}
-                                           source={photoHtmlAndroid} injectedJavaScript={Platform.OS == 'ios' ? null : null}
-                                           style={[{height:300, padding: 0}]}>
+                                           source={photoHtmlAndroid} style={[{height:300, padding: 0}]}>
                             </WebViewBridge> :
                             <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
                                            scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
                                            domStorageEnabled={true}
-                                           source={{html:photoHtmlIos}} injectedJavaScript={Platform.OS == 'ios' ? null : null}
-                                           style={[{height:300, padding: 0}]}>
+                                           source={{html:photoHtmlIos}} style={[{height:300, padding: 0}]}>
                             </WebViewBridge>
                     }
 
@@ -470,11 +477,19 @@ class PhotoEditPage extends Component {
                 {this.state.tagOverlayVisible ?
                     (<View style={[styles.overlay]}>
                         <View style={styles.formRow}>
-                            <TextInput value={this.state.currentTag.brand} placeholder='品类' placeholderTextColor='#fff' style={styles.textInput} onFocus={()=>this._onBrandInputFocus()}/>
-                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none' style={styles.textInput} onSubmitEditing={(event) => {this.state.currentTag.name = event.nativeEvent.text;}} />
+                            <TextInput ref="categoryInput" value={this.state.currentTag.category} placeholder='品类' placeholderTextColor='#fff'
+                                       underlineColorAndroid="transparent" clearTextOnFocus={true}
+                                       enablesReturnKeyAutomatically={true} blurOnSubmit={true} style={styles.textInput}
+                                       onFocus={()=> {this.showCategoryModal(true); this.refs.categoryInput.blur()}} />
+                            <TextInput ref="brandInput" value={this.state.currentTag.brand} placeholder='品牌' placeholderTextColor='#fff'
+                                       underlineColorAndroid="transparent" clearTextOnFocus={true}
+                                       enablesReturnKeyAutomatically={true} blurOnSubmit={true} style={styles.textInput}
+                                       onFocus={() => {this._onBrandInputFocus(); this.refs.brandInput.blur();}} />
                         </View>
                         <View style={styles.formRow}>
-                            <TextInput value={this.state.currentTag.currency} placeholder='币种' placeholderTextColor='#fff' style={styles.textInput} onFocus={this._onCurrencyInputFocus.bind(this)}/>
+                            <TextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none'
+                                       style={styles.textInput}
+                                       onSubmitEditing={(event) => {this.state.currentTag.name = event.nativeEvent.text;}} />
                             <TextInput placeholder='价格' placeholderTextColor='#fff' style={styles.textInput} onSubmitEditing={(event) => {this.state.currentTag.price = event.nativeEvent.text;}}/>
                         </View>
                         <View style={styles.formRow}>
@@ -498,8 +513,8 @@ class PhotoEditPage extends Component {
                     visible={this.state.optionsModalVisible}
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
-                    <View style={[styles.container, {height: height, marginTop:21}]}>
-                        { this.state.categoryOptionsVisible ? <CategoryOptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onCategorySelect.call(this, rowData) }/> : null}
+                    <View style={[styles.container, {height: height - 21}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
+                        { this.state.categoryOptionsVisible ? <CategoryOptionList style={{flex:1}} onCancel={() => {this.showCategoryModal.call(this, false);}} onSelect={(rowData)=> this._onCategorySelect.call(this, rowData) }/> : null}
                         { this.state.brandOptionsVisible ? <BrandOptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
                         { this.state.currencyOptionsVisible ? <CurrencyOptionList onCancel={() => this.showCurrencyModal.call(this, false)} onSelect={(rowData)=> this._onCurrencySelect.call(this, rowData) }/> : null}
                         { this.state.nationOptionsVisible ? <NationOptionList onCancel={() => this.showNationModal.call(this, false)} onSelect={(rowData)=> this._onNationSelect.call(this, rowData) }/> : null}
