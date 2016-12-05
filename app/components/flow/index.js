@@ -64,11 +64,20 @@ class Flow extends React.Component {
     }
 
     componentDidMount() {
+        let the = this;
         const { dispatch ,tag} = this.props;
         let params = _.cloneDeep(fetchParams);
         params.tag = tag;
         if (typeof tag !== 'undefined')
-            dispatch(fetchList(params));
+            dispatch(fetchList(params))
+                .then(()=> {
+                    _.each(the.props.flow.flowList[params.tag], function (v, k) {
+                        if(!the.props.detail.note[v.noteId]){
+                            dispatch(fetchDetail(v.noteId));
+                        }
+                    });
+
+                });
     }
 
     componentWillReceiveProps() {
@@ -83,6 +92,7 @@ class Flow extends React.Component {
     }
 
     _onRefresh(isFlow) {
+        let the = this;
         const { dispatch ,tag } = this.props;
         let params = _.cloneDeep(fetchParams);
         params.refreshing = true;
@@ -92,11 +102,25 @@ class Flow extends React.Component {
         params.myFollowOnly = this.props.home.isFollowed;
         if (isFlow) {
             params.flowRefreshing = true;
-            dispatch(fetchList(params));
+            dispatch(fetchList(params))
+                .then(()=> {
+                    _.each(the.props.flow.flowList[params.tag], function (v, k) {
+                        if(!the.props.detail.note[v.noteId]){
+                            dispatch(fetchDetail(v.noteId));
+                        }
+                    });
+                });
         } else {
             setTimeout(()=> {
                 params.flowRefreshing = false;
-                dispatch(fetchList(params));
+                dispatch(fetchList(params))
+                    .then(()=> {
+                        _.each(the.props.flow.flowList[params.tag], function (v, k) {
+                            if(!the.props.detail.note[v.noteId]){
+                                dispatch(fetchDetail(v.noteId));
+                            }
+                        });
+                    });
                 this.setState({offlineReloading: false});
             }, 2000);
             this.setState({offlineReloading: true});
@@ -274,6 +298,7 @@ class Flow extends React.Component {
     }
 
     _onScroll(event) {
+        let the = this;
         const { dispatch, tag } = this.props;
         let maxOffset = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height;
         let offset = event.nativeEvent.contentOffset.y;
@@ -285,17 +310,32 @@ class Flow extends React.Component {
             params.tag = tag;
             params.loadingMore = true;
             params.myFollowOnly = this.props.home.isFollowed;
-            dispatch(fetchList(params));
+            dispatch(fetchList(params))
+                .then(()=> {
+                    _.each(the.props.flow.flowList[params.tag], function (v, k) {
+                        if(!the.props.detail.note[v.noteId]){
+                            dispatch(fetchDetail(v.noteId));
+                        }
+                    });
+                });
         }
     }
 
     componentDidUpdate() {
+        let the = this;
         const {flow, tag, dispatch, home} = this.props;
         if (flow.pageRefresh && flow.currentTag === tag) {
             let params = _.cloneDeep(fetchParams);
             params.myFollowOnly = home.isFollowed;
             params.tag = tag;
-            dispatch(fetchList(params));
+            dispatch(fetchList(params))
+                .then(()=> {
+                    _.each(the.props.flow.flowList[params.tag], function (v, k) {
+                        if(!the.props.detail.note[v.noteId]){
+                            dispatch(fetchDetail(v.noteId));
+                        }
+                    });
+                });
         }
     }
 

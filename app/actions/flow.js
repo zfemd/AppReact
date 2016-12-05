@@ -12,16 +12,16 @@ export function fetchList(params) {
         }
         dispatch(fetchFlowList(params.refreshing, params.loadingMore, params.flowRefreshing, params.timestamp, params.tag));
 
-        const pageSize = 5;
+        const pageSize = 8;
         params.loadedSize = params.loadedSize ? params.loadedSize : 0;
 
-        Token.getToken().then((token) => {
+        return Token.getToken().then((token) => {
             return request('/notes?' +
                 'timestamp=' + params.timestamp
                 + '&pageSize=' + pageSize
                 + '&loadedSize=' + params.loadedSize
                 + (params.myFollowOnly ? '&myFollowOnly' : '')
-                + '&tag=' + (params.tag !== 'all' ? params.tag : ''), 'get', '', token)
+                + '&tagId=' + (params.tag !== 'all' ? params.tag : ''), 'get', '', token)
                 .then((list) => {
                     if (list.resultCode === 0 && list.resultValues.length > 0) {
                         dispatch(receiveFlowList(list.resultValues, params.tag, false));
@@ -29,9 +29,9 @@ export function fetchList(params) {
                         dispatch(receiveFlowList(list.resultValues, params.tag, true));
                     }
 
-                    _.each(list.resultValues, function (v, k) {
-                        dispatch(fetchDetail(v.noteId));
-                    })
+                    //_.each(list.resultValues, function (v, k) {
+                    //    dispatch(fetchDetail(v.noteId));
+                    //})
 
                 }, function (error) {
                     dispatch(receiveFlowList([]));
