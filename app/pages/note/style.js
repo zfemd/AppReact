@@ -112,6 +112,14 @@ const styles = StyleSheet.create({
         marginVertical: 0,
         paddingVertical: 0,
         textAlignVertical: 'top'
+    },
+    framedTextInput: {
+        flex: 1,
+        borderStyle:'solid',
+        borderWidth:1,
+        borderColor:'#fff',
+        borderRadius:5,
+        marginHorizontal: 5
     }
 });
 
