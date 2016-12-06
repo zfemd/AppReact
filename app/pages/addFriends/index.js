@@ -14,6 +14,7 @@ import Toolbar from '../../components/toolbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImageButton from '../../components/toolbar/ImageButton.js';
 import { naviGoBack } from '../../utils/common';
+import Contacts from 'react-native-contacts';
 var backImg = require('../../assets/upload/rg_left.png');
 
 class Friends extends React.Component {
@@ -31,6 +32,17 @@ class Friends extends React.Component {
             naviGoBack(navigator);
         }
     }
+
+    componentWillMount() {
+        Contacts.getAll((err, contacts) => {
+            if(err && err.type === 'permissionDenied'){
+                console.log('permissionDenied');
+            } else {
+                console.log(contacts)
+            }
+        })
+    }
+
 
     render() {
         return(
