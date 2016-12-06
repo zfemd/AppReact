@@ -8,10 +8,14 @@ import {
     View
 } from 'react-native';
 export default class FramedTextInput extends Component {
+    blur () {
+        this.refs.input.blur();
+    }
+
     render() {
         return (
-            <View style={this.props.containerStyle}>
-                <TextInput {...this.props} />
+            <View style={this.props.contentContainerStyle}>
+                <TextInput ref="input" underlineColorAndroid="transparent" {...this.props}/>
             </View>
         );
     }

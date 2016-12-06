@@ -42,7 +42,7 @@ class Home extends React.Component {
             showToolbar: this.props.home.showToolbar,
             filterMounted: false,
             currentTab: 0,
-            tabForRefresh: false,
+            tabForRefresh: false
         }
     }
 

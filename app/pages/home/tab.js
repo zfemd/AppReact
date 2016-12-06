@@ -18,6 +18,10 @@ class TabBar extends React.Component {
     constructor(props) {
         super(props);
         this._setAnimationValue = this._setAnimationValue.bind(this);
+
+        this.state = {
+            cameraPressed: false
+        };
     }
 
 
@@ -73,6 +77,8 @@ class TabBar extends React.Component {
                 if(i !== 2) {
                     this.props.goToPage(i);
                 }else{
+                    if (this.state.cameraPressed) return;
+                    this.state.cameraPressed =  true;
                     const { navigator } = this.props;
                     this.props.cameraPress(navigator);
                 }

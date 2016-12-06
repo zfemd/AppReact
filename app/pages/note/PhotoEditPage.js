@@ -164,10 +164,6 @@ class PhotoEditPage extends Component {
         webviewbridge.sendToBridge(JSON.stringify({type:'changeTab', imageClickable: (args.i == 1)}));
     }
 
-    _onBrandInputFocus() {
-        this.showBrandModal(true);
-    }
-
     _onCurrencyInputFocus() {
         this.showCurrencyModal(true);
     }
@@ -195,7 +191,8 @@ class PhotoEditPage extends Component {
     }
 
     _onNationSelect(rowData) {
-        this.state.currentTag.nation = rowData.title;
+        console.log(rowData);
+        this.state.currentTag.nation = rowData.nation;
         this.showCurrencyModal(false);
     }
 
@@ -480,35 +477,36 @@ class PhotoEditPage extends Component {
                 {this.state.tagOverlayVisible ?
                     (<View style={[styles.overlay]}>
                         <View style={styles.formRow}>
-                            <FramedTextInput ref="categoryInput" value={this.state.currentTag.category} placeholder='品类' placeholderTextColor='#fff'
-                                             underlineColorAndroid="transparent" clearTextOnFocus={true}
-                                             enablesReturnKeyAutomatically={true} blurOnSubmit={true}
-                                             style={styles.textInput} containerStyle={styles.framedTextInput}
-                                             onFocus={()=> {this.showCategoryModal(true); this.refs.categoryInput.blur()}} />
+                            <FramedTextInput ref="categoryInput" placeholder='品类' placeholderTextColor='#fff'
+                                             clearTextOnFocus={true} enablesReturnKeyAutomatically={true} blurOnSubmit={true}
+                                             value={this.state.currentTag.category}
+                                             contentContainerStyle={styles.framedTextInput}
+                                             style={[styles.textInput, {color: '#fff'}]}
+                                             onFocus={() => {this.showCategoryModal(true); this.refs.categoryInput.blur()}} />
                             <FramedTextInput ref="brandInput" value={this.state.currentTag.brand} placeholder='品牌' placeholderTextColor='#fff'
-                                             underlineColorAndroid="transparent" clearTextOnFocus={true}
-                                             enablesReturnKeyAutomatically={true} blurOnSubmit={true}
-                                             containerStyle={styles.framedTextInput} style={styles.textInput}
-                                             onFocus={() => {this._onBrandInputFocus(); this.refs.brandInput.blur();}} />
+                                             clearTextOnFocus={true} enablesReturnKeyAutomatically={true} blurOnSubmit={true}
+                                             contentContainerStyle={styles.framedTextInput} style={[styles.textInput, {color: '#fff'}]}
+                                             onFocus={() => {this.showBrandModal(true);; this.refs.brandInput.blur();}} />
                         </View>
                         <View style={styles.formRow}>
-                            <FramedTextInput placeholder="名称" placeholderTextColor='#fff' autoCapitalize='none'
-                                             underlineColorAndroid="transparent" clearTextOnFocus={true}
-                                             containerStyle={styles.framedTextInput} style={styles.textInput}
+                            <FramedTextInput placeholder="名称" placeholderTextColor='#fff' clearTextOnFocus={true}
+                                             contentContainerStyle={styles.framedTextInput}
+                                             style={[styles.textInput, {color: '#fff'}]}
                                              onSubmitEditing={(event) => {this.state.currentTag.name = event.nativeEvent.text;}} />
-                            <FramedTextInput placeholder='价格' placeholderTextColor='#fff'
-                                             underlineColorAndroid="transparent" clearTextOnFocus={true}
-                                             containerStyle={styles.framedTextInput} style={styles.textInput}
+                            <FramedTextInput placeholder='价格' placeholderTextColor='#fff' clearTextOnFocus={true}
+                                             keyboardType='numeric'
+                                             contentContainerStyle={styles.framedTextInput} style={[styles.textInput, {color: '#fff'}]}
                                              onSubmitEditing={(event) => {this.state.currentTag.price = event.nativeEvent.text;}}/>
                         </View>
                         <View style={styles.formRow}>
-                            <FramedTextInput value={this.state.currentTag.nation} placeholder='国家' placeholderTextColor='#fff'
-                                             underlineColorAndroid="transparent" clearTextOnFocus={true}
-                                             containerStyle={styles.framedTextInput} style={styles.textInput}
-                                             style={styles.textInput} onFocus={this._onNationInputFocus.bind(this)} />
-                            <FramedTextInput placeholder='具体地点' placeholderTextColor='#fff'
-                                             underlineColorAndroid="transparent" clearTextOnFocus={true}
-                                             containerStyle={styles.framedTextInput} style={styles.textInput}
+                            <FramedTextInput ref="nationInput" placeholder='国家/城市' placeholderTextColor='#fff'
+                                             clearTextOnFocus={true} contentContainerStyle={styles.framedTextInput}
+                                             style={[styles.textInput, {color: '#fff'}]}
+                                             value={this.state.currentTag.nation}
+                                             onFocus={() => {this.showNationModal(true); this.refs.nationInput.blur();}} />
+                            <FramedTextInput placeholder='具体地点' placeholderTextColor='#fff' clearTextOnFocus={true}
+                                             contentContainerStyle={styles.framedTextInput}
+                                             style={[styles.textInput, {color: '#fff'}]}
                                              onSubmitEditing={(event) => {this.state.currentTag.address = event.nativeEvent.text;}}/>
                         </View>
                         <View style={{marginHorizontal: 20}}>

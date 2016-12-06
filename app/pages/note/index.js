@@ -6,6 +6,7 @@ import {
     CameraRoll,
     Dimensions,
     Image,
+    InteractionManager,
     Navigator,
     Platform,
     StyleSheet,
@@ -29,7 +30,8 @@ class SelectPhotoPage extends Component {
         super(props);
 
         this.state = {
-            selectedPhoto: {}
+            selectedPhoto: {},
+            continuePressed: false
         };
 
         this.cameraOptions = {
@@ -112,15 +114,21 @@ class SelectPhotoPage extends Component {
     _onContinue() {
         const { navigator, dispatch } = this.props;
 
-        dispatch({type:StoreActions.ADD_NOTE_PHOTO, photo: this.state.selectedPhoto});
+        if (!this.state.continuePressed) {
+            dispatch({type:StoreActions.ADD_NOTE_PHOTO, photo: this.state.selectedPhoto});
 
-        if(navigator) {
-            navigator.push({
-                name: 'PhotoEditPage',
-                component: PhotoEditPage,
-                params: {photo:this.state.selectedPhoto}
-            })
+            InteractionManager.runAfterInteractions(() => {
+                if(navigator) {
+                    navigator.push({
+                        name: 'PhotoEditPage',
+                        component: PhotoEditPage,
+                        params: {photo:this.state.selectedPhoto}
+                    })
+                }
+            });
         }
+
+        this.state.continuePressed = true;
     }
 
     componentDidMount() {

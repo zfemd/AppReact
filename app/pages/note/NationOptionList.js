@@ -24,18 +24,13 @@ export default class NationOptionList extends Component {
         });
 
         this.state = {
-            dataSource: ds
-        };
-
-        this.state.optionsProps = {
-            onSelect: props.onSelect || this._defaultOptionPress,
-            onCancel: props.onCancel,
-            onEditing: props.onEditing || this._defaultOnEditing,
-            renderRow: props.renderRow
+            dataSource: ds,
+            nation: null,
+            city: null
         };
     }
 
-    _defaultOnEditing (text) {
+    _defaultOnTextInput (text) {
         // fetch('https://mywebsite.com/endpoint/', {
         //     method: 'POST',
         //     headers: {
@@ -76,32 +71,47 @@ export default class NationOptionList extends Component {
         this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
     }
 
-    _defaultOptionPress() {
-        let source = {options:
-        {"beijing":{
-            title: '北京'
-        },"shanghai":{
-            title: '上海'
-        },"tianjing":{
-            title: '天津'
-        },"hangzhou":{
-            title: '杭州'
-        }, 'changsha': {
-            title: '长沙'
-        }, 'nanjing': {
-            title: '南京'
-        }, 'suzhou': {
-            title: '苏州'
-        }, 'hefei': {
-            title: '合肥'
-        }}};
+    _defaultOnSelect(rowData) {
+        if (this.state.nation == null) {
+            this.state.nation = rowData.title;
 
-        this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+            let source = {options:
+            {"beijing":{
+                title: '北京'
+            },"shanghai":{
+                title: '上海'
+            },"tianjing":{
+                title: '天津'
+            },"hangzhou":{
+                title: '杭州'
+            }, 'changsha': {
+                title: '长沙'
+            }, 'nanjing': {
+                title: '南京'
+            }, 'suzhou': {
+                title: '苏州'
+            }, 'hefei': {
+                title: '合肥'
+            }}};
+
+            this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+        } else {
+            if (this.props.onSelect) {
+                this.state.city = rowData.title;
+
+                let data = {
+                    nation: this.state.nation,
+                    city: this.state.city
+                };
+                this.props.onSelect(data);
+            }
+        }
     }
 
     render() {
         return (
-            <OptionList dataSource={this.state.dataSource} {...this.state.optionsProps} />
+            <OptionList dataSource={this.state.dataSource} onTextInput={this._defaultOnTextInput.bind(this)}
+                        {...this.props} onSelect={this._defaultOnSelect.bind(this)} />
         );
     }
 }
