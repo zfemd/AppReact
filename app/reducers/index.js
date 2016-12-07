@@ -10,6 +10,7 @@ import detail from './detail';
 import comments from './comments';
 import recommend from './recommend';
 import user from './user';
+import categories from './categories';
 
 const rootReducer = combineReducers({
     home,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
     detail,
     comments,
     recommend,
-    user
+    user,
+    categories
 });
 
 export default rootReducer;

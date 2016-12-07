@@ -25,7 +25,9 @@ export default keyMirror({
     PAGE_REFRESH: null,
     RECEIVE_USER_INFO: null,
     RECEIVE_USER_NOTES: null,
-    RECEIVE_MY_NOTES: null
+    RECEIVE_MY_NOTES: null,
+
+    FETCH_CATEGORIES:null
 });
 
 

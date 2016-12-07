@@ -6,8 +6,10 @@ import {
     ListView,
     StyleSheet
 } from 'react-native';
+import { connect } from 'react-redux';
 import OptionList from '../../components/optionlist';
 import configs from '../../constants/configs';
+import StoreActions from '../../constants/actions';
 
 export default class CategoryOptionList extends Component {
     constructor(props) {
@@ -29,27 +31,49 @@ export default class CategoryOptionList extends Component {
         };
     }
 
-    _defaultOnTextInput (text) {
-        console.log(text);
-        let source = {options:null};
-        fetch(configs.serviceUrl + 'common/commodity/categories/',  {
-            method: 'GET',
-            headers: {
-             'Accept': 'application/json',
-             'Content-Type': 'application/json'
-            }
-        }).then((response) => response.json())
-         .then((responseJson) => {
+    componentWillReceirveProps() {
+        const { dispatch } = this.props;
+        dispatch({type:StoreActions.FETCH_CATEGORIES});
+    }
+    
+    _defaultOnTextInput (event) {
+        let source = {options:{}};
+
+        if (this.props.categories && this.props.categories.length > 0) {
+            var reg = new RegExp("\w*" + event.nativeEvent.text + "\w*");
+            console.log(reg.toString());
+
+            let validCategories = this.props.categories.filter(function(category){
+                reg.test(category.name);
+            });
+
+            validCategories.forEach(function(category){
+                console.log(category);
+                source.options[category.id] = {title: category.name};
+            });
+
+            this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+        } else {
+            fetch(configs.serviceUrl + 'common/commodity/categories/',  {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then((response) => response.json())
+            .then((responseJson) => {
                 if (responseJson.resultValues && responseJson.resultValues.length > 0) {
+                    this.props.categories = responseJson.resultValues;
                     responseJson.resultValues.forEach(function(category){
                         source.options[category.id] = {title: category.name};
                     });
                 }
                 this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
-         })
-         .catch((error) => {
-             console.error(error);
-         });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        }
 
         //let source = {options:
         //{"option1":{
@@ -102,3 +126,13 @@ export default class CategoryOptionList extends Component {
         );
     }
 }
+
+// get selected photos from store.state object.
+function mapStateToProps(state) {
+    const { categories } = state;
+    return {
+        categories
+    };
+}
+
+export default connect(mapStateToProps)(CategoryOptionList);
