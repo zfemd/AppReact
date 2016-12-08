@@ -25,9 +25,15 @@ class OptionList extends React.Component {
         this._renderRow = this.props.renderRow || this._defaultRenderRow;
     }
 
-    _defaultTextInput(text) {
+    _defaultTextInput(event) {
         if (typeof this.props.onTextInput == 'function') {
-            this.props.onTextInput(text);
+            this.props.onTextInput(event.nativeEvent.text);
+        }
+    }
+
+    _defaultOnChangeText(text) {
+        if (typeof this.props.onChangeText == 'function') {
+            this.props.onChangeText(text);
         }
     }
 
@@ -68,14 +74,14 @@ class OptionList extends React.Component {
                         {searchIcon}
                         <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={true} style={styles.textInput}
                                    underlineColorAndroid="transparent" selectTextOnFocus={true}
-                                   onTextInput={(text) => this._defaultTextInput(text)} />
+                                   onChangeText={(text) => this._defaultOnChangeText(text)} />
                     </View>
                     <TouchableHighlight onPress={this._onCancel.bind(this)}>
                         <Text style={[styles.text, styles.cancelText]}>取消</Text>
                     </TouchableHighlight>
                 </View>
 
-                <ListView dataSource={this.props.dataSource} style={{flex:1}}
+                <ListView dataSource={this.props.dataSource} style={{flex:1}} enableEmptySections={true}
                           renderRow={this._renderRow.bind(this)}
                           renderScrollComponent={props => <ScrollView style={{flex:1}}/>}
                           renderSeparator={this._renderSeparator}/>

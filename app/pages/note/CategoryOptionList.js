@@ -27,7 +27,8 @@ export default class CategoryOptionList extends Component {
         });
 
         this.state = {
-            dataSource: ds
+            dataSource: ds,
+            categories: this.props.categories
         };
     }
 
@@ -35,24 +36,28 @@ export default class CategoryOptionList extends Component {
         const { dispatch } = this.props;
         dispatch({type:StoreActions.FETCH_CATEGORIES});
     }
-    
-    _defaultOnTextInput (event) {
+
+    _getValidCategories(text) {
         let source = {options:{}};
 
-        if (this.props.categories && this.props.categories.length > 0) {
-            var reg = new RegExp("\w*" + event.nativeEvent.text + "\w*");
-            console.log(reg.toString());
-
-            let validCategories = this.props.categories.filter(function(category){
-                reg.test(category.name);
+        if (this.state.categories && this.state.categories.length > 0) {
+            var reg = new RegExp("\\w*" + text + "\\w*");
+            let validCategories = this.state.categories.filter(function(category){
+                return reg.test(category.name);
             });
 
             validCategories.forEach(function(category){
-                console.log(category);
                 source.options[category.id] = {title: category.name};
             });
 
             this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+        }
+    }
+
+    _defaultOnChangeText (text) {
+        console.log(text);
+        if (this.state.categories && this.state.categories.length > 0) {
+            this._getValidCategories(text);
         } else {
             fetch(configs.serviceUrl + 'common/commodity/categories/',  {
                 method: 'GET',
@@ -63,66 +68,20 @@ export default class CategoryOptionList extends Component {
             }).then((response) => response.json())
             .then((responseJson) => {
                 if (responseJson.resultValues && responseJson.resultValues.length > 0) {
-                    this.props.categories = responseJson.resultValues;
-                    responseJson.resultValues.forEach(function(category){
-                        source.options[category.id] = {title: category.name};
-                    });
+                    this.state.categories = responseJson.resultValues;
+                    this._getValidCategories(text);
                 }
-                this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
             })
             .catch((error) => {
                 console.error(error);
             });
         }
 
-        //let source = {options:
-        //{"option1":{
-        //    title: '电子产品'
-        //},"option2":{
-        //    title: '服饰'
-        //},"option3":{
-        //    title: '办公用品'
-        //},"option4":{
-        //    title: '家具'
-        //},"option5":{
-        //    title: '鞋帽'
-        //},"option6":{
-        //    title: '电子产品'
-        //},"option7":{
-        //    title: '服饰'
-        //},"option8":{
-        //    title: '办公用品'
-        //},"option9":{
-        //    title: '家具'
-        //},"option10":{
-        //    title: '鞋帽'
-        //},"option11":{
-        //    title: '电子产品'
-        //},"option12":{
-        //    title: '服饰'
-        //},"option13":{
-        //    title: '办公用品'
-        //},"option14":{
-        //    title: '家具'
-        //},"option15":{
-        //    title: '鞋帽'
-        //},"option16":{
-        //    title: '电子产品'
-        //},"option17":{
-        //    title: '服饰'
-        //},"option18":{
-        //    title: '办公用品'
-        //},"option19":{
-        //    title: '家具'
-        //},"option20":{
-        //    title: '鞋帽'
-        //}}};
-
     }
 
     render() {
         return (
-            <OptionList style={{flex:1}} dataSource={this.state.dataSource} onTextInput={this._defaultOnTextInput.bind(this)} {...this.props} />
+            <OptionList style={{flex:1}} dataSource={this.state.dataSource} onChangeText={this._defaultOnChangeText.bind(this)} {...this.props} />
         );
     }
 }
