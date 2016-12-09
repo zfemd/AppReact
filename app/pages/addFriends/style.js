@@ -62,11 +62,35 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         alignSelf: 'center'
     },
-    friendsList: {
+    listContainer: {
         marginTop: 10,
-        height: 350,
+        minHeight: height,
         backgroundColor: '#fff',
         justifyContent: 'center',
+    },
+    friendsList: {
+
+    },
+    friendsRow: {
+        backgroundColor: '#fff',
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingBottom: 15,
+        paddingTop: 10,
+        borderColor: 'rgba(155,155,155,0.1)',
+        borderBottomWidth: 1,
+        flex:1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    invite: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    name: {
+        flex: 1,
+        flexDirection: 'column',
+        marginLeft: 10
     },
     float: {
         position: 'absolute',
@@ -77,6 +101,9 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderColor: 'rgba(155,155,155,0.1)',
         justifyContent: 'center'
+    },
+    portrait: {
+        borderRadius: 17
     },
     floatText: {
         fontSize: 16,
