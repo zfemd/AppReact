@@ -70,7 +70,12 @@ class Friends extends React.Component {
                                     let obj = {
                                         name: list.givenName + ' ' + list.familyName,
                                         portrait: list.thumbnailPath,
-                                        phone: list.phoneNumbers[0].number
+                                        phone: list.phoneNumbers[0].number.replace(/\s/g, '')
+                                            .replace(/\(/g, '')
+                                            .replace(/\)/g, '')
+                                            .replace(/\-/g, ''),
+                                        hasRegistered: false,
+                                        hasBeFollowed: false
                                     };
                                     array.push(obj);
                                 });
@@ -80,17 +85,20 @@ class Friends extends React.Component {
                                     if (token) {
                                         let body = '';
                                         _.each(array, (list)=> {
-                                            body += 'mobiles=' + list.phone.replace(/\s/g, '')
-                                                    .replace(/\(/g, '')
-                                                    .replace(/\)/g, '')
-                                                    .replace(/\-/g, '')
-                                                + '&';
+                                            body += 'mobiles=' + list.phone + '&';
                                         });
                                         //body = 'mobiles=' + body;
                                         request('/user/mobile-contacts/status?' + body, 'GET', '', token)
                                             .then((res) => {
                                                 if (res.resultCode === 0) {
-                                                    resolve(res)
+                                                    _.each(res, (list)=> {
+                                                        let contact = _.find(array, {phone: list.mobileNumber});
+                                                        if (list.userId > 0)
+                                                            contact.hasRegistered = true;
+                                                        if (list.hasBeFollowed)
+                                                            contact.hasBeFollowed = true;
+                                                    });
+                                                    resolve(array)
                                                 }
                                             }, function (error) {
                                                 console.log(error);
@@ -112,22 +120,29 @@ class Friends extends React.Component {
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
-        return (
-            <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
-                <View>
-                    <View style={styles.friendsRow}>
-                        <Image style={styles.portrait}
-                               source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
-                        <View style={styles.name}>
-                            <Text>{rowData.name}</Text>
-                        </View>
-                        <View style={styles.invite}>
-                            <Image source={require('../../assets/invite/invite.png')}></Image>
+        if (!rowData.hasBeFollowed)
+            return (
+                <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
+                    <View>
+                        <View style={styles.friendsRow}>
+                            <Image style={styles.portrait}
+                                   source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
+                            <View style={styles.name}>
+                                <Text>{rowData.name}</Text>
+                            </View>
+                            <View style={styles.invite}>
+                                {
+                                    rowData.hasRegistered ?
+                                        <Image source={require('../../assets/invite/follow.png')}></Image>
+                                        :
+                                        <Image source={require('../../assets/invite/invite.png')}></Image>
+
+                                }
+                            </View>
                         </View>
                     </View>
-                </View>
-            </TouchableOpacity>
-        )
+                </TouchableOpacity>
+            )
     }
 
     render() {
