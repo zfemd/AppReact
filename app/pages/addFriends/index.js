@@ -95,7 +95,7 @@ class Friends extends React.Component {
                                                         let contact = _.find(array, {phone: list.mobileNumber});
                                                         if (list.userId > 0)
                                                             contact.hasRegistered = true;
-                                                        if (list.hasBeFollowed)
+                                                        if (list.isFollowing)
                                                             contact.hasBeFollowed = true;
                                                     });
                                                     resolve(array)
