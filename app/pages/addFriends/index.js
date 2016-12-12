@@ -14,7 +14,7 @@ import styles from './style';
 import Toolbar from '../../components/toolbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImageButton from '../../components/toolbar/ImageButton.js';
-import { naviGoBack, Token ,request } from '../../utils/common';
+import { naviGoBack, Token ,request, toast, follow } from '../../utils/common';
 import Contacts from 'react-native-contacts';
 import images from '../../constants/images';
 import _ from 'lodash';
@@ -23,12 +23,15 @@ var backImg = require('../../assets/upload/rg_left.png');
 class Friends extends React.Component {
     constructor(props) {
         super(props);
+        this._renderRow = this._renderRow.bind(this);
+        this._invite = this._invite.bind(this);
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             trueSwitchIsOn: true,
-            dataSource: this.ds.cloneWithRows([])
-
+            dataSource: this.ds.cloneWithRows([]),
+            token: null,
+            contacts: []
         };
     }
 
@@ -83,6 +86,7 @@ class Friends extends React.Component {
 
                                 Token.getToken(navigator).then((token) => {
                                     if (token) {
+                                        the.setState({token: token})
                                         let body = '';
                                         _.each(array, (list)=> {
                                             body += 'mobiles=' + list.phone + '&';
@@ -92,7 +96,8 @@ class Friends extends React.Component {
                                             .then((res) => {
                                                 if (res.resultCode === 0) {
                                                     _.each(res.resultValues, (list)=> {
-                                                        let contact = _.find(array, {phone: list.mobile+''});
+                                                        let contact = _.find(array, {phone: list.mobile + ''});
+                                                        contact.userId = list.userId;
                                                         if (list.userId > 0)
                                                             contact.hasRegistered = true;
                                                         if (list.isFollowing)
@@ -114,6 +119,7 @@ class Friends extends React.Component {
                     });
             }).then((res)=> {
                 the.setState({dataSource: the.ds.cloneWithRows(res)});
+                the.setState({contacts: res});
             });
 
 
@@ -133,16 +139,64 @@ class Friends extends React.Component {
                             <View style={styles.invite}>
                                 {
                                     rowData.hasRegistered ?
-                                        <Image source={require('../../assets/invite/follow.png')}></Image>
+                                        <TouchableOpacity onPress={()=>this._follow(rowData.userId)}>
+                                            <Image source={require('../../assets/invite/follow.png')}></Image>
+                                        </TouchableOpacity>
                                         :
-                                        <Image source={require('../../assets/invite/invite.png')}></Image>
+                                        <TouchableOpacity onPress={()=>this._invite(rowData.phone)}>
+                                            <Image source={require('../../assets/invite/invite.png')}></Image>
+                                        </TouchableOpacity>
 
                                 }
                             </View>
                         </View>
                     </View>
                 </TouchableOpacity>
-            )
+            );
+        else
+            return null;
+    }
+
+    _invite(mobile) {
+        let body = '';
+        if (mobile) {
+            body = {
+                mobile: mobile
+            };
+            body = JSON.stringify(body);
+        }
+        else {
+            body = '{';
+            _.each(this.state.contacts, (list)=> {
+                if (!list.hasRegistered)
+                    body += '[mobile=' + list.phone + '],';
+            });
+            body += '}';
+        }
+
+        const token = this.state.token;
+        request('/user/invitations', 'POST', body, token)
+            .then((res) => {
+                if (res.resultCode === 0) {
+                    toast('邀请成功');
+                }
+            }, function (error) {
+                console.log(error);
+            })
+            .catch(() => {
+                console.log('network error');
+            });
+    }
+
+    _follow(userId) {
+        follow(userId, this.state.token).then((res) => {
+            toast('关注成功');
+            //let notes = _.filter(detail.note, {userId: userId});
+            //_.each(notes, function (note) {
+            //    note.isAuthorFollowedByVisitor = true;
+            //});
+            //this.setState({noteUpdated: true});
+        });
     }
 
     render() {
@@ -181,7 +235,7 @@ class Friends extends React.Component {
                         />
                 </View>
 
-                <TouchableOpacity style={styles.float}>
+                <TouchableOpacity style={styles.float} onPress={()=>this._invite()}>
                     <View >
                         <Text style={[styles.baseText,styles.floatText]}>
                             邀请所有人
