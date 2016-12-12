@@ -91,8 +91,8 @@ class Friends extends React.Component {
                                         request('/user/mobile-contacts/status?' + body, 'GET', '', token)
                                             .then((res) => {
                                                 if (res.resultCode === 0) {
-                                                    _.each(res, (list)=> {
-                                                        let contact = _.find(array, {phone: list.mobileNumber});
+                                                    _.each(res.resultValues, (list)=> {
+                                                        let contact = _.find(array, {phone: list.mobile+''});
                                                         if (list.userId > 0)
                                                             contact.hasRegistered = true;
                                                         if (list.isFollowing)

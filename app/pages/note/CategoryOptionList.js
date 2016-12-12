@@ -11,7 +11,7 @@ import OptionList from '../../components/optionlist';
 import configs from '../../constants/configs';
 import StoreActions from '../../constants/actions';
 
-export default class CategoryOptionList extends Component {
+class CategoryOptionList extends Component {
     constructor(props) {
         super(props);
 
