@@ -8,7 +8,9 @@ import {
     TextInput,
     Image,
     Switch,
-    ListView
+    ListView,
+    Dimensions,
+    Animated,
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -18,6 +20,7 @@ import { naviGoBack, Token ,request, toast, follow } from '../../utils/common';
 import Contacts from 'react-native-contacts';
 import images from '../../constants/images';
 import _ from 'lodash';
+const {height, width} = Dimensions.get('window');
 var backImg = require('../../assets/upload/rg_left.png');
 
 class Friends extends React.Component {
@@ -31,7 +34,9 @@ class Friends extends React.Component {
             trueSwitchIsOn: true,
             dataSource: this.ds.cloneWithRows([]),
             token: null,
-            contacts: []
+            contacts: [],
+            opacity: new Animated.Value(1),
+            toLeft: new Animated.Value(width)
         };
     }
 
@@ -40,6 +45,10 @@ class Friends extends React.Component {
         if (navigator) {
             naviGoBack(navigator);
         }
+    }
+
+    componentDidMount() {
+
     }
 
     componentWillMount() {
@@ -129,7 +138,7 @@ class Friends extends React.Component {
         if (!rowData.hasBeFollowed)
             return (
                 <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
-                    <View>
+                    <Animated.View style={{opacity: this.state.opacity}}>
                         <View style={styles.friendsRow}>
                             <Image style={styles.portrait}
                                    source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
@@ -150,7 +159,7 @@ class Friends extends React.Component {
                                 }
                             </View>
                         </View>
-                    </View>
+                    </Animated.View>
                 </TouchableOpacity>
             );
         else
@@ -158,6 +167,24 @@ class Friends extends React.Component {
     }
 
     _invite(mobile) {
+        Animated.sequence([
+            Animated.spring(
+                this.state.opacity,
+                {
+                    toValue: 0.1,
+                    friction: 1
+                }
+            ),
+            Animated.timing(
+                this.state.toLeft, {
+                    toValue: 0,
+                    friction: 1,
+                    duration: 500
+                }
+            )
+        ]).start();
+
+        return true;
         let body = '';
         if (mobile) {
             body = {
