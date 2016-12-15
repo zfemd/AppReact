@@ -115,6 +115,8 @@ class SelectPhotoPage extends Component {
         const { navigator, dispatch } = this.props;
 
         if (!this.state.continuePressed) {
+            this.state.continuePressed = true;
+
             dispatch({type:StoreActions.ADD_NOTE_PHOTO, photo: this.state.selectedPhoto});
 
             InteractionManager.runAfterInteractions(() => {
@@ -125,10 +127,9 @@ class SelectPhotoPage extends Component {
                         params: {photo:this.state.selectedPhoto}
                     })
                 }
+                this.state.continuePressed = false;
             });
         }
-
-        this.state.continuePressed = true;
     }
 
     componentDidMount() {

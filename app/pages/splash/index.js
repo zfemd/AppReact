@@ -31,6 +31,11 @@ class Splash extends React.Component {
                 name: 'Home',
                 params: {store: this.props.store}
             });
+            //navigator.resetTo({
+            //    component: LoginPage,
+            //    name: 'LoginPage',
+            //    params: {store: this.props.store}
+            //});
         });
 
         //this.timer = setTimeout(() => {

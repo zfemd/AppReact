@@ -7,6 +7,7 @@ import {
     StyleSheet
 } from 'react-native';
 import OptionList from '../../components/optionlist';
+import configs from '../../constants/configs';
 
 export default class BrandOptionList extends Component {
     constructor(props) {
@@ -28,44 +29,48 @@ export default class BrandOptionList extends Component {
         };
     }
 
-    _defaultOnTextInput (text) {
-        // fetch('https://mywebsite.com/endpoint/', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         firstParam: 'yourValue',
-        //         secondParam: 'yourOtherValue',
-        //     })
-        // }).then((response) => response.json())
-        //     .then((responseJson) => {
-        //         return responseJson.movies;
-        //     })
-        //     .catch((error) => {
-        //         console.error(error);
-        //     });
+    _defaultOnChangeText (text) {
+        let source = {options:{}};
 
-        let source = {options:
-        {"option1":{
-            title: '苹果'
-        },"option2":{
-            title: 'Dell'
-        },"option3":{
-            title: '美特斯邦威'
-        },"option4":{
-            title: '李宁'
-        },"option5":{
-            title: '特步'
-        }}};
+        fetch(configs.serviceUrl + 'common/commodity/brands',  {
+            method: 'GET',
+            headers: {
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+            }}
+        ).then(
+            (response) => response.json()
+        ).then((responseJson) => {
+                if (responseJson.resultValues && responseJson.resultValues.length > 0) {
+                    responseJson.resultValues.forEach(function (brand) {
+                        source.options[brand.id] = {title: brand.name};
+                    });
+                }
 
-        this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+                this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
+            }
+        ).catch((error) => {
+         console.error(error);
+        });
+        //
+        //let source = {options:
+        //{"option1":{
+        //    title: '苹果'
+        //},"option2":{
+        //    title: 'Dell'
+        //},"option3":{
+        //    title: '美特斯邦威'
+        //},"option4":{
+        //    title: '李宁'
+        //},"option5":{
+        //    title: '特步'
+        //}}};
+
     }
 
     render() {
         return (
-            <OptionList dataSource={this.state.dataSource} onTextInput={this._defaultOnTextInput.bind(this)}
+            <OptionList dataSource={this.state.dataSource} onChangeText={this._defaultOnChangeText.bind(this)}
                         style={{flex:1}}  {...this.props} />
         );
     }
