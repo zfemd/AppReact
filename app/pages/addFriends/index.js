@@ -5,6 +5,7 @@ import {
     View,
     Text,
     TouchableOpacity,
+    TouchableHighlight,
     TextInput,
     Image,
     Switch,
@@ -35,8 +36,9 @@ class Friends extends React.Component {
             dataSource: this.ds.cloneWithRows([]),
             token: null,
             contacts: [],
-            opacity: new Animated.Value(1),
-            toLeft: new Animated.Value(width)
+            opacity: {},
+            toLeft: {},
+            height: {}
         };
     }
 
@@ -130,15 +132,20 @@ class Friends extends React.Component {
                 the.setState({dataSource: the.ds.cloneWithRows(res)});
                 the.setState({contacts: res});
             });
-
-
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
-        if (!rowData.hasBeFollowed)
+        if (!rowData.hasBeFollowed) {
+            this.state.opacity[rowData.phone] = new Animated.Value(1);
+            this.state.toLeft[rowData.phone] = new Animated.Value(0);
+            this.state.height[rowData.phone] = new Animated.Value(50);
+
             return (
                 <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
-                    <Animated.View style={{opacity: this.state.opacity}}>
+                    <Animated.View
+                        style={{opacity: this.state.opacity[rowData.phone],
+                                left: this.state.toLeft[rowData.phone],
+                                height: this.state.height[rowData.phone]}}>
                         <View style={styles.friendsRow}>
                             <Image style={styles.portrait}
                                    source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
@@ -148,13 +155,15 @@ class Friends extends React.Component {
                             <View style={styles.invite}>
                                 {
                                     rowData.hasRegistered ?
-                                        <TouchableOpacity onPress={()=>this._follow(rowData.userId)}>
+                                        <TouchableHighlight onPress={()=>this._follow(rowData.userId)}
+                                                            style={styles.button}>
                                             <Image source={require('../../assets/invite/follow.png')}></Image>
-                                        </TouchableOpacity>
+                                        </TouchableHighlight>
                                         :
-                                        <TouchableOpacity onPress={()=>this._invite(rowData.phone)}>
+                                        <TouchableHighlight onPress={()=>this._invite(rowData.phone)}
+                                                            style={styles.button}>
                                             <Image source={require('../../assets/invite/invite.png')}></Image>
-                                        </TouchableOpacity>
+                                        </TouchableHighlight>
 
                                 }
                             </View>
@@ -162,30 +171,46 @@ class Friends extends React.Component {
                     </Animated.View>
                 </TouchableOpacity>
             );
-        else
+        }
+        else {
             return null;
+        }
     }
 
-    _invite(mobile) {
+    _animation(mobile) {
         Animated.sequence([
-            Animated.spring(
-                this.state.opacity,
+            Animated.timing(
+                this.state.opacity[mobile],
                 {
                     toValue: 0.1,
-                    friction: 1
+                    friction: 1,
+                    duration: 400
                 }
             ),
             Animated.timing(
-                this.state.toLeft, {
+                this.state.toLeft[mobile],
+                {
+                    toValue: -width,
+                    friction: 1,
+                    duration: 300
+                }
+            ),
+            Animated.timing(
+                this.state.height[mobile],
+                {
                     toValue: 0,
                     friction: 1,
-                    duration: 500
+                    duration: 300
                 }
             )
         ]).start();
+    }
 
-        return true;
+    _invite(mobile) {
         let body = '';
+        let the = this;
+        const token = this.state.token;
+
         if (mobile) {
             body = {
                 mobile: mobile
@@ -201,11 +226,17 @@ class Friends extends React.Component {
             body += '}';
         }
 
-        const token = this.state.token;
         request('/user/invitations', 'POST', body, token)
             .then((res) => {
-                if (res.resultCode === 0) {
+                if (res.resultCode !== 0) {
                     toast('邀请成功');
+                    if (mobile) {
+                        the._animation(mobile);
+                    } else {
+                        _.each(the.state.contacts, (list)=> {
+                            the._animation(list.phone);
+                        });
+                    }
                 }
             }, function (error) {
                 console.log(error);

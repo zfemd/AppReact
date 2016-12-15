@@ -113,6 +113,9 @@ const styles = StyleSheet.create({
     trueSwitchIsOn: {
         alignSelf: 'center',
         right: 10,
+    },
+    button: {
+        borderRadius: 6
     }
 });
 
