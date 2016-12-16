@@ -30,6 +30,7 @@ class Friends extends React.Component {
         this._renderRow = this._renderRow.bind(this);
         this._invite = this._invite.bind(this);
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
+        this._filter = this._filter.bind(this);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             trueSwitchIsOn: true,
@@ -234,7 +235,7 @@ class Friends extends React.Component {
                         the._animation(mobile);
                     } else {
                         _.each(the.state.contacts, (list)=> {
-                            if(!list.hasRegistered)
+                            if (!list.hasRegistered)
                                 the._animation(list.phone);
                         });
                     }
@@ -262,6 +263,17 @@ class Friends extends React.Component {
         });
     }
 
+    _filter(content) {
+        let contacts = [];
+        _.each(this.state.contacts, (list)=> {
+            const name = list.name;
+            if (name.indexOf(content.text) > -1) {
+                contacts.push(list);
+            }
+        });
+        this.setState({dataSource: this.ds.cloneWithRows(contacts)});
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -276,6 +288,7 @@ class Friends extends React.Component {
                         placeholder={'搜索通讯录好友'}
                         placeholderTextColor='#bebebe'
                         multiline={false}
+                        onChangeText={(text) => this._filter({text})}
                         />
                     <Image style={styles.magnifier} source={require('../../assets/invite/search.png')}/>
                 </View>
