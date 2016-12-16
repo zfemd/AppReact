@@ -155,7 +155,7 @@ class Friends extends React.Component {
                             <View style={styles.invite}>
                                 {
                                     rowData.hasRegistered ?
-                                        <TouchableHighlight onPress={()=>this._follow(rowData.userId)}
+                                        <TouchableHighlight onPress={()=>this._follow(rowData)}
                                                             style={styles.button}>
                                             <Image source={require('../../assets/invite/follow.png')}></Image>
                                         </TouchableHighlight>
@@ -234,7 +234,8 @@ class Friends extends React.Component {
                         the._animation(mobile);
                     } else {
                         _.each(the.state.contacts, (list)=> {
-                            the._animation(list.phone);
+                            if(!list.hasRegistered)
+                                the._animation(list.phone);
                         });
                     }
                 }
@@ -246,9 +247,13 @@ class Friends extends React.Component {
             });
     }
 
-    _follow(userId) {
+    _follow(rowData) {
+        const userId = rowData.userId;
+        const mobile = rowData.phone;
         follow(userId, this.state.token).then((res) => {
             toast('关注成功');
+            this._animation(mobile);
+
             //let notes = _.filter(detail.note, {userId: userId});
             //_.each(notes, function (note) {
             //    note.isAuthorFollowedByVisitor = true;
