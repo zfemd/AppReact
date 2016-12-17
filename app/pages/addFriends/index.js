@@ -12,6 +12,8 @@ import {
     ListView,
     Dimensions,
     Animated,
+    InteractionManager,
+    Navigator
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -20,6 +22,7 @@ import ImageButton from '../../components/toolbar/ImageButton.js';
 import { naviGoBack, Token ,request, toast, follow } from '../../utils/common';
 import Contacts from 'react-native-contacts';
 import images from '../../constants/images';
+import UserPage from '../../pages/user';
 import _ from 'lodash';
 const {height, width} = Dimensions.get('window');
 var backImg = require('../../assets/upload/rg_left.png');
@@ -148,11 +151,19 @@ class Friends extends React.Component {
                                 left: this.state.toLeft[rowData.phone],
                                 height: this.state.height[rowData.phone]}}>
                         <View style={styles.friendsRow}>
-                            <Image style={styles.portrait}
-                                   source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
-                            <View style={styles.name}>
-                                <Text>{rowData.name}</Text>
+                            <View style={{flex:1}}>
+                                <TouchableOpacity
+                                    style={{flex:1,flexDirection: 'row'}}
+                                    onPress={() => this._jumpToUserPage(rowData.userId)}
+                                    >
+                                    <Image style={styles.portrait}
+                                           source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
+                                    <View style={styles.name}>
+                                        <Text>{rowData.name}</Text>
+                                    </View>
+                                </TouchableOpacity>
                             </View>
+
                             <View style={styles.invite}>
                                 {
                                     rowData.hasRegistered ?
@@ -272,6 +283,23 @@ class Friends extends React.Component {
             }
         });
         this.setState({dataSource: this.ds.cloneWithRows(contacts)});
+    }
+
+    _jumpToUserPage(userId) {
+        if(userId <= 0)
+            return null;
+        const { navigator } = this.props;
+        const token = this.state.token;
+        if (token) {
+            InteractionManager.runAfterInteractions(() => {
+                navigator.push({
+                    component: UserPage,
+                    name: 'UserPage',
+                    sceneConfigs: Navigator.SceneConfigs.FloatFromRight,
+                    userId: userId
+                });
+            });
+        }
     }
 
     render() {

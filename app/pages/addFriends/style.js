@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         paddingBottom: 15,
-        paddingTop: 10,
+        paddingTop: 15,
         borderColor: 'rgba(155,155,155,0.1)',
         borderBottomWidth: 1,
         flex:1,
@@ -85,12 +85,14 @@ const styles = StyleSheet.create({
     },
     invite: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     name: {
         flex: 1,
         flexDirection: 'column',
-        marginLeft: 10
+        marginLeft: 10,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
     },
     float: {
         position: 'absolute',
@@ -103,7 +105,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     portrait: {
-        borderRadius: 17
+        borderRadius: 17,
+        alignSelf: 'center'
     },
     floatText: {
         fontSize: 16,
@@ -115,7 +118,8 @@ const styles = StyleSheet.create({
         right: 10,
     },
     button: {
-        borderRadius: 6
+        borderRadius: 6,
+        height: 25
     }
 });
 
