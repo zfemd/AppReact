@@ -140,12 +140,13 @@ let _scrollView =  ScrollView;
 const styles = StyleSheet.create({
     tabView: {
         width: width,
+        height: 38
     },
     tab: {
         flex: 1,
         alignItems: 'center',
         paddingTop: 4,
-        paddingBottom: 10,
+        paddingBottom: 38,
         //marginRight: 10
     },
     tabs: {
@@ -161,6 +162,7 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         minWidth: 10,
+        height: 38,
         textAlign: 'center'
     },
     arrow: {
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: arrowWidth,
         height: arrowWidth,
-        marginTop: -arrowWidth,
+        marginTop: 0,
         right: 0,
         alignItems: 'center',
         justifyContent: 'center'

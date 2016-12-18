@@ -48,16 +48,20 @@ const styles = StyleSheet.create({
     info: {
         marginLeft: 5,
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: 'column',
     },
     nick: {
         fontSize: 16,
         lineHeight: 16,
+        height: 16,
+        width: width-150,
         color: '#4a4a4a',
     },
     date: {
         fontSize: 11,
         lineHeight: 11,
+        height: 11,
+        width: width-150,
         marginTop: 5,
         color: '#9b9b9b',
     },
@@ -128,6 +132,7 @@ const styles = StyleSheet.create({
     },
     floatOpText: {
         lineHeight: 27,
+        alignSelf: 'center',
         paddingLeft: 5,
         color: '#9b9b9b'
     },
