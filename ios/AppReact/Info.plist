@@ -37,6 +37,10 @@
 	<string></string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<true/>
+	<key>NSMainNibFile</key>
+	<string>LaunchScreen</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>此应用需要您的同意才能读取媒体资料库</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
