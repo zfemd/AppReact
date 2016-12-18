@@ -17,7 +17,7 @@ import {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        backgroundColor: '#222',
+        backgroundColor: '#ddd',
         overflow: 'hidden'
     },
     image: {
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     sequences: {
         height: 20,
         width: 45,
-        marginTop: -30,
+        bottom: 20,
         position: 'absolute',
         right: 15,
         flex: 1,

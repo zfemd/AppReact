@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 15,
         paddingBottom: 0,
+        height: 50
     },
     portrait: {
         backgroundColor: '#d8d8d8',
@@ -46,6 +47,8 @@ const styles = StyleSheet.create({
     },
     info: {
         marginLeft: 5,
+        flex: 1,
+        flexDirection: 'row',
     },
     nick: {
         fontSize: 16,
@@ -64,7 +67,7 @@ const styles = StyleSheet.create({
         top: 14,
     },
     thumbWarp: {
-        marginTop: 10,
+        marginTop: 45,
         //flexDirection: 'row',
         //overflow: 'visible',
         //flexWrap: 'nowrap',
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
     floatOpLine: {
         flex: 1,
         height: 20,
-        width: 1.5,
+        //width: 1.5,
         backgroundColor: 'rgba(155,155,155,0.4)',
         marginTop: 8,
     },
@@ -192,6 +195,7 @@ const styles = StyleSheet.create({
     commentContent: {
         color: '#4a4a4a',
         fontSize: 13,
+        maxWidth: width/2-110
     },
     recommendByUser: {
         padding: 15
@@ -267,7 +271,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.5)',
         height: 22,
-        marginTop: -22,
+        marginTop: 98,
+        marginLeft: 3,
         width: width/3-5,
         position: 'absolute'
     },

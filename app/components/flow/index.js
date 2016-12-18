@@ -229,8 +229,8 @@ class Flow extends React.Component {
                                     />
                             </View>
                         </TouchableOpacity>
-                        <View>
-                            <Text style={[styles.text,styles.title]} numberOfLines={2} lineBreakMode='tail'>
+                        <View style={styles.title}>
+                            <Text style={styles.text} numberOfLines={2} lineBreakMode='tail'>
                                 {val.title}
                             </Text>
                         </View>

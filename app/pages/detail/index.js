@@ -315,7 +315,7 @@ class Detail extends React.Component {
                                     return (
                                         <View key={key} style={styles.commentList}>
                                             <Text style={styles.NickName} lineBreakMode={"tail"}
-                                                  numberOfLines={1}>{val.authorNickname}</Text>
+                                                  >{val.authorNickname}</Text>
                                             <Text>：</Text>
                                             <Text style={styles.commentContent} lineBreakMode={'tail'}
                                                   numberOfLines={1}>{val.comment}</Text>
