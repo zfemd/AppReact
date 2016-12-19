@@ -18,7 +18,9 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     selectedPhotoContainer: {
-        backgroundColor: colors.black
+        backgroundColor: colors.black,
+        flexDirection: 'row',
+        height:300
     },
     tabView: {
         justifyContent: 'center',
