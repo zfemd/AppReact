@@ -64,7 +64,7 @@ class Toolbar extends React.Component {
     }
 
     _onArrowClicked() {
-        if(!this.props.hideDrop){
+        if (!this.props.hideDrop) {
             //this.props.home.showFilter = !this.props.home.showFilter;
             this.props.showFilter();
         }
@@ -85,9 +85,10 @@ class Toolbar extends React.Component {
                     source={this.props.leftImg ? this.props.leftImg : backImg}
                     style={styles.leftIOS}
                     onPress={this._onLeftIconClicked}
+                    containerStyle={styles.leftIOSContainer}
                     />
 
-                <View style={styles.titleViewIOS} >
+                <View style={styles.titleViewIOS}>
                     <TouchableOpacity style={styles.titleViewIOSClick} onPress={this._onTitleClicked}>
                         <Text
                             style={styles.titleIOS}
@@ -95,7 +96,7 @@ class Toolbar extends React.Component {
                             {this.props.title}
                         </Text>
                         {
-                            !this.props.hideDrop?
+                            !this.props.hideDrop ?
                                 <ImageButton
                                     source={arrowImg}
                                     onPress={this._onTitleClicked}
@@ -109,11 +110,13 @@ class Toolbar extends React.Component {
                 {
                     this.props.rightText ?
                         (
-                            <TouchableOpacity style={[styles.rightIOS,styles.rightText]} onPress={this._onRightIconClicked}>
+                            <TouchableOpacity style={[styles.rightIOS,styles.rightText]}
+                                              onPress={this._onRightIconClicked}>
                                 <Text >{this.props.rightText}</Text>
                             </TouchableOpacity>
                         )
-                        : (<ImageButton source={this.props.rightImg} style={styles.rightIOS} onPress={this._onRightIconClicked} />)
+                        : (<ImageButton source={this.props.rightImg} style={styles.rightIOS}
+                                        onPress={this._onRightIconClicked}/>)
                 }
 
             </View>
@@ -151,6 +154,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
     },
+    leftIOSContainer: {
+        width: 30,
+        height: 35,
+        justifyContent: 'center',
+    },
     leftIOS: {
         //height: 18,
         //width: 24,
@@ -177,7 +185,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
     },
-    titleViewIOSClick:{
+    titleViewIOSClick: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
