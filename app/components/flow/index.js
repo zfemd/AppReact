@@ -266,9 +266,9 @@ class Flow extends React.Component {
 
                                 <Text style={styles.interText}>{val.likeCount}</Text>
                             </View>
-                            <View style={styles.like}>
+                            <View style={[styles.like,styles.comment]}>
                                 <Image source={require('../../assets/flow/comment.png')}/>
-                                <Text style={styles.interText}>{val.commentCount}</Text>
+                                <Text style={[styles.interText,styles.commentInterText]}>{val.commentCount}</Text>
                             </View>
                         </View>
                     </View>
@@ -481,7 +481,7 @@ var styles = StyleSheet.create({
         borderTopWidth: .6,
         paddingTop: 6,
         marginBottom: 10,
-        borderColor: '#9b9b9b',
+        borderColor: '#cecece',
     },
     star: {
         flexDirection: 'row',
@@ -489,15 +489,21 @@ var styles = StyleSheet.create({
     },
     like: {
         flexDirection: 'row',
-    },
-    comment: {
-        flexDirection: 'row',
+        minWidth: 24
     },
     interText: {
         fontSize: 7,
         paddingLeft: 4,
-        paddingRight: 4,
+        marginRight: 8,
+        width: 10,
+        height: 10,
         color: '#9b9b9b'
+    },
+    comment: {
+        flexDirection: 'row',
+    },
+    commentInterText: {
+        marginRight: 0,
     },
     center: {
         alignItems: 'center'
@@ -527,7 +533,7 @@ var styles = StyleSheet.create({
         height: 20
     },
     title: {
-        height: 28
+        height: 38
     },
     button: {
         height: 36,
