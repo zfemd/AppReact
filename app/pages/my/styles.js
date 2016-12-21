@@ -4,8 +4,10 @@
 import React from 'react-native'
 
 var {
-    StyleSheet
+    StyleSheet,
+    Dimensions
 } = React;
+var {height, width} = Dimensions.get('window');
 
 export default styles = StyleSheet.create({
     container: {
@@ -134,5 +136,32 @@ export default styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f1f1f1',
         marginTop: 20
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    },
+    modal: {
+        width: width * .6,
+        height: 80,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        borderRadius: 6,
+    },
+    op: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        width : width * .6,
+    },
+    line: {
+        borderBottomWidth: .6,
+        borderColor: '#cecece'
+    },
+    redText: {
+        color: 'red'
     }
 });
