@@ -81,6 +81,7 @@ class TabBar extends React.Component {
                     this.state.cameraPressed =  true;
                     const { navigator } = this.props;
                     this.props.cameraPress(navigator);
+                    this.state.cameraPressed = false;
                 }
             }
         });
