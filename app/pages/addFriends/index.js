@@ -225,22 +225,25 @@ class Friends extends React.Component {
 
         if (mobile) {
             body = {
-                mobile: mobile
+                mobiles: [mobile]
             };
             body = JSON.stringify(body);
         }
         else {
-            body = '{';
+            let mobiles = [];
             _.each(this.state.contacts, (list)=> {
                 if (!list.hasRegistered)
-                    body += '[mobile=' + list.phone + '],';
+                    mobiles.push(list.phone);
             });
-            body += '}';
+            body = {
+                mobiles: mobiles
+            };
+            body = JSON.stringify(body);
         }
 
         request('/user/invitations', 'POST', body, token)
             .then((res) => {
-                if (res.resultCode !== 0) {
+                if (res.resultCode === 0) {
                     toast('邀请成功');
                     if (mobile) {
                         the._animation(mobile);
