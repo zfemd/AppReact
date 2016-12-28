@@ -13,6 +13,8 @@ import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import cn.reactnative.httpcache.HttpCachePackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import com.react.taobaobaichuanapi.BaiChuanPackage;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new WebViewBridgePackage(),
                     new HttpCachePackage(),
                     new RNSpinkitPackage(),
-                    new ReactNativeContacts()
+                    new ReactNativeContacts(),
+                    new BaiChuanPackage()
             );
         }
     };
