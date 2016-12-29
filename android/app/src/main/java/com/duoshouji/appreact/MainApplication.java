@@ -14,7 +14,10 @@ import cn.reactnative.httpcache.HttpCachePackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.react.taobaobaichuanapi.BaiChuanPackage;
-
+import com.alibaba.baichuan.android.trade.AlibcTradeSDK;
+import com.alibaba.baichuan.android.trade.callback.AlibcTradeInitCallback;
+import com.alibaba.baichuan.android.trade.model.AlibcTaokeParams;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,5 +52,24 @@ public class MainApplication extends Application implements ReactApplication {
     public void onCreate() {
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
+
+        AlibcTradeSDK.asyncInit(this, new AlibcTradeInitCallback() {
+            @Override
+            public void onSuccess() {
+                //初始化成功，设置相关的全局配置参数
+                AlibcTradeSDK.setForceH5(false);
+                AlibcTaokeParams alibcTaokeParams = new AlibcTaokeParams(
+                        "pid", "", ""
+                );
+                AlibcTradeSDK.setTaokeParams(alibcTaokeParams);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+
+                //初始化失败，可以根据code和msg判断失败原因，详情参见错误说明
+                Log.e("", "onFailure: 初始化百川SDK失败\n原因:" + msg + "(" + code + ")");
+            }
+        });
     }
 }

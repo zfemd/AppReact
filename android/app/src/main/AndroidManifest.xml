@@ -27,7 +27,9 @@
       android:icon="@mipmap/ic_launcher"
       android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-      <activity
+        <meta-data android:value="23497643" android:name="com.alibaba.apmplus.app_key"></meta-data>
+
+        <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
