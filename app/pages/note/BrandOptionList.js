@@ -32,7 +32,7 @@ export default class BrandOptionList extends Component {
     _defaultOnChangeText (text) {
         let source = {options:{}};
 
-        fetch(configs.serviceUrl + 'common/commodity/brands',  {
+        fetch(configs.serviceUrl + 'common/commodity/brands?keyword=' + text,  {
             method: 'GET',
             headers: {
              'Accept': 'application/json',
