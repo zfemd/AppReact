@@ -209,7 +209,7 @@ class Flow extends React.Component {
                 <TouchableOpacity key={val.noteId} style={this._getChildrenStyle(height)}
                                   onPress={() => this._jumpToDetailPage(val)} underlayColor="transparent"
                                   activeOpacity={0.5}>
-                    <View>
+                    <View style={styles.boxContainer}>
                         <PrefetchImage
                             imageUri={image}
                             imageStyle={styles.thumb}
@@ -221,7 +221,8 @@ class Flow extends React.Component {
                             <Text style={styles.priceText}>￥100</Text>
                         </View>
                         <TouchableOpacity
-                            onPress={() => this._jumpToUserPage(val.authorId?val.authorId:13585979772)}>
+                            onPress={() => this._jumpToUserPage(val.authorId?val.authorId:13585979772)}
+                            style={[styles.portraitContainer,{marginTop: height-15}]}>
                             <View style={styles.portrait}>
                                 <Image
                                     source={{uri: val.portrait , width: 30, height: 30}}
@@ -257,10 +258,10 @@ class Flow extends React.Component {
                                 <TouchableOpacity onPress={()=> this._like(val.noteId,tag)}>
                                     <Icon
                                         name={'ios-heart'}
-                                        size={18}
+                                        size={24}
 
                                         color={ val.isLikedByVisitor?'#fc7d30':'#bebdbd'}
-                                        style={{marginTop : -4}}
+                                        style={{justifyContent: 'flex-start'}}
                                         />
                                 </TouchableOpacity>
 
@@ -428,14 +429,23 @@ var styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
         alignItems: 'flex-start',
     },
+    boxContainer:{
+        flexDirection: 'column',
+    },
     thumb: {
         width: (width / 100) * 47,
         height: 200,
         overflow: 'hidden',
+        zIndex: 1,
+
+    },
+    title: {
+        height: 28,
+        margin: 6,
+        marginTop: 24,
     },
     text: {
         flex: 1,
-        margin: 6,
         color: '#4a4a4a',
         fontSize: 11,
         lineHeight: 13,
@@ -445,13 +455,16 @@ var styles = StyleSheet.create({
         marginBottom: 50,
         flex: 1
     },
+    portraitContainer: {
+        zIndex: 10,
+        position: 'absolute',
+        right: 15
+    },
     portrait: {
         backgroundColor: '#d8d8d8',
         borderRadius: 30,
         borderColor: '#fff',
         borderWidth: 1.5,
-        marginTop: -15,
-        marginRight: 15,
         alignSelf: 'flex-end',
     },
     portraitImg: {
@@ -477,19 +490,20 @@ var styles = StyleSheet.create({
         flexDirection: 'row',
         alignSelf: 'center',
         width: (width / 100) * 47 - 20,
-        flex: 1,
         borderTopWidth: .6,
-        paddingTop: 6,
+        paddingTop: 2,
         marginBottom: 10,
         borderColor: '#cecece',
     },
     star: {
         flexDirection: 'row',
         flex: 1,
+        paddingTop: 6
     },
     like: {
         flexDirection: 'row',
-        minWidth: 24
+        minWidth: 24,
+        alignItems: 'center'
     },
     interText: {
         fontSize: 7,
@@ -531,9 +545,6 @@ var styles = StyleSheet.create({
     heart: {
         width: 20,
         height: 20
-    },
-    title: {
-        height: 38
     },
     button: {
         height: 36,
