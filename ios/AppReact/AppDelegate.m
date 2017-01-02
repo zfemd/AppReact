@@ -12,6 +12,7 @@
 #import "RCTPushNotificationManager.h"
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
+#import <ALBBSDK/ALBBSDK.h>
 
 @implementation AppDelegate
 
@@ -22,7 +23,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-
+    
+    [[ALBBSDK sharedInstance] setDebugLogOpen:NO]; // 打开debug日志
+    [[ALBBSDK sharedInstance] setUseTaobaoNativeDetail:YES]; // 优先使用手淘APP打开商品详情页面，如果没有安装手机淘宝，SDK会使用H5打开
+    [[ALBBSDK sharedInstance] setViewType:ALBB_ITEM_VIEWTYPE_TAOBAO];// 使用淘宝H5页面打开商品详情
+    [[ALBBSDK sharedInstance] setISVCode:@"my_isv_code"]; //设置全局的app标识，在电商模块里等同于isv_code
+    [[ALBBSDK sharedInstance] asyncInit:^{ // 基础SDK初始化
+        NSLog(@"init success");
+    } failure:^(NSError *error) {
+        NSLog(@"init failure, %@", error);
+    }];
+    
   [[RCTBundleURLProvider sharedSettings] setDefaults];
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 
@@ -86,4 +97,12 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 
 //****************** end for notifications   **********************
 
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
+    BOOL isHandled = [[ALBBSDK sharedInstance] handleOpenURL:url]; // 如果百川处理过会返回YES
+    if (!isHandled) {
+        // 其他处理逻辑
+    }
+    return YES;
+}
 @end
