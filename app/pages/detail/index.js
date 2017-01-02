@@ -27,7 +27,7 @@ import {fetchDetail} from '../../actions/detail';
 import {fetchCommentsList} from '../../actions/comments';
 import {fetchRecommendList} from '../../actions/recommend';
 import { connect } from 'react-redux';
-//import React_Native_Taobao_Baichuan_Api from 'react-native-taobao-baichuan-api';
+import React_Native_Taobao_Baichuan_Api from 'react-native-taobao-baichuan-api';
 import {Token, follow, timeFormat, like } from '../../utils/common';
 import _ from 'lodash';
 

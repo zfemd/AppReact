@@ -112,7 +112,7 @@ const ChannelTabBar = React.createClass({
 
         return (
             <View style={[styles.tabView, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
-                <View style={{width: width - arrowWidth}}>
+                <View style={{width: width - arrowWidth}} style={styles.scroll}>
                     <ScrollView
                         ref={(scrollView) => { _scrollView = scrollView; }}
                         contentContainerStyle={[styles.tabs, {width: tabsLength}]}
@@ -140,7 +140,11 @@ let _scrollView =  ScrollView;
 const styles = StyleSheet.create({
     tabView: {
         width: width,
-        height: 38
+        height: 38,
+        flexDirection: 'row',
+    },
+    scroll: {
+        width: width-arrowWidth
     },
     tab: {
         flex: 1,
@@ -166,6 +170,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     arrow: {
+        flex: 1,
         backgroundColor: '#fff',
         borderLeftWidth: 1,
         borderColor: '#f4f4f4',
@@ -175,7 +180,8 @@ const styles = StyleSheet.create({
         marginTop: 0,
         right: 0,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'row',
     }
 });
 
