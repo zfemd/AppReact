@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     leftIOSContainer: {
-        width: 30,
+        width: 40,
         height: 35,
         justifyContent: 'center',
     },

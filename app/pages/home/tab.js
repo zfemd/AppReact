@@ -4,7 +4,8 @@ import {
     View,
     TouchableOpacity,
     Navigator,
-    InteractionManager
+    InteractionManager,
+    Platform
 } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -97,7 +98,7 @@ class TabBar extends React.Component {
                         size={i===2 ? 44 : 26}
                         color={i===2 ? 'rgb(252, 125, 48)' : (this.props.activeTab === i ? 'rgb(252, 125, 48)' : 'rgb(155,155,155)')}
                         ref={(icon) => { tabIcons[i] = icon; }}
-                        style={i===2? {marginTop : 18}: ''}
+                        style={i===2&&Platform.OS === 'android'? {marginTop : 6}: (i===2?{marginTop : 18}:'')}
                         />
                     <Text
                         style={[styles.tabTitle, {color: (this.props.activeTab === i ? 'rgb(252, 125, 48)' : 'rgb(155,155,155)')}]}
