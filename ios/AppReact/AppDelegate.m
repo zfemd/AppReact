@@ -15,6 +15,10 @@
 
 @implementation AppDelegate
 
+/**
+ * This method comes from UIApplicationDelegate protocol. It's a optional method of that protocol.
+ * Support from IOS 3.0.
+ */
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
@@ -36,7 +40,9 @@
   return YES;
 }
 
-// Required to register for notifications
+//****************** Required to register for notifications   **********************
+
+// This callback will be made upon calling -[UIApplication registerUserNotificationSettings:]. The settings the user has granted to the application will be passed in as the second argument.
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
 	[RCTPushNotificationManager didRegisterUserNotificationSettings:notificationSettings];
@@ -77,5 +83,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
 	[RCTPushNotificationManager didReceiveLocalNotification:notification];
 }
+
+//****************** end for notifications   **********************
 
 @end
