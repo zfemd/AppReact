@@ -76,7 +76,7 @@ class Toolbar extends React.Component {
                 style={styles.toolbarAndroid}
                 navIcon={this.props.leftImg ? this.props.leftImg : backImg}
                 onIconClicked={this._onLeftIconClicked}
-                actions={[{title: 'Settings', icon: this.props.rightImg , show: 'always'}]}
+                actions={[{title: this.props.rightText, icon: this.props.rightImg  , show: 'always'}]}
                 onActionSelected={this._onRightIconClicked}
                 >
                 <View style={styles.titleAndroidV}>
@@ -213,23 +213,28 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 120,
-        height: 40
+        height: 48
     },
     toolbarAndroid: {
         backgroundColor: '#fff',
-        height: 56,
+        height: 48,
+        borderBottomWidth: 1,
+        borderColor: '#eee',
+        paddingBottom: 10,
+        marginTop: -8
     },
     titleViewAndroidClick: {
         flexDirection: 'row',
+        justifyContent: 'center',
         alignItems: 'center',
-        width: 120,
+        width: width -110,
         height: 56
     },
     titleAndroidV: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        height: 56,
+        height: 48,
     },
     titleAndroidT: {
         color: '#000',
