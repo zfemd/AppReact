@@ -195,7 +195,6 @@ export default class MyMessagesPage extends Component {
                 <ListView dataSource={this.state.dataSource}
                           renderSectionHeader={this._renderSectionHeader}
                           renderRow={this._renderMessage.bind(this)}
-                          renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
                           renderSeparator={this._renderSeparator}/>
 
             </View>

@@ -3,7 +3,6 @@
 import React, { PropTypes } from 'react';
 import {
     StyleSheet,
-    ToolbarAndroid,
     Platform,
     View,
     Text,
@@ -15,6 +14,7 @@ import { connect } from 'react-redux';
 import { naviGoBack } from '../../utils/common';
 import ImageButton from './ImageButton';
 import Button from './Button';
+import ToolbarAndroid from 'ToolbarAndroid';
 
 const arrowImg = require('../../assets/header/arrow.png');
 var backImg = require('../../assets/upload/rg_left.png');
@@ -73,8 +73,31 @@ class Toolbar extends React.Component {
     _renderToolbarAndroid() {
         return (
             <ToolbarAndroid
-                title={this.props.title}
-                />
+                style={styles.toolbarAndroid}
+                navIcon={this.props.leftImg ? this.props.leftImg : backImg}
+                onIconClicked={this._onLeftIconClicked}
+                actions={[{title: 'Settings', icon: this.props.rightImg , show: 'always'}]}
+                onActionSelected={this._onRightIconClicked}
+                >
+                <View style={styles.titleAndroidV}>
+                    <TouchableOpacity style={styles.titleViewAndroidClick} onPress={this._onTitleClicked}>
+                        <Text
+                            style={styles.titleIOS}
+                            >
+                            {this.props.title}
+                        </Text>
+                        {
+                            !this.props.hideDrop ?
+                                <ImageButton
+                                    source={arrowImg}
+                                    onPress={this._onTitleClicked}
+                                    style={styles.arrowIOS}
+                                    /> : <View/>
+                        }
+                    </TouchableOpacity>
+
+                </View>
+            </ToolbarAndroid>
         );
     }
 
@@ -126,7 +149,7 @@ class Toolbar extends React.Component {
 
     render() {
         let Toolbar = Platform.select({
-            android: () => this._renderToolbarIOS(),
+            android: () => this._renderToolbarAndroid(),
             ios: () => this._renderToolbarIOS()
         });
         return <Toolbar />;
@@ -191,6 +214,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: 120,
         height: 40
+    },
+    toolbarAndroid: {
+        backgroundColor: '#fff',
+        height: 56,
+    },
+    titleViewAndroidClick: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: 120,
+        height: 56
+    },
+    titleAndroidV: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 56,
+    },
+    titleAndroidT: {
+        color: '#000',
+        fontSize: 20
     }
 });
 

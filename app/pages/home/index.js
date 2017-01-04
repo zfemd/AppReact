@@ -27,9 +27,11 @@ import Channel from '../channel';
 import AddFriends from '../addFriends';
 import {showorHideFilter} from '../../actions/home';
 import {Token} from '../../utils/common';
+import HomeContainer from './homeContainer';
 
 const addImg = require('../../assets/header/add.png');
 const searchImg = require('../../assets/header/search.png');
+const settingImg = require('../../assets/personal/setting.png');
 
 class Home extends React.Component {
     constructor(props) {
@@ -100,7 +102,10 @@ class Home extends React.Component {
             },10)
         }
         if (data.i == 3 || data.i == 4) {
-            this.setState({showToolbar: false});
+            setTimeout(()=>{
+                this.setState({showToolbar: false});
+            },2000)
+
         } else {
             this.setState({showToolbar: true});
         }
@@ -134,17 +139,19 @@ class Home extends React.Component {
         return (
             <View style={[styles.container, Platform.OS === 'android' ? null : {marginTop: 21}]} visible='hidden'>
                 {
-                    this.state.showToolbar ? (
-                        <Toolbar
-                            title={this.props.home.isFollowed ? '关注的' : '剁手记'}
-                            navigator={navigator}
-                            showFilter={this._showFilter}
-                            leftImg={addImg}
-                            rightImg={searchImg}
-                            onLeftIconClicked={this._onLeftIconClicked}
-                            onRightIconClicked={this._onRightIconClicked}
-                            />
-                    ) : null
+
+                    //this.state.showToolbar ? (
+                    //    <Toolbar
+                    //        title={this.props.home.isFollowed ? '关注的' : '剁手记'}
+                    //        navigator={navigator}
+                    //        showFilter={this._showFilter}
+                    //        leftImg={addImg}
+                    //        rightImg={searchImg}
+                    //        onLeftIconClicked={this._onLeftIconClicked}
+                    //        onRightIconClicked={this._onRightIconClicked}
+                    //        hideDrop={this.state.showToolbar}
+                    //        />
+                    //) :null
                 }
 
                 <ScrollableTabView
@@ -156,9 +163,20 @@ class Home extends React.Component {
                     onChangeTab={this._onChangeTab.bind(this)}
                     locked={true}
                     >
-                    <Flow tabForRefresh={this.state.tabForRefresh} tag='all' navigator={this.props.navigator} dispatch={this.props.dispatch}  tabLabel="ios-home-outline" style={styles.tabView}/>
+                    <View tabLabel="ios-home-outline" style={styles.tabView}>
+                        <HomeContainer navigator={this.props.navigator} dispatch={this.props.dispatch}/>
+                        <Flow tabForRefresh={this.state.tabForRefresh}
+                              tag='all'
+                              navigator={this.props.navigator}
+                              dispatch={this.props.dispatch}
+                              />
+                    </View>
 
-                    <Channel navigator={this.props.navigator} tabLabel="ios-compass-outline" style={styles.tabView}></Channel>
+                    <View tabLabel="ios-compass-outline" style={styles.tabView}>
+                        <HomeContainer navigator={this.props.navigator} dispatch={this.props.dispatch}/>
+                        <Channel navigator={this.props.navigator} ></Channel>
+
+                    </View>
 
                     <ScrollView tabLabel="md-camera" style={styles.tabView}>
                     </ScrollView>

@@ -26,7 +26,7 @@ class MessagesPage extends Component {
         let { dispatch } = this.props;
         dispatch({type: StoreActions.HIDE_HOME_TOOLBAR});
     }
-    
+
     render() {
         let defaultName = 'MyMessagesPage';
         let defaultComponent = MyMessagesPage;
