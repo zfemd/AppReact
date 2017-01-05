@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         minHeight: height,
         backgroundColor: '#fff',
         justifyContent: 'center',
+        paddingBottom: 30
     },
     friendsList: {
 

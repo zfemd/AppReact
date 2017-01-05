@@ -86,15 +86,24 @@ class Friends extends React.Component {
                             } else {
                                 let array = [];
                                 _.each(contacts, (list)=> {
+                                    let phone = 0;
+                                    if(list.phoneNumbers.length === 0){
+                                       phone =  list.recordID;
+                                    } else {
+                                        phone = list.phoneNumbers[0].number;
+                                    }
+                                    phone = phone.replace(/\+86/g, '')
+                                        .replace(/\s/g, '')
+                                        .replace(/\(/g, '')
+                                        .replace(/\)/g, '')
+                                        .replace(/\-/g, '');
                                     let obj = {
                                         name: list.givenName || '' + ' ' + list.familyName || '',
                                         portrait: list.thumbnailPath,
-                                        phone: list.phoneNumbers[0].number.replace(/\s/g, '')
-                                            .replace(/\(/g, '')
-                                            .replace(/\)/g, '')
-                                            .replace(/\-/g, ''),
+                                        phone: phone,
                                         hasRegistered: false,
-                                        hasBeFollowed: false
+                                        hasBeFollowed: false,
+                                        userId: 0
                                     };
                                     array.push(obj);
                                 });
@@ -111,14 +120,19 @@ class Friends extends React.Component {
                                         request('/user/mobile-contacts/status?' + body, 'GET', '', token)
                                             .then((res) => {
                                                 if (res.resultCode === 0) {
-                                                    _.each(res.resultValues, (list)=> {
-                                                        let contact = _.find(array, {phone: list.mobile + ''});
-                                                        contact.userId = list.userId;
-                                                        if (list.userId > 0)
-                                                            contact.hasRegistered = true;
-                                                        if (list.isFollowing)
-                                                            contact.hasBeFollowed = true;
-                                                    });
+                                                    try{
+                                                        _.each(res.resultValues, (list)=> {
+                                                            let contact = _.find(array, {phone: list.mobile + ''});
+                                                            contact.userId = list.userId || 0;
+                                                            if (list.userId > 0)
+                                                                contact.hasRegistered = true;
+                                                            if (list.isFollowing)
+                                                                contact.hasBeFollowed = true;
+                                                        });
+                                                    }catch(error){
+                                                        console.log(error)
+                                                    }
+
                                                     resolve(array)
                                                 }
                                             }, function (error) {
@@ -161,6 +175,7 @@ class Friends extends React.Component {
                                            source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
                                     <View style={styles.name}>
                                         <Text>{rowData.name}</Text>
+                                        <Text>{rowData.phone}</Text>
                                     </View>
                                 </TouchableOpacity>
                             </View>
