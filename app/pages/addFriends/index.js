@@ -25,6 +25,8 @@ import Contacts from 'react-native-contacts';
 import images from '../../constants/images';
 import UserPage from '../../pages/user';
 import _ from 'lodash';
+import Spinner from 'react-native-spinkit';
+
 const {height, width} = Dimensions.get('window');
 var backImg = require('../../assets/upload/rg_left.png');
 
@@ -87,8 +89,8 @@ class Friends extends React.Component {
                                 let array = [];
                                 _.each(contacts, (list)=> {
                                     let phone = 0;
-                                    if(list.phoneNumbers.length === 0){
-                                       phone =  list.recordID;
+                                    if (list.phoneNumbers.length === 0) {
+                                        phone = list.recordID;
                                     } else {
                                         phone = list.phoneNumbers[0].number;
                                     }
@@ -120,7 +122,7 @@ class Friends extends React.Component {
                                         request('/user/mobile-contacts/status?' + body, 'GET', '', token)
                                             .then((res) => {
                                                 if (res.resultCode === 0) {
-                                                    try{
+                                                    try {
                                                         _.each(res.resultValues, (list)=> {
                                                             let contact = _.find(array, {phone: list.mobile + ''});
                                                             contact.userId = list.userId || 0;
@@ -129,7 +131,7 @@ class Friends extends React.Component {
                                                             if (list.isFollowing)
                                                                 contact.hasBeFollowed = true;
                                                         });
-                                                    }catch(error){
+                                                    } catch (error) {
                                                         console.log(error)
                                                     }
 
@@ -305,7 +307,7 @@ class Friends extends React.Component {
     }
 
     _jumpToUserPage(userId) {
-        if(userId <= 0)
+        if (userId <= 0)
             return null;
         const { navigator } = this.props;
         const token = this.state.token;
@@ -349,16 +351,24 @@ class Friends extends React.Component {
                         value={this.state.trueSwitchIsOn}
                         />
                 </View>
-                <View style={styles.listContainer}>
-                    <ListView
-                        contentContainerStyle={styles.friendsList}
-                        dataSource={this.state.dataSource}
-                        renderRow={this._renderRow}
-                        horizontal={false}
-                        showsVerticalScrollIndicator={false}
-                        enableEmptySections={true}
-                        />
-                </View>
+                {
+                    this.state.contacts.length === 0 ?
+                        <View style={{marginTop: 40,alignItems: 'center'}}>
+                            <Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt"
+                                     color={'#fc7d30'}/>
+                        </View>
+                        :
+                        <View style={styles.listContainer}>
+                            <ListView
+                                contentContainerStyle={styles.friendsList}
+                                dataSource={this.state.dataSource}
+                                renderRow={this._renderRow}
+                                horizontal={false}
+                                showsVerticalScrollIndicator={false}
+                                enableEmptySections={true}
+                                />
+                        </View>
+                }
 
                 <TouchableOpacity style={styles.float} onPress={()=>this._invite()}>
                     <View >
