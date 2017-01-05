@@ -86,7 +86,7 @@ class Friends extends React.Component {
                                 let array = [];
                                 _.each(contacts, (list)=> {
                                     let obj = {
-                                        name: list.givenName + ' ' + list.familyName,
+                                        name: list.givenName || '' + ' ' + list.familyName || '',
                                         portrait: list.thumbnailPath,
                                         phone: list.phoneNumbers[0].number.replace(/\s/g, '')
                                             .replace(/\(/g, '')
@@ -101,7 +101,7 @@ class Friends extends React.Component {
 
                                 Token.getToken(navigator).then((token) => {
                                     if (token) {
-                                        the.setState({token: token})
+                                        the.setState({token: token});
                                         let body = '';
                                         _.each(array, (list)=> {
                                             body += 'mobiles=' + list.phone + '&';
@@ -319,6 +319,8 @@ class Friends extends React.Component {
                         placeholder={'搜索通讯录好友'}
                         placeholderTextColor='#bebebe'
                         multiline={false}
+                        underlineColorAndroid='transparent'
+                        returnKeyType='go'
                         onChangeText={(text) => this._filter({text})}
                         />
                     <Image style={styles.magnifier} source={require('../../assets/invite/search.png')}/>

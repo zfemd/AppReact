@@ -40,6 +40,9 @@ const styles = StyleSheet.create({
         lineHeight: 24,
         borderWidth: 0,
         backgroundColor: 'rgba(155,155,155,0.1)',
+        marginHorizontal: 10,
+        flex: 1,
+        paddingVertical: 3
     },
     back: {
         marginTop: 12,
@@ -75,13 +78,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingLeft: 10,
         paddingRight: 10,
-        paddingBottom: 15,
-        paddingTop: 15,
+        //paddingBottom: 15,
+        //paddingTop: 15,
         borderColor: 'rgba(155,155,155,0.1)',
         borderBottomWidth: 1,
         flex:1,
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     invite: {
         flexDirection: 'row',
@@ -105,8 +108,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     portrait: {
+        height: 34,
         borderRadius: 17,
-        alignSelf: 'center'
+        alignSelf: 'center',
     },
     floatText: {
         fontSize: 16,
