@@ -13,7 +13,8 @@ import {
     Dimensions,
     Animated,
     InteractionManager,
-    Navigator
+    Navigator,
+    Platform
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -307,7 +308,7 @@ class Friends extends React.Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,{minHeight: height}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <View style={styles.search}>
                     <ImageButton
                         source={backImg}
