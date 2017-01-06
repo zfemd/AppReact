@@ -72,32 +72,35 @@ class Toolbar extends React.Component {
 
     _renderToolbarAndroid() {
         return (
-            <ToolbarAndroid
-                style={styles.toolbarAndroid}
-                navIcon={this.props.leftImg ? this.props.leftImg : backImg}
-                onIconClicked={this._onLeftIconClicked}
-                actions={[{title: this.props.rightText, icon: this.props.rightImg  , show: 'always'}]}
-                onActionSelected={this._onRightIconClicked}
-                >
-                <View style={styles.titleAndroidV}>
-                    <TouchableOpacity style={styles.titleViewAndroidClick} onPress={this._onTitleClicked}>
-                        <Text
-                            style={styles.titleIOS}
-                            >
-                            {this.props.title}
-                        </Text>
-                        {
-                            !this.props.hideDrop ?
-                                <ImageButton
-                                    source={arrowImg}
-                                    onPress={this._onTitleClicked}
-                                    style={styles.arrowIOS}
-                                    /> : <View/>
-                        }
-                    </TouchableOpacity>
+            <View>
+                <ToolbarAndroid
+                    style={styles.toolbarAndroid}
+                    navIcon={this.props.leftImg ? this.props.leftImg : backImg}
+                    onIconClicked={this._onLeftIconClicked}
+                    actions={[{title: this.props.rightText, icon: this.props.rightImg  , show: 'always'}]}
+                    onActionSelected={this._onRightIconClicked}
+                    >
+                    <View style={styles.titleAndroidV}>
+                        <TouchableOpacity style={styles.titleViewAndroidClick} onPress={this._onTitleClicked}>
+                            <Text
+                                style={styles.titleIOS}
+                                >
+                                {this.props.title}
+                            </Text>
+                            {
+                                !this.props.hideDrop ?
+                                    <ImageButton
+                                        source={arrowImg}
+                                        onPress={this._onTitleClicked}
+                                        style={styles.arrowIOS}
+                                        /> : <View/>
+                            }
+                        </TouchableOpacity>
+                    </View>
+                </ToolbarAndroid>
+                <View style={styles.underlineAndroid}></View>
+            </View>
 
-                </View>
-            </ToolbarAndroid>
         );
     }
 
@@ -213,15 +216,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: 120,
-        height: 48
+        height: 40
     },
     toolbarAndroid: {
         backgroundColor: '#fff',
         height: 48,
-        borderBottomWidth: 1,
-        borderColor: '#eee',
         paddingBottom: 10,
-        marginTop: -8
+        marginTop: -8,
+        marginBottom: 1
     },
     titleViewAndroidClick: {
         flexDirection: 'row',
@@ -239,6 +241,13 @@ const styles = StyleSheet.create({
     titleAndroidT: {
         color: '#000',
         fontSize: 20
+    },
+    underlineAndroid: {
+        width: width,
+        height: 1,
+        borderBottomWidth: 1,
+        borderColor: '#eee',
+        backgroundColor: '#eee',
     }
 });
 
