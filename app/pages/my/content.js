@@ -222,7 +222,7 @@ export default class MyContent extends Component {
     _renderSectionHeader(sectionData, sectionID) {
         return (
             <View style={styles.myNotesTitle}>
-                <Text style={{fontSize:16}}>我的笔记</Text>
+                <Text style={{fontSize:16}}>笔记</Text>
             </View>
         );
     }
@@ -425,7 +425,7 @@ export default class MyContent extends Component {
                                   contentContainerStyle={styles.list}
                                   renderSectionHeader={this._renderSectionHeader}
                                   renderRow={this._renderNote.bind(this)}
-                                  renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
+                                  //renderScrollComponent={props => <RecyclerViewBackedScrollView {...props} />}
                                   renderSeparator={this._renderSeparator}
                                   style={styles.myNoteContainer}
                                   enableEmptySections={true}
