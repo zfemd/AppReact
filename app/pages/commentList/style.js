@@ -24,9 +24,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
     },
     portrait: {
-        backgroundColor: '#d8d8d8',
+        backgroundColor: '#fff',
         borderRadius: 17,
-        borderColor: '#fff',
+        borderColor: '#dedede',
+        borderWidth: 1,
+    },
+    portraitC: {
+        backgroundColor: '#fff',
+        borderRadius: 14,
+        borderColor: '#dedede',
         borderWidth: 1,
     },
     float: {
@@ -68,14 +74,15 @@ const styles = StyleSheet.create({
         lineHeight: 15
     },
     commentText: {
-        height: 24,
+        height: 26,
         width: width - 56,
-        marginLeft: 4,
+        marginLeft: 8,
         paddingLeft: 4,
         fontSize: 14,
         lineHeight: 24,
         borderWidth: 0,
         backgroundColor:  'rgba(155,155,155,0.1)',
+        paddingVertical: 4
     },
     commentList: {
         paddingBottom: 40

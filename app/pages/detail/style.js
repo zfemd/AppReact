@@ -119,18 +119,20 @@ const styles = StyleSheet.create({
     },
     floatOp: {
         width: width/4,
+
     },
     floatOpView: {
         flex:1,
         flexDirection: 'row',
         alignSelf: 'center',
+        alignItems: 'center',
         justifyContent: 'center'
     },
     floatOpImage: {
-        marginTop: 12,
+        //marginTop: 12,
     },
     floatOpText: {
-        lineHeight: 27,
+        //lineHeight: 27,
         alignSelf: 'center',
         paddingLeft: 5,
         color: '#9b9b9b'
@@ -194,6 +196,7 @@ const styles = StyleSheet.create({
         color: '#9b9b9b',
         fontSize: 13,
         marginRight: 5,
+        height: 16,
         maxWidth: 50
     },
     commentContent: {

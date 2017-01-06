@@ -106,7 +106,7 @@ class CommentList extends React.Component {
 
                 <View style={styles.float}>
                     <TouchableOpacity style={styles.floatOp} >
-                        <Image style={styles.portrait} source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 28, height: 28}}/>
+                        <Image style={styles.portraitC} source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 28, height: 28}}/>
                     </TouchableOpacity>
                     <TouchableOpacity  onPress={() => this._jumpToCommentPage()}>
                         <TextInput
@@ -115,6 +115,8 @@ class CommentList extends React.Component {
                             placeholder={'说点什么'}
                             placeholderTextColor='#bebebe'
                             multiline={false}
+                            underlineColorAndroid='transparent'
+                            returnKeyType='go'
                             />
                     </TouchableOpacity>
 

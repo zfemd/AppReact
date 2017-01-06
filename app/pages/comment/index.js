@@ -93,6 +93,9 @@ class Comment extends React.Component {
                         placeholder={'来说说你的心得吧'}
                         placeholderTextColor='#bebebe'
                         multiline={true}
+                        underlineColorAndroid='transparent'
+                        returnKeyType='done'
+                        numberOfLines = {8}
                         onChangeText={(text) => {this.state.comment=text }}
                         />
                 </View>

@@ -26,9 +26,11 @@ const styles = StyleSheet.create({
         padding: 5
     },
     commentText: {
+        textAlignVertical: 'top',
         height: 120,
         fontSize: 14,
-        borderWidth: 0
+        borderWidth: 0,
+        paddingVertical: 10
     },
     shortcut:{
         flexDirection: 'row',
@@ -41,7 +43,8 @@ const styles = StyleSheet.create({
     at: {
         color: "#9b9b9b",
         fontSize: 25,
-        marginLeft: 20
+        marginLeft: 20,
+        lineHeight: 30
     },
     button: {
         height: 36,
