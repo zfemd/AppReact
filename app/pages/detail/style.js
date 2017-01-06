@@ -40,14 +40,13 @@ const styles = StyleSheet.create({
         height: 50
     },
     portrait: {
-        backgroundColor: '#d8d8d8',
+        backgroundColor: '#fff',
         borderRadius: 17,
         borderColor: '#fff',
         borderWidth: 1,
     },
     info: {
         marginLeft: 5,
-        flex: 1,
         flexDirection: 'column',
     },
     nick: {
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
         top: 14,
     },
     thumbWarp: {
-        marginTop: 45,
+        marginTop: 15,
         //flexDirection: 'row',
         //overflow: 'visible',
         //flexWrap: 'nowrap',

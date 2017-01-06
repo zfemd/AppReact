@@ -200,7 +200,7 @@ class Detail extends React.Component {
             let image = {
                 width: 376,
                 height: 288,
-                uri: 'http://img.hb.aicdn.com/58373a70edfbcc1bc71bee64521b09f8ba228ff21848d2-qHcWbh_fw658'
+                uri: 'https://asianeye.com/templates/admin_coco/images/default.png'
             };
             images.push(image);
         }

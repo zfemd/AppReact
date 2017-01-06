@@ -442,7 +442,7 @@ export default class MyContent extends Component {
                     animationType={"fade"}
                     transparent={true}
                     visible={this.state.modalVisible}
-
+                    onRequestClose={() => {console.log("Modal has been closed.")}}
                     >
                     <TouchableWithoutFeedback onPress={() => {this._setModalVisible(false)}}>
                         <View style={styles.modalContainer}>
