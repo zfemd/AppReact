@@ -13,6 +13,7 @@
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
 #import <ALBBSDK/ALBBSDK.h>
+#import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 
 @implementation AppDelegate
 
@@ -103,6 +104,11 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     if (!isHandled) {
         // 其他处理逻辑
     }
-    return YES;
+  
+    return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+
+//    return YES;
 }
+
+
 @end
