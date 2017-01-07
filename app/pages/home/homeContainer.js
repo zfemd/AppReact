@@ -68,18 +68,24 @@ class HomeContainer extends React.Component {
 
     render() {
         return(
-            <View>
-                <Toolbar
-                    title={this.props.home.isFollowed ? '关注的' : '剁手记'}
-                    navigator={this.props.navigator}
-                    showFilter={this._showFilter}
-                    leftImg={addImg}
-                    rightImg={searchImg}
-                    onLeftIconClicked={this._onLeftIconClicked}
-                    onRightIconClicked={this._onRightIconClicked}
-                    hideDrop={false}
-                    />
+            <View {...this.props}>
+                <View>
+                    <Toolbar
+                        title={this.props.home.isFollowed ? '关注的' : '剁手记'}
+                        navigator={this.props.navigator}
+                        showFilter={this._showFilter}
+                        leftImg={addImg}
+                        rightImg={searchImg}
+                        onLeftIconClicked={this._onLeftIconClicked}
+                        onRightIconClicked={this._onRightIconClicked}
+                        hideDrop={false}
+                        />
+
+
+                </View>
+                {this.props.children}
             </View>
+
 
         )
     }

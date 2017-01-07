@@ -51,6 +51,11 @@ const styles = StyleSheet.create({
     },
     flow: {
         flex: 1,
+    },
+    HomeContainer: {
+        position: 'absolute',
+        left : 0,
+        top: 0,
     }
 });
 

@@ -436,8 +436,6 @@ var styles = StyleSheet.create({
         width: (width / 100) * 47,
         height: 200,
         overflow: 'hidden',
-        zIndex: 1,
-
     },
     title: {
         height: 28,

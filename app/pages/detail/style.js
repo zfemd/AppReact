@@ -208,7 +208,8 @@ const styles = StyleSheet.create({
         padding: 15
     },
     recommendBySystem: {
-        padding: 15
+        padding: 15,
+        height: 228
     },
     relatedNote: {
         backgroundColor: 'rgba(155,155,155,0)'
@@ -278,7 +279,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.5)',
         height: 22,
-        marginTop: 98,
+        //marginTop: 98,
+        bottom: 20,
         marginLeft: 3,
         width: width/3-5,
         position: 'absolute'

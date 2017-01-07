@@ -12,7 +12,7 @@ const {
     TouchableOpacity,
     AsyncStorage,
     StatusBar
-} = ReactNative;
+    } = ReactNative;
 import { connect } from 'react-redux';
 import styles from './style';
 import TabBar from './tab';
@@ -71,7 +71,7 @@ class Home extends React.Component {
 
     _showFilter() {
         const { dispatch} = this.props;
-        if(this.props.home.showFilter){
+        if (this.props.home.showFilter) {
             dispatch(showorHideFilter(false));
         } else {
             dispatch(showorHideFilter(true));
@@ -93,18 +93,18 @@ class Home extends React.Component {
      * @private
      */
     _onChangeTab(data) {
-        if(data.i !== this.state.currentTab) {
+        if (data.i !== this.state.currentTab) {
             this.setState({currentTab: data.i});
         } else {
             this.setState({tabForRefresh: true});
-            setTimeout(()=>{
+            setTimeout(()=> {
                 this.setState({tabForRefresh: false});
-            },10)
+            }, 10)
         }
         if (data.i == 3 || data.i == 4) {
-            setTimeout(()=>{
+            setTimeout(()=> {
                 this.setState({showToolbar: false});
-            },2000)
+            }, 2000)
 
         } else {
             this.setState({showToolbar: true});
@@ -163,20 +163,21 @@ class Home extends React.Component {
                     onChangeTab={this._onChangeTab.bind(this)}
                     locked={true}
                     >
-                    <View tabLabel="ios-home-outline" style={styles.tabView}>
-                        <HomeContainer navigator={this.props.navigator} dispatch={this.props.dispatch}/>
+                    <HomeContainer tabLabel="ios-home-outline" style={styles.tabView} navigator={this.props.navigator}
+                                   dispatch={this.props.dispatch}>
                         <Flow tabForRefresh={this.state.tabForRefresh}
                               tag='all'
                               navigator={this.props.navigator}
                               dispatch={this.props.dispatch}
-                              />
-                    </View>
+                            />
+                    </HomeContainer>
 
-                    <View tabLabel="ios-compass-outline" style={styles.tabView}>
-                        <HomeContainer navigator={this.props.navigator} dispatch={this.props.dispatch}/>
-                        <Channel navigator={this.props.navigator} ></Channel>
 
-                    </View>
+                    <HomeContainer tabLabel="ios-compass-outline" style={styles.tabView}
+                                   navigator={this.props.navigator} dispatch={this.props.dispatch}>
+                        <Channel navigator={this.props.navigator}></Channel>
+
+                    </HomeContainer>
 
                     <ScrollView tabLabel="md-camera" style={styles.tabView}>
                     </ScrollView>
@@ -185,7 +186,9 @@ class Home extends React.Component {
                     <MyPage navigator={this.props.navigator} tabLabel="ios-person-outline" style={styles.tabView}/>
                 </ScrollableTabView>
                 {
-                    this.props.home.showFilter ?  <HomeFilter navigator={this.props.navigator}  click={this._onFilterClicked} key=''/> : <View></View>
+                    this.props.home.showFilter ?
+                        <HomeFilter navigator={this.props.navigator} click={this._onFilterClicked} key=''/> :
+                        <View></View>
 
                 }
 
