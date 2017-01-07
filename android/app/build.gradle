@@ -136,6 +136,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-wx')
     compile project(':react-native-contacts')
     compile project(':react-native-http-cache')
     compile project(':react-native-spinkit')
