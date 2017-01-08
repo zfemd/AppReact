@@ -103,6 +103,10 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         signingConfig signingConfigs.duoshouji
+        manifestPlaceholders = [
+                // 如果有多项，每一项之间需要用逗号分隔
+                WX_APPID: "wx0095c65e446a296f"      //在此修改微信APPID
+        ]
     }
     splits {
         abi {
@@ -133,6 +137,7 @@ android {
     }
     productFlavors {
     }
+
 }
 
 dependencies {

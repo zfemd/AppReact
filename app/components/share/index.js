@@ -12,6 +12,8 @@ import {
     Image
 } from 'react-native';
 import { connect } from 'react-redux';
+import * as WechatAPI from '../../../node_modules/react-native-wx';
+import {toast} from '../../utils/common';
 
 var {height, width} = Dimensions.get('window');
 const propTypes = {
@@ -21,6 +23,8 @@ const propTypes = {
 class Share extends React.Component {
     constructor(props) {
         super(props);
+        this._shareToWechat = this._shareToWechat.bind(this);
+        this._shareToMoment = this._shareToMoment.bind(this);
         this.state = {
             fadeAnim: new Animated.Value(0),
             dropAnim: new Animated.Value(-150),
@@ -44,17 +48,51 @@ class Share extends React.Component {
     componentWillMount() {
     }
 
+    _shareToWechat() {
+        const data = {
+            type: 'news',
+            title : 'duoshouji note',
+            description : 'duoshiji note',
+            webpageUrl : 'http://www.share68.com',
+            imageUrl: this.props.thumbUrl,
+        };
+        WechatAPI.isWXAppInstalled()
+            .then((res) =>{
+                if(!res)
+                    toast('您还未安装微信');
+                else
+                    WechatAPI.shareToSession(data);
+            });
+    }
+
+    _shareToMoment() {
+        const data = {
+            type: 'news',
+            title : 'duoshouji note',
+            description : 'duoshiji note',
+            webpageUrl : 'http://www.share68.com',
+            imageUrl: this.props.thumbUrl,
+        };
+        WechatAPI.isWXAppInstalled()
+            .then((res) =>{
+                if(!res)
+                    toast('您还未安装微信');
+                else
+                    WechatAPI.shareToTimeline(data);
+            });
+    }
+
     render() {
         return (
             <TouchableWithoutFeedback>
                 <View style={styles.share}>
                     <Animated.View style={[styles.shareContent,{bottom: this.state.dropAnim}]}>
                         <View style={styles.list}>
-                            <TouchableOpacity style={styles.shareItem}>
+                            <TouchableOpacity style={styles.shareItem} onPress={this._shareToWechat}>
                                 <Image style={styles.follow} source={require('../../assets/note/wechat.png')}/>
                                 <Text style={styles.shareFont}>微信</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.shareItem}>
+                            <TouchableOpacity style={styles.shareItem}onPress={this._shareToMoment}>
                                 <Image style={styles.follow} source={require('../../assets/note/moment.png')}/>
                                 <Text style={styles.shareFont}>朋友圈</Text>
                             </TouchableOpacity>

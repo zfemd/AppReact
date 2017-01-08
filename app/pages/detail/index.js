@@ -421,7 +421,7 @@ class Detail extends React.Component {
                 {[this.state.showShare].map((show) => {
                     if (show) {
                         return (
-                            <Share key='' press={this._onSharePress}/>
+                            <Share key='' press={this._onSharePress} thumbUrl={images[0].uri}/>
                         );
                     }
                 })}
