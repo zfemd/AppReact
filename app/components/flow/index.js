@@ -304,7 +304,7 @@ class Flow extends React.Component {
         let maxOffset = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height;
         let offset = event.nativeEvent.contentOffset.y;
         let params = _.cloneDeep(fetchParams);
-        if ((maxOffset - offset) < 0 && !this.props.flow.loadingMore && !this.props.flow.noMoreData) {
+        if (Math.floor(maxOffset - offset) <= 0 && !this.props.flow.loadingMore && !this.props.flow.noMoreData) {
             params.loadedSize = this.props.flow.flowList[tag].length;
             params.timestamp = this.props.flow.timestamp[tag];
             params.refreshing = true;
