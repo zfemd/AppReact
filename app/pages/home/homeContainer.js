@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import styles from './style';
 import AddFriends from '../addFriends';
 import {showorHideFilter} from '../../actions/home';
+import SearchPage from '../search';
 
 const ReactNative = require('react-native');
 const {
@@ -50,7 +51,13 @@ class HomeContainer extends React.Component {
         const { navigator } = this.props;
         Token.getToken(navigator).then((token) => {
             if (token) {
-                //todo
+                InteractionManager.runAfterInteractions(() => {
+                    navigator.push({
+                        component: SearchPage,
+                        name: 'SearchPage',
+                        sceneConfigs: Navigator.SceneConfigs.FadeAndroid
+                    });
+                });
             }
         });
     }
@@ -64,7 +71,6 @@ class HomeContainer extends React.Component {
         }
 
     }
-
 
     render() {
         return(

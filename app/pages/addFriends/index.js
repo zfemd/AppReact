@@ -332,6 +332,7 @@ class Friends extends React.Component {
                         style={styles.back}
                         onPress={this._onLeftIconClicked}
                         />
+                    <Image style={styles.magnifier} source={require('../../assets/invite/search.png')}/>
                     <TextInput
                         style={styles.searchText}
                         placeholder={'搜索通讯录好友'}
@@ -341,7 +342,6 @@ class Friends extends React.Component {
                         returnKeyType='go'
                         onChangeText={(text) => this._filter({text})}
                         />
-                    <Image style={styles.magnifier} source={require('../../assets/invite/search.png')}/>
                 </View>
                 <View style={styles.addressBook}>
                     <Text style={[styles.baseText,styles.addressText]}>允许通过手机通讯录加好友</Text>

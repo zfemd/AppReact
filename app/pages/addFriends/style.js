@@ -4,7 +4,8 @@ import React from 'react-native';
 
 var {
     StyleSheet,
-    Dimensions
+    Dimensions,
+    Platform
     } = React;
 
 const {height, width} = Dimensions.get('window');
@@ -29,29 +30,30 @@ const styles = StyleSheet.create({
         paddingTop: 0,
         backgroundColor: '#fff',
         flexDirection: 'row',
+        alignItems: 'center'
     },
     searchText: {
         height: 24,
         width: width - 66,
         marginTop: 10,
-        marginLeft: 20,
+        marginLeft: 12,
         paddingLeft: 26,
         fontSize: 14,
         lineHeight: 24,
         borderWidth: 0,
         backgroundColor: 'rgba(155,155,155,0.1)',
         marginHorizontal: 10,
-        flex: 1,
-        paddingVertical: 3
+        paddingVertical: 4
     },
     back: {
-        marginTop: 12,
-        marginLeft: 10
+        marginLeft: 10,
+        marginTop:  Platform.OS === 'android' ? 6 : 0
     },
     magnifier: {
         position: 'absolute',
-        marginTop: 14,
-        marginLeft: 72 - width
+        top: Platform.OS === 'android' ? 18 : 15,
+        left: 42,
+        //zIndex: 1
     },
     addressBook: {
         marginTop: 10,
@@ -72,9 +74,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingBottom: 30
     },
-    friendsList: {
-
-    },
+    friendsList: {},
     friendsRow: {
         backgroundColor: '#fff',
         paddingLeft: 10,
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         //paddingTop: 15,
         borderColor: 'rgba(155,155,155,0.1)',
         borderBottomWidth: 1,
-        flex:1,
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
     },
