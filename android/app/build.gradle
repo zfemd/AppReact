@@ -105,7 +105,7 @@ android {
         signingConfig signingConfigs.duoshouji
         manifestPlaceholders = [
                 // 如果有多项，每一项之间需要用逗号分隔
-                WX_APPID: "wx0095c65e446a296f"      //在此修改微信APPID
+                WX_APPID: "wx9ddba3ee3672de95"      //在此修改微信APPID
         ]
     }
     splits {
