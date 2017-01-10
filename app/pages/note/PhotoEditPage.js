@@ -431,7 +431,7 @@ class PhotoEditPage extends Component {
 
                                 {
                                     this.state.beautifyTab == 'brightness' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
-                                        <Slider value={this.state.beautify.brightness.oldValue} onValueChange={(value) => this._adjustImageBrightness(value)} style={{flex:1}}></Slider>
+                                        <Slider value={this.state.beautify.brightness.oldValue} onSlidingComplete={(value) => this._adjustImageBrightness(value)} style={{flex:1}}></Slider>
                                         <ConfirmBar style={styles.confirmBar} title='亮度'
                                                     onCancel={() => {
                                                             this._adjustImageBrightness(this.state.beautify.brightness.oldValue)
@@ -446,7 +446,7 @@ class PhotoEditPage extends Component {
 
                                 {
                                     this.state.beautifyTab == 'contrast' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
-                                        <Slider value={this.state.beautify.contrast.oldValue} onValueChange={(value) => this._adjustImageContrast(value)} minimumValue={0} maximumValue={2} step={0.1} style={{flex:1}}></Slider>
+                                        <Slider value={this.state.beautify.contrast.oldValue} onSlidingComplete={(value) => this._adjustImageContrast(value)} minimumValue={0} maximumValue={2} step={0.1} style={{flex:1}}></Slider>
                                         <ConfirmBar style={styles.confirmBar} title='对比度'
                                                     onCancel={() => {
                                                         this._adjustImageContrast(this.state.beautify.contrast.oldValue);
