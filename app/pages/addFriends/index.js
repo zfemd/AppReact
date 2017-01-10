@@ -94,11 +94,13 @@ class Friends extends React.Component {
                                     } else {
                                         phone = list.phoneNumbers[0].number;
                                     }
-                                    phone = phone.replace(/\+86/g, '')
-                                        .replace(/\s/g, '')
+                                    phone = phone.toString().replace(/\+86/g, '')
                                         .replace(/\(/g, '')
                                         .replace(/\)/g, '')
-                                        .replace(/\-/g, '');
+                                        .replace(/\-/g, '')
+                                        .replace(/\s/g, '')
+                                        .replace(/\+/g, '')
+                                        .replace(/(^\s*)|(\s*$)/g, '');
                                     let obj = {
                                         name: list.givenName || '' + ' ' + list.familyName || '',
                                         portrait: list.thumbnailPath,
@@ -107,7 +109,8 @@ class Friends extends React.Component {
                                         hasBeFollowed: false,
                                         userId: 0
                                     };
-                                    array.push(obj);
+                                    if(/^\d+$/.test(phone))
+                                        array.push(obj);
                                 });
 
 
