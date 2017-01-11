@@ -18,6 +18,7 @@ import com.react.taobaobaichuanapi.BaiChuanPackage;
 import com.alibaba.baichuan.android.trade.AlibcTradeSDK;
 import com.alibaba.baichuan.android.trade.callback.AlibcTradeInitCallback;
 import com.alibaba.baichuan.android.trade.model.AlibcTaokeParams;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -35,12 +36,13 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-            new WeChatPackage(),
+                    new WeChatPackage(),
                     new WebViewBridgePackage(),
                     new HttpCachePackage(),
                     new RNSpinkitPackage(),
                     new ReactNativeContacts(),
-                    new BaiChuanPackage()
+                    new BaiChuanPackage(),
+                    new ReactNativePushNotificationPackage()
             );
         }
     };
