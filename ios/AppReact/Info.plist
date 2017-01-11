@@ -51,16 +51,14 @@
       <key>NSAllowsArbitraryLoads</key>
       <true/>
     </dict>
+    <key>NSCameraUsageDescription</key>
+    <string>此应用需要您的同意才能拍照</string>
     <key>NSContactsUsageDescription</key>
     <string/>
     <key>NSLocationWhenInUseUsageDescription</key>
     <true/>
-    <key>NSMainNibFile</key>
-    <string>LaunchScreen</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>此应用需要您的同意才能读取媒体资料库</string>
-    <key>NSCameraUsageDescription</key>
-    <string>此应用需要您的同意才能拍照</string>
     <key>UIAppFonts</key>
     <array>
       <string>Entypo.ttf</string>
@@ -72,12 +70,12 @@
       <string>Octicons.ttf</string>
       <string>Zocial.ttf</string>
     </array>
-    <key>UILaunchStoryboardName</key>
-    <string>LaunchScreen</string>
     <key>UIRequiredDeviceCapabilities</key>
     <array>
       <string>armv7</string>
     </array>
+    <key>UIRequiresFullScreen</key>
+    <true/>
     <key>UISupportedInterfaceOrientations</key>
     <array>
       <string>UIInterfaceOrientationPortrait</string>
