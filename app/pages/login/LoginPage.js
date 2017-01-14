@@ -24,6 +24,7 @@ import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import ForgetPasswordPage from './ForgetPasswordPage';
 import WeiXinLoginPage from './WeiXinLoginPage';
 import configs from '../../constants/configs';
+import * as WechatAPI from 'react-native-wx';
 
 const myIcon = (<Icon name="rocket" size={30} color="#900" />)
 
@@ -79,12 +80,19 @@ export default class LoginPage extends Component {
     }
 
     _onPressWeixinIcon() {
-        const { navigator } = this.props;
-        navigator.push({
-            component: WeiXinLoginPage,
-            name: 'WeiXinLoginPage',
-            params: {store: this.props.store}
-        });
+        const config = {
+            scope: 'snsapi_userinfo', // 默认 'snsapi_userinfo'
+        };
+        WechatAPI.isWXAppInstalled()
+            .then((res) =>{
+                if(!res)
+                    toast('您还未安装微信');
+                else
+                    return WechatAPI.login(config);
+            })
+            .then((res,re) =>{
+                console.log(res);
+            })
     }
 
     _onPressCancel() {
