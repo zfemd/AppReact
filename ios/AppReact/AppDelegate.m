@@ -12,7 +12,7 @@
 #import "RCTPushNotificationManager.h"
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
-#import <ALBBSDK/ALBBSDK.h>
+//#import <AlibcTradeSDK/AlibcTradeSDK.h>
 #import "../Libraries/LinkingIOS/RCTLinkingManager.h"
 
 @implementation AppDelegate
@@ -24,17 +24,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-    
-    [[ALBBSDK sharedInstance] setDebugLogOpen:NO]; // 打开debug日志
-    [[ALBBSDK sharedInstance] setUseTaobaoNativeDetail:YES]; // 优先使用手淘APP打开商品详情页面，如果没有安装手机淘宝，SDK会使用H5打开
-    [[ALBBSDK sharedInstance] setViewType:ALBB_ITEM_VIEWTYPE_TAOBAO];// 使用淘宝H5页面打开商品详情
-    [[ALBBSDK sharedInstance] setISVCode:@"my_isv_code"]; //设置全局的app标识，在电商模块里等同于isv_code
-    [[ALBBSDK sharedInstance] asyncInit:^{ // 基础SDK初始化
-        NSLog(@"init success");
-    } failure:^(NSError *error) {
-        NSLog(@"init failure, %@", error);
-    }];
-    
+
+  
   [[RCTBundleURLProvider sharedSettings] setDefaults];
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index.ios" fallbackResource:nil];
 
@@ -98,17 +89,49 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 
 //****************** end for notifications   **********************
 
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
-    BOOL isHandled = [[ALBBSDK sharedInstance] handleOpenURL:url]; // 如果百川处理过会返回YES
-    if (!isHandled) {
-        // 其他处理逻辑
-    }
-  
-    return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
-
-//    return YES;
-}
-
+//
+////****************** baichuan  **********************//
+//- (BOOL)application:(UIApplication *)application {
+//  // 百川平台基础SDK初始化，加载并初始化各个业务能力插件
+//  [[AlibcTradeSDK sharedInstance] asyncInitWithSuccess:^{
+//    
+//  } failure:^(NSError *error) {
+//    NSLog(@"Init failed: %@", error.description);
+//  }];
+//  
+//  // 开发阶段打开日志开关，方便排查错误信息
+//  //默认调试模式打开日志,release关闭,可以不调用下面的函数
+//  [[AlibcTradeSDK sharedInstance] setDebugLogOpen:YES];
+//  
+//  // 配置全局的淘客参数
+//  //如果没有阿里妈妈的淘客账号,setTaokeParams函数需要调用
+//  AlibcTradeTaokeParams *taokeParams = [[AlibcTradeTaokeParams alloc] init];
+//  taokeParams.pid = @"mm_XXXXX"; //mm_XXXXX为你自己申请的阿里妈妈淘客pid
+//  [[AlibcTradeSDK sharedInstance] setTaokeParams:taokeParams];
+//  
+//  //设置全局的app标识，在电商模块里等同于isv_code
+//  //没有申请过isv_code的接入方,默认不需要调用该函数
+//  [[AlibcTradeSDK sharedInstance] setISVCode:@"your_isv_code"];
+//  
+//  // 设置全局配置，是否强制使用h5
+//  [[AlibcTradeSDK sharedInstance] setIsForceH5:NO];
+//  
+//  return YES;
+//}
+//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation{
+//  BOOL isHandled = [[AlibcTradeSDK sharedInstance] handleOpenURL:url]; // 如果百川处理过会返回YES
+//  if (!isHandled) {
+//    // 其他处理逻辑
+//  }
+//  return YES;
+//}
+//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
+//  BOOL isHandled = [[AlibcTradeSDK sharedInstance] handleOpenURL:url]; // 如果百川处理过会返回YES
+//  if (!isHandled) {
+//    // 其他处理逻辑
+//  }
+//  return YES;
+//}
+//****************** baichuan  **********************//
 
 @end
