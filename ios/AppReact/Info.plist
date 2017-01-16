@@ -30,7 +30,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string>yw_1222</string>
+			<string></string>
 			<key>CFBundleURLName</key>
 			<string>weixin</string>
 			<key>CFBundleURLSchemes</key>
@@ -42,12 +42,12 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLIconFile</key>
-			<string>yw_1222</string>
+			<string></string>
 			<key>CFBundleURLName</key>
 			<string>tb</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>tbopen23597141</string>
+				<string>tbopen23362952</string>
 			</array>
 		</dict>
 	</array>
