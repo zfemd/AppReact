@@ -90,7 +90,7 @@ export default class ForgetPasswordPage extends Component {
         //    body: formData
         //});
 
-        fetch(configs.serviceUrl + '/user/login', {
+        fetch(configs.serviceUrl + 'user/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -103,25 +103,20 @@ export default class ForgetPasswordPage extends Component {
             })
         }).then((response) => {
             if (response.ok) {
-                return response.json();
+                return response.headers.map['x-app-token'];
             }
         }).then((responseJson) => {
             console.log(responseJson);
-            if (responseJson && responseJson.resultCode == 0) {
-                if (responseJson.resultValues && responseJson.resultValues.token) {
-                    InteractionManager.runAfterInteractions(() => {
-                        //navigator.jumpTo(navigator.getCurrentRoutes()[0]);
-                        //HomeNavigator.pop();
-                        //navigator.resetTo(Object.assign({},navigator.getCurrentRoutes()[0], {signIn: true}));
-                        setTimeout(function(){
-                            navigator.jumpTo(navigator.getCurrentRoutes()[0]);
-                        }, 1000);
+            if (responseJson) {
+                InteractionManager.runAfterInteractions(() => {
+                    setTimeout(function(){
+                        navigator.jumpTo(navigator.getCurrentRoutes()[0]);
+                    }, 1000);
 
-                    });
-                    toast('登录成功');
-                    Token.setToken(responseJson.resultValues.token);
-                    return true;
-                }
+                });
+                toast('登录成功');
+                Token.setToken(responseJson);
+                return true;
             } else {
                 Alert.alert('登陆失败', "验证码登陆失败");
             }

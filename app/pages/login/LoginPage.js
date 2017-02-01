@@ -25,6 +25,10 @@ import ForgetPasswordPage from './ForgetPasswordPage';
 import WeiXinLoginPage from './WeiXinLoginPage';
 import configs from '../../constants/configs';
 import * as WechatAPI from 'react-native-wx';
+import {
+    Token,
+    toast
+} from '../../utils/common';
 
 const myIcon = (<Icon name="rocket" size={30} color="#900" />)
 
