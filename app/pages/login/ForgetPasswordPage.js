@@ -107,7 +107,7 @@ export default class ForgetPasswordPage extends Component {
             }
         }).then((responseJson) => {
             console.log(responseJson);
-            if (responseJson) {
+            if (responseJson && responseJson.length > 0) {
                 InteractionManager.runAfterInteractions(() => {
                     setTimeout(function(){
                         navigator.jumpTo(navigator.getCurrentRoutes()[0]);
@@ -115,7 +115,7 @@ export default class ForgetPasswordPage extends Component {
 
                 });
                 toast('登录成功');
-                Token.setToken(responseJson);
+                Token.setToken(responseJson[0]);
                 return true;
             } else {
                 Alert.alert('登陆失败', "验证码登陆失败");
