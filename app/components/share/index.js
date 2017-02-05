@@ -14,6 +14,7 @@ import {
 import { connect } from 'react-redux';
 import * as WechatAPI from '../../../node_modules/react-native-wx';
 import {toast} from '../../utils/common';
+import configs from '../../constants/configs';
 
 var {height, width} = Dimensions.get('window');
 const propTypes = {
@@ -51,9 +52,9 @@ class Share extends React.Component {
     _shareToWechat() {
         const data = {
             type: 'news',
-            title : 'duoshouji note',
-            description : 'duoshiji note',
-            webpageUrl : 'http://www.share68.com',
+            title : this.props.note.title,
+            description : this.props.note.content,
+            webpageUrl : configs.mobileServiceUrl+ 'detail/'+this.props.noteId,
             imageUrl: this.props.thumbUrl,
         };
         WechatAPI.isWXAppInstalled()
@@ -68,9 +69,9 @@ class Share extends React.Component {
     _shareToMoment() {
         const data = {
             type: 'news',
-            title : 'duoshouji note',
-            description : 'duoshiji note',
-            webpageUrl : 'http://www.share68.com',
+            title : this.props.note.title,
+            description : this.props.note.content,
+            webpageUrl : configs.mobileServiceUrl + 'detail/'+this.props.noteId,
             imageUrl: this.props.thumbUrl,
         };
         WechatAPI.isWXAppInstalled()

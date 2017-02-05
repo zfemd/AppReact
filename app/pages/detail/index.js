@@ -82,11 +82,7 @@ class Detail extends React.Component {
 
     _onSharePress() {
         const {navigator } = this.props;
-        Token.getToken(navigator).then((token) => {
-            if (token) {
-                this.setState({showShare: !this.state.showShare});
-            }
-        });
+        this.setState({showShare: !this.state.showShare});
     }
 
     _jumpToCommentPage() {
@@ -421,7 +417,7 @@ class Detail extends React.Component {
                 {[this.state.showShare].map((show) => {
                     if (show) {
                         return (
-                            <Share key='' press={this._onSharePress} thumbUrl={images[0].uri}/>
+                            <Share key='' note={detail.note[noteId]} noteId={noteId} press={this._onSharePress} thumbUrl={images[0].uri}/>
                         );
                     }
                 })}
