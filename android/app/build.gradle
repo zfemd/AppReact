@@ -84,11 +84,12 @@ def enableProguardInReleaseBuilds = false
 
 android {
     signingConfigs {
+        // default release signing
         duoshouji {
             keyAlias 'duoshouji'
-            keyPassword '111111'
-            storeFile file('/Users/lyan2/git/AppReact/android/keystores/demo.keystore')
-            storePassword '111111'
+            keyPassword 'duoshouji123!'
+            storeFile file('duoshouji.keystore')
+            storePassword 'duoshouji123!'
         }
     }
     compileSdkVersion 23
@@ -121,10 +122,11 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             buildConfigField "String", "WX_APPID", "wx9ddba3ee3672de95"
+//            signingConfig signingConfigs.duoshouji
         }
-
         debug {
             buildConfigField "String", "WX_APPID", '"wx9ddba3ee3672de95"'
+//            signingConfig signingConfigs.duoshouji
         }
     }
     // applicationVariants are e.g. debug, release
@@ -155,22 +157,20 @@ dependencies {
     compile project(':react-native-webview-bridge')
     compile project(':react-native-taobao-baichuan-api')
     compile project(':react-native-push-notification')
-
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.facebook.react:react-native:+'
-    compile 'com.android.support:appcompat-v7:23.0.1'
-
-    compile 'com.google.android.gms:play-services-gcm:10.0.0'
-    compile 'com.google.firebase:firebase-messaging:9.6.1'
-
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     // From node_modules
+    compile 'com.facebook.react:react-native:+'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.firebase:firebase-core:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
 }
 
 // Run this once to be able to run the application with BUCK
 // puts all compile dependencies into folder libs for BUCK to use
 task copyDownloadableDepsToLibs(type: Copy) {
-  from configurations.compile
-  into 'libs'
+    from configurations.compile
+    into 'libs'
 }
 
 apply plugin: "com.google.gms.google-services"
