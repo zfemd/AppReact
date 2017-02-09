@@ -27,7 +27,9 @@ export default keyMirror({
     RECEIVE_USER_NOTES: null,
     RECEIVE_MY_NOTES: null,
 
-    FETCH_CATEGORIES:null
+    FETCH_CATEGORIES:null,
+    RECEIVE_FOLLOWING_LIST: null,
+    RECEIVE_FOLLOWER_LIST: null
 });
 
 

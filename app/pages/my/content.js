@@ -34,6 +34,8 @@ import portraitPage from '../settings/portrait';
 import {fetchUserNotes} from '../../actions/user';
 import images from '../../constants/images';
 import Spinner from 'react-native-spinkit';
+import FollowingPage from './following';
+import FollowerPage from './follower';
 
 var womanIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="venus"/>;
 var manIcon = <Icon style={{marginLeft:3,alignItems:'center',color:'#FF0087'}} size={16} name="mars"/>;
@@ -349,6 +351,30 @@ export default class MyContent extends Component {
         );
     }
 
+    _jumpToFollowingPage(userId) {
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: FollowingPage,
+                name: 'FollowingPage',
+                sceneConfigs: Navigator.SceneConfigs.FloatFromRight,
+                userId: userId
+            });
+        });
+    }
+
+    _jumpToFollowerPage(userId) {
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: FollowerPage,
+                name: 'FollowerPage',
+                sceneConfigs: Navigator.SceneConfigs.FloatFromRight,
+                userId: userId
+            });
+        });
+    }
+
     render() {
 
         this.user = this.state.user;
@@ -356,6 +382,7 @@ export default class MyContent extends Component {
         if (this.props.userInfo) {
             let userInfo = this.props.userInfo;
             this.user = {
+                userId: userInfo.userId,
                 name: userInfo.nickname,
                 gender: userInfo.gender == 'FEMALE' ? 'women' : 'man',
                 income: userInfo.totalRevenue,
@@ -408,15 +435,21 @@ export default class MyContent extends Component {
                         <Text style={[styles.text, styles.assetText]}>交易</Text>
                     </View>
                     <View style={styles.separatorVertical}/>
-                    <View style={styles.asset}>
-                        <Text style={styles.count}>{this.user.summary.watcherNum}</Text>
-                        <Text style={[styles.text, styles.assetText]}>关注</Text>
-                    </View>
+                    <TouchableWithoutFeedback onPress={() => this._jumpToFollowingPage(this.user.userId)}>
+                        <View style={styles.asset}>
+                            <Text style={styles.count}>{this.user.summary.watcherNum}</Text>
+                            <Text style={[styles.text, styles.assetText]}>关注</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+
                     <View style={styles.separatorVertical}/>
-                    <View style={styles.asset}>
-                        <Text style={styles.count}>{this.user.summary.fansNum}</Text>
-                        <Text style={[styles.text, styles.assetText]}>粉丝</Text>
-                    </View>
+                    <TouchableWithoutFeedback onPress={() => this._jumpToFollowerPage(this.user.userId)}>
+                        <View style={styles.asset}>
+                            <Text style={styles.count}>{this.user.summary.fansNum}</Text>
+                            <Text style={[styles.text, styles.assetText]}>粉丝</Text>
+                        </View>
+                    </TouchableWithoutFeedback>
+
                 </View>
 
                 {

@@ -11,6 +11,7 @@ import comments from './comments';
 import recommend from './recommend';
 import user from './user';
 import categories from './categories';
+import follow from './follow';
 
 const rootReducer = combineReducers({
     home,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
     comments,
     recommend,
     user,
-    categories
+    categories,
+    follow
 });
 
 export default rootReducer;

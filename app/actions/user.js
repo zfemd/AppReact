@@ -10,6 +10,7 @@ export function fetchUserInfo(params) {
                 if (list.resultCode == 0) {
                     let userInfo = list.resultValues;
                     const source = {
+                        userId: userInfo.userId,
                         name: userInfo.nickname,
                         gender: userInfo.gender == 'FEMALE' ? 'women' : 'man',
                         income: userInfo.totalRevenue,
