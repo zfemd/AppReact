@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     },
     framedTextInput: {
         flex: 1,
+        height: 24,
         borderStyle:'solid',
         borderWidth:1,
         borderColor:'#fff',
