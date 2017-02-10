@@ -72,9 +72,11 @@ class OptionList extends React.Component {
                 <View style={styles.optionsHeader}>
                     <View style={styles.richTextInput}>
                         {searchIcon}
-                        <TextInput returnKeyType='search' returnKeyLabel='search' autoFocus={true} style={styles.textInput}
-                                   underlineColorAndroid="transparent" selectTextOnFocus={true}
-                                   onChangeText={(text) => this._defaultOnChangeText(text)} />
+                        <TextInput autoFocus={true} autoCorrect={false} keyboardType='default' style={styles.textInput} selectTextOnFocus={true}
+                                   clearButtonMode='while-editing'returnKeyType='search' enablesReturnKeyAutomatically={true} /* ios attributes */
+                                   returnKeyLabel='search' underlineColorAndroid="transparent" /* android attributes */
+                                   /* onSubmitEditing={(e) => console.log(e)} */
+                                   onChangeText={(text) => this._defaultOnChangeText(text)} autoCapitalize='none'/>
                     </View>
                     <TouchableHighlight onPress={this._onCancel.bind(this)}>
                         <Text style={[styles.text, styles.cancelText]}>取消</Text>
