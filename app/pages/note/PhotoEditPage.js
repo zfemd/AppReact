@@ -191,8 +191,7 @@ class PhotoEditPage extends Component {
     }
 
     _onNationSelect(rowData) {
-        console.log(rowData);
-        this.state.currentTag.nation = rowData.nation;
+        this.state.currentTag.city = rowData.title;
         this.showCurrencyModal(false);
     }
 
@@ -502,7 +501,7 @@ class PhotoEditPage extends Component {
                             <FramedTextInput ref="nationInput" placeholder='国家/城市' placeholderTextColor='#fff'
                                              clearTextOnFocus={true} contentContainerStyle={styles.framedTextInput}
                                              style={[styles.textInput, {color: '#fff'}]}
-                                             value={this.state.currentTag.nation}
+                                             value={this.state.currentTag.city}
                                              onFocus={() => {this.showNationModal(true); this.refs.nationInput.blur();}} />
                             <FramedTextInput placeholder='具体地点' placeholderTextColor='#fff' clearTextOnFocus={true}
                                              contentContainerStyle={styles.framedTextInput}
