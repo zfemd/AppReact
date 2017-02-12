@@ -28,6 +28,7 @@ export default keyMirror({
     RECEIVE_MY_NOTES: null,
 
     FETCH_CATEGORIES:null,
+    FETCH_CITIES: null,
     RECEIVE_FOLLOWING_LIST: null,
     RECEIVE_FOLLOWER_LIST: null
 });

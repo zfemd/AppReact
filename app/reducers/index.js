@@ -11,6 +11,7 @@ import comments from './comments';
 import recommend from './recommend';
 import user from './user';
 import categories from './categories';
+import cities from './cities';
 import follow from './follow';
 
 const rootReducer = combineReducers({
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     recommend,
     user,
     categories,
+    cities,
     follow
 });
 

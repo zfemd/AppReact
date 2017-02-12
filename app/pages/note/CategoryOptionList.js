@@ -32,7 +32,7 @@ class CategoryOptionList extends Component {
         };
     }
 
-    componentWillReceirveProps() {
+    componentWillReceiveProps() {
         const { dispatch } = this.props;
         dispatch({type:StoreActions.FETCH_CATEGORIES});
     }
@@ -47,7 +47,7 @@ class CategoryOptionList extends Component {
             });
 
             validCategories.forEach(function(category){
-                source.options[category.id] = {title: category.name};
+                source.options[category.id] = {title: category.name, id:category.id};
             });
 
             this.setState({dataSource:this.state.dataSource.cloneWithRowsAndSections(source)});
