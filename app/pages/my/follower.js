@@ -12,7 +12,8 @@ import {
     Animated,
     InteractionManager,
     Navigator,
-    Platform
+    Platform,
+    AsyncStorage
 } from 'react-native';
 import styles from './followStyle';
 import Toolbar from '../../components/toolbar';
@@ -26,6 +27,7 @@ import _ from 'lodash';
 import Spinner from 'react-native-spinkit';
 import { connect } from 'react-redux';
 import {fetchFollowerList} from '../../actions/follow';
+import StorageKeys from '../../constants/StorageKeys';
 
 const {height, width} = Dimensions.get('window');
 var backImg = require('../../assets/upload/rg_left.png');
@@ -36,7 +38,8 @@ class Follower extends React.Component {
         this._renderRow = this._renderRow.bind(this);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: this.ds.cloneWithRows([])
+            dataSource: this.ds.cloneWithRows([]),
+            title: '我'
         };
     }
 
@@ -49,7 +52,15 @@ class Follower extends React.Component {
     }
 
     componentWillMount() {
-
+        const { route } = this.props;
+        AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY).then((meDetail)=> {
+            if (meDetail !== null) {
+                const user = JSON.parse(meDetail);
+                if(user.userId !== route.userId){
+                    this.setState({title: 'Ta'});
+                }
+            }
+        });
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
@@ -100,7 +111,7 @@ class Follower extends React.Component {
         return (
             <View style={[styles.container,{minHeight: height}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
-                    title="我的粉丝"
+                    title= {this.state.title+"的粉丝"}
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />

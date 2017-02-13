@@ -12,7 +12,8 @@ import {
     Animated,
     InteractionManager,
     Navigator,
-    Platform
+    Platform,
+    AsyncStorage
 } from 'react-native';
 import styles from './followStyle';
 import Toolbar from '../../components/toolbar';
@@ -26,6 +27,7 @@ import _ from 'lodash';
 import Spinner from 'react-native-spinkit';
 import { connect } from 'react-redux';
 import {fetchFollowingList} from '../../actions/follow';
+import StorageKeys from '../../constants/StorageKeys';
 
 const {height, width} = Dimensions.get('window');
 var backImg = require('../../assets/upload/rg_left.png');
@@ -36,7 +38,8 @@ class Following extends React.Component {
         this._renderRow = this._renderRow.bind(this);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: this.ds.cloneWithRows([])
+            dataSource: this.ds.cloneWithRows([]),
+            title: '我'
         };
     }
 
@@ -45,12 +48,19 @@ class Following extends React.Component {
         let the = this;
         dispatch(fetchFollowingList(route.userId)).then(()=>{
             the.setState({dataSource: the.ds.cloneWithRows(the.props.follow.followingList)});
-
         });
     }
 
     componentWillMount() {
-
+        const { route } = this.props;
+        AsyncStorage.getItem(StorageKeys.ME_STORAGE_KEY).then((meDetail)=> {
+            if (meDetail !== null) {
+                const user = JSON.parse(meDetail);
+                if(user.userId !== route.userId){
+                    this.setState({title: 'Ta'});
+                }
+            }
+        });
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
@@ -95,7 +105,7 @@ class Following extends React.Component {
         return (
             <View style={[styles.container,{minHeight: height}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
-                    title="我的关注"
+                    title= {this.state.title+"的关注"}
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />
