@@ -173,7 +173,7 @@ class PhotoEditPage extends Component {
     }
 
     _onCategorySelect(rowData) {
-        this.state.currentTag.category = rowData.title;
+        this.state.currentTag.category = {title: rowData.title, id: rowData.id};
         this.showBrandModal(false);
     }
 
@@ -191,7 +191,7 @@ class PhotoEditPage extends Component {
     }
 
     _onNationSelect(rowData) {
-        this.state.currentTag.city = rowData.title;
+        this.state.currentTag.city = {title:rowData.title, id:rowData.id};
         this.showCurrencyModal(false);
     }
 
@@ -239,7 +239,11 @@ class PhotoEditPage extends Component {
         const { webviewbridge } = this.refs;
         let {tags} = this.state;
 
-        let data = {name, nation, currency, brand, price, address, x, y} = this.state.currentTag;
+        let data = {name, currency, brand, price, address, x, y} = this.state.currentTag;
+        this.state.currentTag.category && (data.category = this.state.currentTag.category.id);
+        this.state.currentTag.city && (data.city = this.state.currentTag.city.id);
+
+        console.log(data);
 
         tags.push(data);
         webviewbridge.sendToBridge(JSON.stringify({type:'addTag', data: data}));
@@ -478,7 +482,7 @@ class PhotoEditPage extends Component {
                         <View style={styles.formRow}>
                             <FramedTextInput ref="categoryInput" placeholder='品类' placeholderTextColor='#fff'
                                              clearTextOnFocus={true} enablesReturnKeyAutomatically={true} blurOnSubmit={true}
-                                             value={this.state.currentTag.category}
+                                             value={this.state.currentTag.category && this.state.currentTag.category.title}
                                              contentContainerStyle={styles.framedTextInput}
                                              style={[styles.textInput, {color: '#fff'}]}
                                              onFocus={() => {this.showCategoryModal(true); this.refs.categoryInput.blur()}} />
