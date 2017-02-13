@@ -1,21 +1,23 @@
 'use strict';
 
-import React  from 'react';
-import {
+import React from 'react-native';
+
+var {
     StyleSheet,
-    Dimensions
-} from 'react-native';
+    Dimensions,
+    Platform
+    } = React;
 
 const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    baseText:{
+    baseText: {
         fontSize: 13,
         color: '#4a4a4a',
         lineHeight: 18,
         paddingBottom: 2
     },
-    dimText:{
+    dimText: {
         color: '#9b9b9b',
     },
     container: {
@@ -23,271 +25,108 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: '#f1f1f1',
     },
-    main: {
-        //padding: 15,
-        marginBottom: 40
-    },
-    block: {
+    search: {
+        height: 42,
+        paddingTop: 0,
         backgroundColor: '#fff',
-        marginBottom: 10,
-        flexDirection: 'column',
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    user: {
+    searchText: {
+        height: 24,
+        width: width - 66,
+        marginTop: 10,
+        marginLeft: 12,
+        paddingLeft: 26,
+        fontSize: 14,
+        lineHeight: 24,
+        borderWidth: 0,
+        backgroundColor: 'rgba(155,155,155,0.1)',
+        marginHorizontal: 10,
+        paddingVertical: 4
+    },
+    back: {
+        marginLeft: 10,
+        marginTop:  Platform.OS === 'android' ? 6 : 0
+    },
+    magnifier: {
+        position: 'absolute',
+        top: Platform.OS === 'android' ? 18 : 15,
+        left: 42,
+        //zIndex: 1
+    },
+    addressBook: {
+        marginTop: 10,
+        height: 50,
+        backgroundColor: '#fff',
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+    },
+    addressText: {
+        fontSize: 16,
+        paddingLeft: 10,
+        alignSelf: 'center'
+    },
+    listContainer: {
+        minHeight: height,
+        backgroundColor: '#fff',
+        justifyContent: 'center',
+        paddingBottom: 30
+    },
+    friendsList: {},
+    friendsRow: {
+        backgroundColor: '#fff',
+        paddingLeft: 10,
+        paddingRight: 10,
+        //paddingBottom: 15,
+        //paddingTop: 15,
+        borderColor: 'rgba(155,155,155,0.1)',
+        borderBottomWidth: 1,
         flex: 1,
         flexDirection: 'row',
-        padding: 15,
-        paddingBottom: 0,
-        height: 50
+        alignItems: 'center',
     },
-    portrait: {
-        backgroundColor: '#fff',
-        borderRadius: 17,
-        borderColor: '#fff',
-        borderWidth: 1,
-    },
-    info: {
-        marginLeft: 5,
-        flexDirection: 'column',
-    },
-    nick: {
-        fontSize: 16,
-        lineHeight: 16,
-        height: 16,
-        width: width-150,
-        color: '#4a4a4a',
-    },
-    date: {
-        fontSize: 11,
-        lineHeight: 11,
-        height: 11,
-        width: width-150,
-        marginTop: 5,
-        color: '#9b9b9b',
-    },
-    follow: {
-        position: 'absolute',
-        right: 10,
-        top: 14,
-    },
-    thumbWarp: {
-        marginTop: 15,
-        //flexDirection: 'row',
-        //overflow: 'visible',
-        //flexWrap: 'nowrap',
-        alignSelf: 'flex-start',
-    },
-    thumb: {
-        width: width,
-        overflow: 'hidden',
-    },
-    description: {
-        padding: 15,
-    },
-    dTitle: {
-        marginBottom: 14,
-    },
-    tags: {
-        padding: 15,
+    invite: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignSelf: 'flex-start',
+        alignItems: 'center',
     },
-    tag: {
-        backgroundColor: 'rgba(155,155,155,0.1)',
-        height: 25,
-        borderRadius: 2,
-        paddingLeft: 20,
-        paddingRight: 20,
-        marginRight: 5,
-        marginBottom: 10,
-    },
-    tagText: {
-        fontSize: 12,
-        lineHeight: 18,
-        color: '#9b9b9b'
+    name: {
+        flex: 1,
+        flexDirection: 'column',
+        marginLeft: 10,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
     },
     float: {
-        flex:1,
-        flexDirection: 'row',
         position: 'absolute',
         width: width,
         height: 40,
-        bottom: 0,
-        backgroundColor: '#fff',
+        bottom: 21,
+        backgroundColor: '#4cd864',
         borderTopWidth: 1,
         borderColor: 'rgba(155,155,155,0.1)',
-    },
-    floatOp: {
-        width: width/4,
-
-    },
-    floatOpView: {
-        flex:1,
-        flexDirection: 'row',
-        alignSelf: 'center',
-        alignItems: 'center',
         justifyContent: 'center'
     },
-    floatOpImage: {
-        //marginTop: 12,
-    },
-    floatOpText: {
-        //lineHeight: 27,
+    portrait: {
+        height: 34,
+        borderRadius: 17,
         alignSelf: 'center',
-        paddingLeft: 5,
-        color: '#9b9b9b'
     },
-    floatOpLine: {
-        flex: 1,
-        height: 20,
-        //width: 1.5,
-        backgroundColor: 'rgba(155,155,155,0.4)',
-        marginTop: 8,
-    },
-
-    GC: {
-        flex: 1,
-        flexDirection: 'row',
-    },
-    grade: {
-        width: width/2,
-        padding: 15
-    },
-    comment: {
-        width: width/2,
-        padding: 15
-    },
-    blockTitle: {
-        paddingBottom: 5,
-        borderBottomWidth: 1,
-        borderColor: 'rgba(155,155,155,0.1)',
-        marginBottom: 5,
-        flexDirection: 'row',
-    },
-    blockTitleText: {
-        color: '#4a4a4a',
+    floatText: {
         fontSize: 16,
-        lineHeight: 18,
+        color: '#fff',
+        alignSelf: 'center'
     },
-    star: {
-        flexDirection: 'row',
-        flex: 1,
-        height: 30,
-        alignItems: 'center'
+    trueSwitchIsOn: {
+        alignSelf: 'center',
+        right: 10,
     },
-    starTitle: {
-        width: 70,
-        color: '#9b9b9b',
-        fontSize: 13
+    button: {
+        borderRadius: 6,
+        height: 25
     },
-    rightArrow: {
-        position: 'absolute',
-        right: 0,
-        top: 2
-    },
-    commentList: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        height: 30,
-        alignItems: 'center',
-        overflow: 'hidden'
-    },
-    NickName: {
-        color: '#9b9b9b',
-        fontSize: 13,
-        marginRight: 5,
-        height: 16,
-        maxWidth: 50
-    },
-    commentContent: {
-        color: '#4a4a4a',
-        fontSize: 13,
-        maxWidth: width/2-110
-    },
-    recommendByUser: {
-        padding: 15
-    },
-    recommendBySystem: {
-        padding: 15,
-        height: 228
-    },
-    relatedNote: {
-        backgroundColor: 'rgba(155,155,155,0)'
-    },
-    relatedNoteTitle: {
-        paddingLeft: 15,
-        paddingRight: 15,
-        borderBottomWidth: 0
-    },
-    sysList: {
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignSelf: 'flex-start',
-    },
-    sysRow: {
-        marginTop: 2,
-        marginBottom: 0,
-        width: width / 3,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-    },
-    sysThumb: {
-        width: width / 3 - 5
-    },
-    sysFrom: {
-        flexDirection: 'row',
-        marginBottom: 5
-    },
-    sysFromText: {
-        color: '#fc7d30'
-    },
-    sysFromMore: {
-        flexDirection: 'row',
-        position: 'absolute',
-        right: 0,
-        alignItems: 'center',
-    },
-    sysFromFrame: {
-        marginBottom: 10
-    },
-    recFrame:{
-        flexDirection: 'row',
-    },
-    recThumb:{
-        width: width / 4
-    },
-    recContent: {
-        width: width / 4 * 3 -40,
-        marginLeft: 10,
-        flexDirection: 'column',
-    },
-    recPrice: {
-        fontSize: 26,
-        lineHeight: 26
-    },
-    recPriceFrame: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 15
-    },
-    recPriceOld: {
-        textDecorationLine: 'line-through',
-        marginLeft: 5
-    },
-    recFlowPrice: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        height: 22,
-        //marginTop: 98,
-        bottom: 20,
-        marginLeft: 3,
-        width: width/3-5,
-        position: 'absolute'
-    },
-    recFlowText: {
-        color: '#fc7d30',
-        paddingLeft: 4
+    friendsRowC: {
+        height: 50
     }
 });
 

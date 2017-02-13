@@ -36,13 +36,16 @@ class Follower extends React.Component {
         this._renderRow = this._renderRow.bind(this);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: this.ds.cloneWithRows(this.props.follow.followingList)
+            dataSource: this.ds.cloneWithRows([])
         };
     }
 
     componentDidMount() {
         const { dispatch, route } = this.props;
-        dispatch(fetchFollowerList(route.userId));
+        let the = this;
+        dispatch(fetchFollowerList(route.userId)).then(()=>{
+            the.setState({dataSource: the.ds.cloneWithRows(the.props.follow.followerList)});
+        });
     }
 
     componentWillMount() {
@@ -50,55 +53,33 @@ class Follower extends React.Component {
     }
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
-        if (!rowData.hasBeFollowed) {
-            this.state.opacity[rowData.phone] = new Animated.Value(1);
-            this.state.toLeft[rowData.phone] = new Animated.Value(0);
-            this.state.height[rowData.phone] = new Animated.Value(50);
-
-            return (
-                <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
-                    <Animated.View
-                        style={{opacity: this.state.opacity[rowData.phone],
-                                left: this.state.toLeft[rowData.phone],
-                                height: this.state.height[rowData.phone]}}>
-                        <View style={styles.friendsRow}>
-                            <View style={{flex:1}}>
-                                <TouchableOpacity
-                                    style={{flex:1,flexDirection: 'row'}}
-                                    onPress={() => this._jumpToUserPage(rowData.userId)}
-                                    >
-                                    <Image style={styles.portrait}
-                                           source={{uri: (rowData.portrait ? rowData.portrait : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
-                                    <View style={styles.name}>
-                                        <Text>{rowData.name}</Text>
-                                        <Text>{rowData.phone}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-
-                            <View style={styles.invite}>
-                                {
-                                    rowData.hasRegistered ?
-                                        <TouchableHighlight onPress={()=>this._follow(rowData)}
-                                                            style={styles.button}>
-                                            <Image source={require('../../assets/invite/follow.png')}></Image>
-                                        </TouchableHighlight>
-                                        :
-                                        <TouchableHighlight onPress={()=>this._invite(rowData.phone)}
-                                                            style={styles.button}>
-                                            <Image source={require('../../assets/invite/invite.png')}></Image>
-                                        </TouchableHighlight>
-
-                                }
-                            </View>
+        return (
+            <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
+                <View style={styles.friendsRowC}>
+                    <View style={styles.friendsRow}>
+                        <View style={{flex:1}}>
+                            <TouchableOpacity
+                                style={{flex:1,flexDirection: 'row'}}
+                                onPress={() => this._jumpToUserPage(rowData.userId)}
+                                >
+                                <Image style={styles.portrait}
+                                       source={{uri: (rowData.portraitUrl ? rowData.portraitUrl : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
+                                <View style={styles.name}>
+                                    <Text>{rowData.nickname}</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
-                    </Animated.View>
-                </TouchableOpacity>
-            );
-        }
-        else {
-            return null;
-        }
+
+                        <View style={styles.invite}>
+                            <TouchableHighlight onPress={()=>this._follow(rowData)}
+                                                style={styles.button}>
+                                <Image source={require('../../assets/invite/follow.png')}></Image>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        );
     }
 
     _jumpToUserPage(userId) {
