@@ -30,6 +30,7 @@ import { connect } from 'react-redux';
 import React_Native_Taobao_Baichuan_Api from 'react-native-taobao-baichuan-api';
 import {Token, follow, timeFormat, like } from '../../utils/common';
 import _ from 'lodash';
+import imagesConstants from '../../constants/images';
 
 const shareImg = require('../../assets/note/transfer.png');
 const uri = ['https://hbimg.b0.upaiyun.com/fd0af542aae5ceb16f67c54c080a6537111d065b94beb-brWmWp_fw658',
@@ -217,7 +218,7 @@ class Detail extends React.Component {
                             <TouchableOpacity style={{flexDirection: 'row'}}
                                               onPress={() => this._jumpToUserPage(detail.note[noteId].userId)}>
                                 <Image style={styles.portrait}
-                                       source={{uri: (detail.note[noteId] ? detail.note[noteId].portrait : 'https://avatars2.githubusercontent.com/u/19884155?v=3&s=200'), width:34, height:34 }}/>
+                                       source={{uri: (detail.note[noteId] ? detail.note[noteId].portrait : imagesConstants.DEFAULT_PORTRAIT), width:34, height:34 }}/>
                                 <View style={styles.info}>
                                     <Text
                                         style={styles.nick}>{detail.note[noteId] ? detail.note[noteId].nickname : '' }</Text>

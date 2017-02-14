@@ -18,8 +18,9 @@ import Toolbar from '../../components/toolbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CommentPage from '../../pages/comment';
 import { connect } from 'react-redux';
-import { Token } from '../../utils/common';
+import { Token, timeFormat } from '../../utils/common';
 import LoginPage from '../../pages/login';
+import images from '../../constants/images';
 
 class CommentList extends React.Component {
     constructor(props) {
@@ -44,11 +45,12 @@ class CommentList extends React.Component {
             <TouchableOpacity  underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.commentRow}>
-                        <Image style={styles.portrait} source={{uri: 'https://facebook.github.io/react/img/logo_small_2x.png', width: 34, height: 34}}/>
+                        <Image style={styles.portrait}
+                               source={{uri: (rowData.authorPortraitUrl ? rowData.authorPortraitUrl : images.DEFAULT_PORTRAIT), width: 34, height: 34}}/>
                         <View style={styles.commentContent}>
                             <View style={styles.commentUserAndTime}>
                                 <Text style={styles.dimText}>{rowData.authorNickname} </Text>
-                                <Text style={[styles.dimText,styles.commentTime]}>2016-08-05 </Text>
+                                <Text style={[styles.dimText,styles.commentTime]}>{rowData.createdDateTime ? timeFormat(rowData.createdDateTime, 'yyyy年MM月dd日 hh:mm:ss') : '2016-08-05'} </Text>
                             </View>
 
                             <Text style={styles.baseText} >
