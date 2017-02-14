@@ -72,7 +72,7 @@ class Flow extends React.Component {
             dispatch(fetchList(params))
                 .then(()=> {
                     _.each(the.props.flow.flowList[params.tag], function (v, k) {
-                        if(!the.props.detail.note[v.noteId]){
+                        if (!the.props.detail.note[v.noteId]) {
                             dispatch(fetchDetail(v.noteId));
                         }
                     });
@@ -105,7 +105,7 @@ class Flow extends React.Component {
             dispatch(fetchList(params))
                 .then(()=> {
                     _.each(the.props.flow.flowList[params.tag], function (v, k) {
-                        if(!the.props.detail.note[v.noteId]){
+                        if (!the.props.detail.note[v.noteId]) {
                             dispatch(fetchDetail(v.noteId));
                         }
                     });
@@ -116,7 +116,7 @@ class Flow extends React.Component {
                 dispatch(fetchList(params))
                     .then(()=> {
                         _.each(the.props.flow.flowList[params.tag], function (v, k) {
-                            if(!the.props.detail.note[v.noteId]){
+                            if (!the.props.detail.note[v.noteId]) {
                                 dispatch(fetchDetail(v.noteId));
                             }
                         });
@@ -300,11 +300,15 @@ class Flow extends React.Component {
 
     _onScroll(event) {
         let the = this;
-        const { dispatch, tag } = this.props;
+        const { dispatch, tag, flow } = this.props;
         let maxOffset = event.nativeEvent.contentSize.height - event.nativeEvent.layoutMeasurement.height;
         let offset = event.nativeEvent.contentOffset.y;
         let params = _.cloneDeep(fetchParams);
-        if (Math.floor(maxOffset - offset) <= 0 && !this.props.flow.loadingMore && !this.props.flow.noMoreData) {
+        if (offset > 0
+            && Math.floor(maxOffset - offset) <= 0
+            && !this.props.flow.loadingMore
+            && !this.props.flow.noMoreData
+            && tag === flow.currentTag) {
             params.loadedSize = this.props.flow.flowList[tag].length;
             params.timestamp = this.props.flow.timestamp[tag];
             params.refreshing = true;
@@ -314,7 +318,7 @@ class Flow extends React.Component {
             dispatch(fetchList(params))
                 .then(()=> {
                     _.each(the.props.flow.flowList[params.tag], function (v, k) {
-                        if(!the.props.detail.note[v.noteId]){
+                        if (!the.props.detail.note[v.noteId]) {
                             dispatch(fetchDetail(v.noteId));
                         }
                     });
@@ -332,7 +336,7 @@ class Flow extends React.Component {
             dispatch(fetchList(params))
                 .then(()=> {
                     _.each(the.props.flow.flowList[params.tag], function (v, k) {
-                        if(!the.props.detail.note[v.noteId]){
+                        if (!the.props.detail.note[v.noteId]) {
                             dispatch(fetchDetail(v.noteId));
                         }
                     });
@@ -429,7 +433,7 @@ var styles = StyleSheet.create({
         backgroundColor: '#f1f1f1',
         alignItems: 'flex-start',
     },
-    boxContainer:{
+    boxContainer: {
         flexDirection: 'column',
     },
     thumb: {
