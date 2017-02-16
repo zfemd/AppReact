@@ -92,7 +92,7 @@ Token.isTokenValid = async function () {
                 }
             }
         }).catch((error) => {
-            Alert.alert('登陆失败', "网络连接失败：" + error);
+            Alert.alert('登录失败', "网络连接失败：" + error);
         });
     }
 

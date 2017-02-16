@@ -94,7 +94,7 @@ export default class WeixinLoginPage extends Component {
         return (
             <View>
                 <Toolbar
-                    title="微信账号登陆"
+                    title="微信账号登录"
                     navigator={this.props.navigator}
                     hideDrop={true}
                     />
@@ -119,7 +119,7 @@ export default class WeixinLoginPage extends Component {
 
                     <View style={{marginTop:40, flexDirection:'row'}}>
                         <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
-                                onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
+                                onPress={this._onPressLoginButton.bind(this)}>登录</Button>
                     </View>
                 </View>
 

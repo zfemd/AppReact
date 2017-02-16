@@ -77,9 +77,9 @@ export default class LoginPage extends Component {
                     return;
                 }
             }
-            Alert.alert('登陆失败', "密码登陆失败");
+            Alert.alert('登录失败', "密码登录失败");
         }).catch((error) => {
-            Alert.alert('登陆失败', "网络连接失败：" + error);
+            Alert.alert('登录失败', "网络连接失败：" + error);
         });
     }
 
@@ -161,12 +161,12 @@ export default class LoginPage extends Component {
 
                 <View style={{marginTop:40, flexDirection:'row'}}>
                     <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1, justifyContent: 'center', backgroundColor:'red'}}
-                            onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
+                            onPress={this._onPressLoginButton.bind(this)}>登录</Button>
                 </View>
 
                 <View style={{marginTop:60, flexDirection:'row'}}>
                     <View style={{borderBottomColor:'#989898', borderBottomWidth:1, flex:1, height:8, marginRight:5}}></View>
-                    <Text style={{color:'#989898'}}>或合作账号登陆</Text>
+                    <Text style={{color:'#989898'}}>或合作账号登录</Text>
                     <View style={{borderBottomColor:'#989898', borderBottomWidth:1, flex:1, height:8, marginLeft:5}}></View>
                 </View>
 

@@ -118,12 +118,12 @@ export default class ForgetPasswordPage extends Component {
                 Token.setToken(responseJson[0]);
                 return true;
             } else {
-                Alert.alert('登陆失败', "验证码登陆失败");
+                Alert.alert('登录失败', "验证码登录失败");
             }
 
 
         }).catch((error) => {
-            Alert.alert('登陆失败', "网络连接失败：" + error);
+            Alert.alert('登录失败', "网络连接失败：" + error);
         });
     }
 
@@ -147,7 +147,7 @@ export default class ForgetPasswordPage extends Component {
 
                 <View style={styles.navigator}>
                     <Icon.Button name="angle-left" size={32} color="#4a4a4a" backgroundColor="transparent" onPress={this._onPasswordLoginLink.bind(this)}>
-                        <Text style={{fontSize:24, color:'#4a4a4a'}}>返回密码登陆</Text>
+                        <Text style={{fontSize:24, color:'#4a4a4a'}}>返回密码登录</Text>
                     </Icon.Button>
                 </View>
 
@@ -174,12 +174,12 @@ export default class ForgetPasswordPage extends Component {
 
                 <View style={{justifyContent:'flex-end', flexDirection:'row'}}>
                     <Button style={{textAlign:'right', fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
-                            onPress={this._onPasswordLoginLink.bind(this)} >密码登陆</Button>
+                            onPress={this._onPasswordLoginLink.bind(this)} >密码登录</Button>
                 </View>
 
                 <View style={{marginTop:40, flexDirection:'row'}}>
                     <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
-                        onPress={this._onPressLoginButton.bind(this)}>登陆</Button>
+                        onPress={this._onPressLoginButton.bind(this)}>登录</Button>
                 </View>
 
             </View>
