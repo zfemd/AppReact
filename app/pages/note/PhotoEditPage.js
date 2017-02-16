@@ -239,13 +239,19 @@ class PhotoEditPage extends Component {
         const { webviewbridge } = this.refs;
         let {tags} = this.state;
 
-        let data = {name, currency, brand, price, address, x, y} = this.state.currentTag;
-        this.state.currentTag.category && (data.category = this.state.currentTag.category.id);
-        this.state.currentTag.city && (data.city = this.state.currentTag.city.id);
+        let tagData = {name, currency, brand, price, address, x, y} = this.state.currentTag;
+
+        this.state.currentTag.category && (tagData.category = this.state.currentTag.category.id);
+        this.state.currentTag.city && (tagData.city = this.state.currentTag.city.id);
+
+        let data = clone(tagData);
+
+        this.state.currentTag.category && (data.category = this.state.currentTag.category.title);
+        this.state.currentTag.city && (data.city = this.state.currentTag.city.title);
 
         console.log(data);
 
-        tags.push(data);
+        tags.push(tagData);
         webviewbridge.sendToBridge(JSON.stringify({type:'addTag', data: data}));
 
         this.state.tags = tags;
@@ -505,7 +511,7 @@ class PhotoEditPage extends Component {
                             <FramedTextInput ref="nationInput" placeholder='国家/城市' placeholderTextColor='#fff'
                                              clearTextOnFocus={true} contentContainerStyle={styles.framedTextInput}
                                              style={[styles.textInput, {color: '#fff'}]}
-                                             value={this.state.currentTag.city}
+                                             value={this.state.currentTag.city && this.state.currentTag.city.title}
                                              onFocus={() => {this.showNationModal(true); this.refs.nationInput.blur();}} />
                             <FramedTextInput placeholder='具体地点' placeholderTextColor='#fff' clearTextOnFocus={true}
                                              contentContainerStyle={styles.framedTextInput}

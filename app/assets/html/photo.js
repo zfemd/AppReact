@@ -248,7 +248,7 @@ const photo = `<html lang="en">
                     //group.setOriginY(e.offsetY);
 
                     addTagLabel((message.data.brand || '') + (message.data.name || ''), position, group, 0);
-                    addTagLabel(message.data.nation, position, group, 1);
+                    addTagLabel(message.data.city, position, group, 1);
                     addTagLabel((message.data.price || '') + (message.data.currency || ''), position, group, 2);
                     addTagLabel(message.data.address, position, group, 3);
 
