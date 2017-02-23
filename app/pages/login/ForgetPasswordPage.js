@@ -36,7 +36,8 @@ export default class ForgetPasswordPage extends Component {
         super(props);
 
         this.state = {
-            modalVisible: true
+            modalVisible: true,
+            sending: true
         };
     }
 
@@ -49,10 +50,15 @@ export default class ForgetPasswordPage extends Component {
         }
     }
     _sendCode() {
+        if (this.state.sending) return;
+
         if(!this.state.phone){
             toast('请填写正确的手机号码');
             return false;
         }
+
+        this.state.sending = true;
+
         fetch(configs.serviceUrl + '/message/verification-code', {
             method: 'POST',
             headers: {
@@ -64,6 +70,7 @@ export default class ForgetPasswordPage extends Component {
                 mobile: this.state.phone
             })
         }).then((response) => {
+            this.state.sending = false;
             if (response.ok) {
                 return response.json()
             }
@@ -73,22 +80,18 @@ export default class ForgetPasswordPage extends Component {
                 return responseJson.resultCode;
             }
         }).catch((error) => {
+            this.state.sending = false;
             console.error(error);
         });
     }
 
     _onPressLoginButton() {
+        if (this.state.sending) return;
+
         const { navigator, HomeNavigator } = this.props;
         let {phone, code} = this.state;
-
-        //let formData = new FormData();
-        //formData.append("code", "1234");
-
-        //let request = new Request(configs.serviceUrl + 'accounts/' + this.state.phone + '/login/verification-code', {
-        //    method: 'POST',
-        //    headers: {},
-        //    body: formData
-        //});
+        
+        this.state.sending = true;
 
         fetch(configs.serviceUrl + 'user/login', {
             method: 'POST',
@@ -102,6 +105,7 @@ export default class ForgetPasswordPage extends Component {
                 mobileNumber: phone
             })
         }).then((response) => {
+            this.state.sending = false;
             if (response.ok) {
                 return response.headers.map['x-app-token'];
             }
@@ -123,6 +127,7 @@ export default class ForgetPasswordPage extends Component {
 
 
         }).catch((error) => {
+            this.state.sending = false;
             Alert.alert('登录失败', "网络连接失败：" + error);
         });
     }
