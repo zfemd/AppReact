@@ -175,7 +175,7 @@ export function toast(message){
     if(Platform.OS === 'ios'){
         Toast.show(message, {
             duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
+            position: Toast.positions.CENTER,
             shadow: true,
             animation: true,
             hideOnPress: true,
