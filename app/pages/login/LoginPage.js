@@ -40,8 +40,7 @@ export default class LoginPage extends Component {
         this.state = {
             region: 'China',
             modalVisible: true,
-            sending: false,
-            sended: false
+            sending: false
         };
     }
 
@@ -134,7 +133,7 @@ export default class LoginPage extends Component {
             return false;
         }
 
-        this.setState({sending: true});
+        this.state.sending = true;
 
         fetch(configs.serviceUrl + 'message/verification-code', {
             method: 'POST',
@@ -147,19 +146,18 @@ export default class LoginPage extends Component {
                 mobile: this.state.phone
             })
         }).then((response) => {
-            this.setState({sending: false});
+            this.state.sending = false;
             if (response.ok) {
                 return response.json();
             }
         }).then((responseJson) => {
             if(responseJson.resultCode == 0){
                 toast('验证码已发送');
-                this.setState({sended: true});
                 return responseJson.resultCode;
             }
             toast('验证码发送失败');
         }).catch((error) => {
-            this.setState({sending: false});
+            this.state.sending = false;
             console.error(error);
         });
     }
@@ -255,7 +253,7 @@ export default class LoginPage extends Component {
                                onChangeText={(text) => {this.state.code=text; this.validate();}}
                                value={this.state.text}
                                onFocus={(e) => this.setState({focus:'code'})}/>
-                    <PhoneCodeButton onPress={this._sendCode.bind(this)} sended={this.state.sended}>发送验证码</PhoneCodeButton>
+                    <PhoneCodeButton onPress={this._sendCode.bind(this)}>发送验证码</PhoneCodeButton>
                 </View>
 
                 <View style={{justifyContent:'space-between', flexDirection:'row'}}>

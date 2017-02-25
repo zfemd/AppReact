@@ -37,8 +37,7 @@ export default class ForgetPasswordPage extends Component {
 
         this.state = {
             modalVisible: true,
-            sending: false,
-            sended: false
+            sending: false
         };
     }
 
@@ -51,14 +50,14 @@ export default class ForgetPasswordPage extends Component {
         }
     }
     _sendCode() {
-        if (this.state.sending) return;
+        if (this.state.sending) return false;
 
         if(!this.state.phone){
             toast('请填写正确的手机号码');
             return false;
         }
 
-        this.setState({sending: true});
+        this.state.sending = true;
 
         fetch(configs.serviceUrl + 'message/verification-code', {
             method: 'POST',
@@ -71,19 +70,19 @@ export default class ForgetPasswordPage extends Component {
                 mobile: this.state.phone
             })
         }).then((response) => {
-            this.setState({sending: false});
+            console.log(response);
+            this.state.sending = false;
             if (response.ok) {
                 return response.json();
             }
         }).then((responseJson) => {
             if(responseJson.resultCode == 0){
                 toast('验证码已发送');
-                this.setState({sended: true});
                 return responseJson.resultCode;
             }
-            toast('验证码发送失败');
+            //toast('验证码发送失败');
         }).catch((error) => {
-            this.setState({sending: false});
+            this.state.sending = false;
             console.error(error);
         });
     }
@@ -94,7 +93,7 @@ export default class ForgetPasswordPage extends Component {
         const { navigator, HomeNavigator } = this.props;
         let {phone, code} = this.state;
 
-        this.setState({sending: true});
+        this.state.sending = true;
 
         fetch(configs.serviceUrl + 'user/login', {
             method: 'POST',
@@ -108,7 +107,7 @@ export default class ForgetPasswordPage extends Component {
                 mobileNumber: phone
             })
         }).then((response) => {
-            this.setState({sending: false});
+            this.state.sending = false;
             if (response.ok) {
                 return response.headers.map['x-app-token'];
             }
@@ -177,7 +176,7 @@ export default class ForgetPasswordPage extends Component {
                                onChangeText={(text) => {this.state.code=text; this.validate();}}
                                value={this.state.text}
                                onFocus={(e) => this.setState({focus:'code'})}/>
-                    <PhoneCodeButton onPress={this._sendCode.bind(this)} sended={this.state.sended}>发送验证码</PhoneCodeButton>
+                    <PhoneCodeButton onPress={this._sendCode.bind(this)} >发送验证码</PhoneCodeButton>
                 </View>
 
                 <View style={{marginTop:40, flexDirection:'row'}}>
