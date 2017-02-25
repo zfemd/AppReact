@@ -23,6 +23,7 @@ import Button from '../../components/button/Button';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import RegisterPage from './register';
 import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
+import BindingPage from './binding';
 import configs from '../../constants/configs';
 import * as WechatAPI from 'react-native-wx';
 import {
@@ -56,32 +57,69 @@ export default class LoginPage extends Component {
     }
 
     _onPressWeixinIcon() {
-        const config = {
-            scope: 'snsapi_userinfo', // 默认 'snsapi_userinfo'
-        };
-        WechatAPI.isWXAppInstalled()
-            .then((res) =>{
-                if(!res)
-                    toast('您还未安装微信');
-                else
-                    return WechatAPI.login(config);
-            })
-            .then((res,re) =>{
-                console.log(res);
-            })
+        const { navigator } = this.props;
+        InteractionManager.runAfterInteractions(() => {
+            navigator.push({
+                component: BindingPage,
+                name: 'BindingPage',
+                sceneConfigs: Navigator.SceneConfigs.FloatFromLeft
+            });
+        });
+        //const config = {
+        //    scope: 'snsapi_userinfo', // 默认 'snsapi_userinfo'
+        //};
+        //WechatAPI.isWXAppInstalled()
+        //    .then((res) =>{
+        //        if(!res)
+        //            toast('您还未安装微信');
+        //        else
+        //            return WechatAPI.login(config);
+        //    })
+        //    .then((res) =>{
+        //        _checkBinding(res);
+        //    })
+    }
+
+    _checkBinding(res) {
+        const { navigator } = this.props;
+        fetch(configs.serviceUrl + 'users/check-binding', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(res)
+        }).then((response) => {
+            this.setState({sending: false});
+            if (response.ok) {
+                return response.json();
+            }
+        }).then((responseJson) => {
+           if(responseJson.binded){
+               InteractionManager.runAfterInteractions(() => {
+                   setTimeout(function(){
+                       navigator.jumpTo(navigator.getCurrentRoutes()[0]);
+                   }, 500);
+
+               });
+               toast('登录成功');
+               Token.setToken(responseJson.token);
+           } else {
+               InteractionManager.runAfterInteractions(() => {
+                   navigator.push({
+                       component: BindingPage,
+                       name: 'BindingPage',
+                       sceneConfigs: Navigator.SceneConfigs.FloatFromLeft
+                   });
+               });
+           }
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     _onPressCancel() {
         const { navigator } = this.props;
-        if (navigator && navigator.getCurrentRoutes().length > 1) {
-            navigator.pop();
-            return true;
-        }
-    }
-
-    _onPasswordLoginLink() {
-        const { navigator } = this.props;
-
         if (navigator && navigator.getCurrentRoutes().length > 1) {
             navigator.pop();
             return true;
@@ -239,7 +277,7 @@ export default class LoginPage extends Component {
                 </View>
 
                 <View style={{flexDirection:'row', justifyContent:'space-between', marginTop:20}}>
-                    <Icon.Button name="weixin" onPress={this._onPressWeixinIcon.bind(this)} size={28} color="#21b384" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc',height:48, width:48}}/>
+                    <Icon.Button name="weixin" onPress={this._onPressWeixinIcon.bind(this)} size={26} color="#21b384" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc',height:48, width:48}}/>
                     <Icon.Button name="weibo" size={32} color="#900" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc'}}/>
                     <Icon.Button name="qq" size={32} color="#007AFF" backgroundColor="transparent" borderRadius={24} iconStyle={{marginRight:0}} style={{borderWidth:1, borderColor:'#ccc'}}/>
                 </View>
