@@ -14,9 +14,6 @@ import LoginPage from './LoginPage';
 class Login extends Component {
     constructor(props) {
         super(props);
-
-        this.displayName = "Login"
-
     }
     render() {
         return( <LoginPage navigator={this.props.navigator} ></LoginPage>);

@@ -37,7 +37,8 @@ export default class ForgetPasswordPage extends Component {
 
         this.state = {
             modalVisible: true,
-            sending: true
+            sending: false,
+            sended: false
         };
     }
 
@@ -57,9 +58,9 @@ export default class ForgetPasswordPage extends Component {
             return false;
         }
 
-        this.state.sending = true;
+        this.setState({sending: true});
 
-        fetch(configs.serviceUrl + '/message/verification-code', {
+        fetch(configs.serviceUrl + 'message/verification-code', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -70,17 +71,19 @@ export default class ForgetPasswordPage extends Component {
                 mobile: this.state.phone
             })
         }).then((response) => {
-            this.state.sending = false;
+            this.setState({sending: false});
             if (response.ok) {
-                return response.json()
+                return response.json();
             }
         }).then((responseJson) => {
             if(responseJson.resultCode == 0){
                 toast('验证码已发送');
+                this.setState({sended: true});
                 return responseJson.resultCode;
             }
+            toast('验证码发送失败');
         }).catch((error) => {
-            this.state.sending = false;
+            this.setState({sending: false});
             console.error(error);
         });
     }
@@ -90,8 +93,8 @@ export default class ForgetPasswordPage extends Component {
 
         const { navigator, HomeNavigator } = this.props;
         let {phone, code} = this.state;
-        
-        this.state.sending = true;
+
+        this.setState({sending: true});
 
         fetch(configs.serviceUrl + 'user/login', {
             method: 'POST',
@@ -105,7 +108,7 @@ export default class ForgetPasswordPage extends Component {
                 mobileNumber: phone
             })
         }).then((response) => {
-            this.state.sending = false;
+            this.setState({sending: false});
             if (response.ok) {
                 return response.headers.map['x-app-token'];
             }
@@ -118,17 +121,17 @@ export default class ForgetPasswordPage extends Component {
                     }, 1000);
 
                 });
-                toast('登录成功');
+                toast('注册成功');
                 Token.setToken(responseJson[0]);
                 return true;
             } else {
-                Alert.alert('登录失败', "验证码登录失败");
+                Alert.alert('注册失败', "非常抱歉，您可以尝试再次注册！");
             }
 
 
         }).catch((error) => {
-            this.state.sending = false;
-            Alert.alert('登录失败', "网络连接失败：" + error);
+            this.setState({sending: false});
+            Alert.alert('注册失败', "网络连接失败：" + error);
         });
     }
 
@@ -152,7 +155,7 @@ export default class ForgetPasswordPage extends Component {
 
                 <View style={styles.navigator}>
                     <Icon.Button name="angle-left" size={32} color="#4a4a4a" backgroundColor="transparent" onPress={this._onPasswordLoginLink.bind(this)}>
-                        <Text style={{fontSize:24, color:'#4a4a4a'}}>返回密码登录</Text>
+                        <Text style={{fontSize:24, color:'#4a4a4a'}}>返回登录</Text>
                     </Icon.Button>
                 </View>
 
@@ -174,17 +177,12 @@ export default class ForgetPasswordPage extends Component {
                                onChangeText={(text) => {this.state.code=text; this.validate();}}
                                value={this.state.text}
                                onFocus={(e) => this.setState({focus:'code'})}/>
-                    <PhoneCodeButton onPress={this._sendCode.bind(this)}>发送验证码</PhoneCodeButton>
-                </View>
-
-                <View style={{justifyContent:'flex-end', flexDirection:'row'}}>
-                    <Button style={{textAlign:'right', fontSize: 14, padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}
-                            onPress={this._onPasswordLoginLink.bind(this)} >密码登录</Button>
+                    <PhoneCodeButton onPress={this._sendCode.bind(this)} sended={this.state.sended}>发送验证码</PhoneCodeButton>
                 </View>
 
                 <View style={{marginTop:40, flexDirection:'row'}}>
                     <Button style={[styles.button, this.state.validForm ? styles.activeButton : null]} containerStyle={{flex:1}}
-                        onPress={this._onPressLoginButton.bind(this)}>登录</Button>
+                            onPress={this._onPressLoginButton.bind(this)}>注册</Button>
                 </View>
 
             </View>
@@ -192,18 +190,7 @@ export default class ForgetPasswordPage extends Component {
     }
 }
 
-/*
- <Picker style={{width:80,height:26}}
- selectedValue={this.state.region}
- onValueChange={(lang) => this.setState({region: lang})}>
- <Picker.Item label="+86" value="China" />
- </Picker>*/
 
-/*<Button ref={(component) => this.codeBtn = component}
-        onPress={this._sendCode.bind(this)}
-        style={{fontSize: 14, backgroundColor:'#ececec', padding:3, borderRadius:2, color:'#888',lineHeight:23,fontFamily:'ArialMT'}}>
-
-    发送验证码</Button>*/
 
 var styles = StyleSheet.create({
     description: {

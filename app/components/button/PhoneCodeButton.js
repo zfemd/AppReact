@@ -35,7 +35,7 @@ export default class PhoneCodeButton extends Component {
     onPressBtn() {
         if (this.props.onPress() === false) return;
         if (this.state.hasSent) return;
-
+        if (!this.state.sending) return;
         if (this.props.onPress) {
             this.props.onPress();
         }
