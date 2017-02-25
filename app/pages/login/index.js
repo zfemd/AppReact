@@ -19,19 +19,6 @@ class Login extends Component {
 
     }
     render() {
-        //let defaultName = 'LoginPage';
-        //let defaultComponent = LoginPage;
-        //return (
-        //    <Navigator
-        //        initialRoute={{ name: defaultName, component: defaultComponent, title:'登陆', rightButtonTitle:'取消'}}
-        //        configureScene={(route, routeStack) => {
-        //                return Navigator.SceneConfigs.FloatFromLeft;
-        //            }}
-        //        renderScene={(route, navigator) => {
-        //                let Component = route.component;
-        //                return <Component {...route.params} navigator={navigator} HomeNavigator={this.props.navigator} />
-        //            }}/>
-        //);
         return( <LoginPage navigator={this.props.navigator} ></LoginPage>);
     }
 }

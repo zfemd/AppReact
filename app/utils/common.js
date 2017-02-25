@@ -107,7 +107,7 @@ export function request(url, method, body, token) {
         'X-App-Token': token ? token : ''
     }};
 
-    if (method == 'POST') {
+    if (method.toLowerCase() === 'post') {
         options.body = body;
     }
 
@@ -118,7 +118,7 @@ export function request(url, method, body, token) {
             } else {
                 success = false;
             }
-            return response.json();
+            return response;
         }).then((responseData) => {
             if (success) {
                 resolve(responseData);

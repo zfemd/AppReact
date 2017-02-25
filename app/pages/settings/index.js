@@ -52,7 +52,7 @@ class SettingPage extends React.Component {
             if (token) {
                 return request('/user/logout', 'post', '', token)
                     .then((ret) => {
-                        if(ret.resultCode === 0){
+                        if(ret.ok){
                             removeAllStorage();
                             toast('登出成功');
                             navigator.resetTo({
@@ -64,13 +64,14 @@ class SettingPage extends React.Component {
                             Alert.alert('登出失败', "登出失败");
                         }
                     }, function (error) {
+                        console.log(error);
                         Alert.alert('登出失败', "出错：" + error);
                     })
                     .catch(() => {
                         Alert.alert('登出失败', "网络连接失败：" + error);
                     });
             } else {
-                console.log('sign out');
+                console.log('signed out');
             }
         });
 
