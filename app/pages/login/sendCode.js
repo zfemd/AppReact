@@ -6,39 +6,32 @@ import {
     TextInput,
     Alert,
     DeviceEventEmitter,
-    Platform,
-    InteractionManager,
-    Navigator
+    Platform
 } from 'react-native';
 import styles from './bindingStyle';
 import Toolbar from '../../components/toolbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Token, toast, request } from '../../utils/common';
 import { connect } from 'react-redux';
-import SendCodePage from './sendCode';
+import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
 
-class Binding extends React.Component {
+class SendCode extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            phone: ''
+            phone: this.props.route.phone
         };
     }
 
     _submit() {
-        let the = this;
-        if(!this.state.phone){
-            toast('请填写正确的手机号码');
-            return false;
-        }
-        
+        const {navigator} = this.props;
         let body = {
             phone: this.state.phone
         };
         request('/message/verification-code', 'POST', body)
             .then((res) => {
                 if (res.resultCode === 0) {
-                    the._jumpToCodePage();
+
                 }
             }, function (error) {
                 console.log(error);
@@ -46,20 +39,15 @@ class Binding extends React.Component {
             .catch(() => {
                 console.log('network error');
             });
-        the._jumpToCodePage();
     }
 
-    _jumpToCodePage(){
-        const {navigator} = this.props;
-        InteractionManager.runAfterInteractions(() => {
-            navigator.push({
-                component: SendCodePage,
-                name: 'SendCodePage',
-                sceneConfigs: Navigator.SceneConfigs.FloatFromLeft,
-                phone: this.state.phone
-            });
-        });
 
+    _sendCode() {
+        return true;
+    }
+
+    componentDidMount() {
+        this.codeBtn.codeBtn.props.onPress();
     }
 
     render() {
@@ -73,15 +61,22 @@ class Binding extends React.Component {
                 <View style={styles.phone}>
                     <TextInput
                         style={[styles.phoneText, Platform.OS === 'android' ? null : {height: 26}]}
-                        placeholder={'输入您已注册 或 常用的手机号'}
+                        placeholder={'验证码'}
                         placeholderTextColor='#bebebe'
                         underlineColorAndroid='transparent'
                         returnKeyType='done'
                         onChangeText={(text) => {this.state.phone=text }}
                         />
+                    <View style={{marginRight: 8}}>
+                        <PhoneCodeButton ref={(component) => this.codeBtn = component}
+                            onPress={this._sendCode.bind(this)}>再次发送</PhoneCodeButton>
+                    </View>
+                </View>
+                <View style={styles.bindPhone}>
+                    <Text style={styles.baseText}>即将绑定手机：{this.state.phone}</Text>
                 </View>
                 <TouchableOpacity style={styles.button} onPress={()=>this._submit()}>
-                    <Text style={styles.buttonFont}>确认</Text>
+                    <Text style={styles.buttonFont}>完成绑定并登录</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -91,4 +86,4 @@ class Binding extends React.Component {
 
 
 
-export default Binding;
+export default SendCode;

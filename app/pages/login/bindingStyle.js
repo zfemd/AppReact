@@ -48,6 +48,10 @@ const styles = StyleSheet.create({
         paddingVertical: 0,
         paddingLeft: 10,
         backgroundColor: '#fff'
+    },
+    bindPhone: {
+        marginTop: 10,
+        marginLeft: 10
     }
 });
 
