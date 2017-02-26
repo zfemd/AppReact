@@ -161,6 +161,8 @@ class PostNotePage extends Component {
             longitude: this.state.longitude
         };
 
+        console.log(data);
+
         if (!data.title || !data.content) {
             Toast.show('发布笔记需要您输入标题和内容。', {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
             return;
@@ -175,9 +177,10 @@ class PostNotePage extends Component {
             },
             body: JSON.stringify(data)
         }).then((response) => {
-            return response.json();
+            if (response.ok) {
+                return response.json();
+            }
         }).then((responseJson) => {
-            console.log(responseJson);
             if (responseJson && responseJson.resultCode == 0 && responseJson.resultValues) {
                 this._sendPhotos(responseJson.resultValues.noteId);
             } else {

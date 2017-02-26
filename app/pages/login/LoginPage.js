@@ -215,7 +215,7 @@ export default class LoginPage extends Component {
             return;
         }
 
-        if (!this.state.code || this.state.code.length < 4) {
+        if (!this.state.code || this.state.code.length < 6) {
             this.setState({validForm:false});
             return;
         }

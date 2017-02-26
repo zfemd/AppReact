@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     formRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: 10,
+        marginHorizontal: 20,
         marginVertical: 10
     },
     button: {
