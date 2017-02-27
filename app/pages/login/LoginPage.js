@@ -185,6 +185,7 @@ export default class LoginPage extends Component {
             this.setState({sending: false});
             if (response.ok) {
                 return response.headers.map['x-app-token'];
+                //return response.json();
             }
         }).then((responseJson) => {
             console.log(responseJson);

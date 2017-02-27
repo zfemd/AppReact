@@ -4,9 +4,9 @@ import { request } from '../utils/common';
 export function fetchRecommendList(noteId) {
     return dispatch => {
 
-        return request('/notes/'+noteId+'/recommendations', 'get')
+        return request('/notes/' + noteId + '/recommendations', 'get', '', token)
             .then((list) => {
-                if(list.resultValues.length > 0){
+                if (list.resultValues.length > 0) {
                     dispatch(receiveRecommendList(list.resultValues));
                 } else {
                     dispatch(receiveRecommendList([]));
@@ -17,7 +17,7 @@ export function fetchRecommendList(noteId) {
                 console.log(error);
             })
             .catch(() => {
-                dispatch(receiveChannelList([]));
+                dispatch(receiveRecommendList([]));
                 console.log('network error');
             });
     };
