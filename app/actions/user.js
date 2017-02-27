@@ -24,6 +24,7 @@ export function fetchUserInfo(params) {
                         portraitHeight: userInfo.portraitHeight,
                         portraitWidth: userInfo.portraitWidth
                     };
+                    console.log('11'+ JSON.stringify(source))
                     AsyncStorage.removeItem(StorageKeys.ME_STORAGE_KEY);
                     return AsyncStorage.setItem(StorageKeys.ME_STORAGE_KEY, JSON.stringify(source));
                 }

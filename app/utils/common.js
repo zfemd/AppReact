@@ -118,8 +118,9 @@ export function request(url, method, body, token) {
             } else {
                 success = false;
             }
-            return response;
+            return response.json();
         }).then((responseData) => {
+            console.log(responseData)
             if (success) {
                 resolve(responseData);
             } else {
