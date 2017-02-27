@@ -24,6 +24,7 @@ import { connect } from 'react-redux';
 import WebViewBridge from 'react-native-webview-bridge';
 import Icon from '../../../node_modules/react-native-vector-icons/FontAwesome';
 import Button from '../../components/button/Button';
+import Loading from '../../components/loading';
 import FramedTextInput from '../../components/textInput/FramedTextInput';
 import Toolbar from '../../components/toolbar';
 import ConfirmBar from '../../components/bar/ConfirmBar';
@@ -61,6 +62,7 @@ class PhotoEditPage extends Component {
 
         this.state = {
             bShowTabsBar: true,
+            bHandlingFilter: false,
             oTabsBar: null,
             oDefaultTabsBar: <DefaultTabBar {...this.props}/>,
             dBrightness: 0.5,
@@ -276,18 +278,21 @@ class PhotoEditPage extends Component {
 
     _adjustImageBrightness(value) {
         const { webviewbridge } = this.refs;
+        this.setState({bHandlingFilter:true});
         webviewbridge.sendToBridge(JSON.stringify({type:'beautify', beautify:'brightness', value: value}));
         this.state.beautify.brightness.newValue = value;
     }
 
     _adjustImageContrast(value){
         const { webviewbridge } = this.refs;
+        this.setState({bHandlingFilter:true});
         webviewbridge.sendToBridge(JSON.stringify({type:'beautify', beautify:'contrast', value: value}));
         this.state.beautify.contrast.newValue = value;
     }
 
     _applyImageFilter(filter){
         const { webviewbridge } = this.refs;
+        this.setState({bHandlingFilter:true});
         webviewbridge.sendToBridge(JSON.stringify({type:'filter', value: filter}));
         this.setState({currentFilter : filter});
     }
@@ -308,6 +313,7 @@ class PhotoEditPage extends Component {
                     this.setState({tagOverlayVisible:true, currentTag: {x:message.x, y:message.y}});
                     break;
                 case "imageUpdated":
+                    this.setState({bHandlingFilter:false});
                     console.log(message.type);
                     //this.setState({sImageBase64Data: message.data});
                     break;
@@ -368,6 +374,8 @@ class PhotoEditPage extends Component {
                     onLeftIconClicked={this._onCancel.bind(this)}
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
+
+                {this.state.bHandlingFilter ? <Loading /> : null}
 
                 <View style={styles.selectedPhotoContainer}>
                     {

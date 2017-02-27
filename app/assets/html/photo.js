@@ -98,6 +98,7 @@ const photo = `<html lang="en">
 
                 imgFab.filters =  appliedFilters;
                 imgFab.applyFilters(canvasFab.renderAll.bind(canvasFab));
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
             }
 
             var applyBrightness = function(value) {
