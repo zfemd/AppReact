@@ -4,7 +4,7 @@ import { request } from '../utils/common';
 export function fetchRecommendList(noteId) {
     return dispatch => {
 
-        return request('/notes/' + noteId + '/recommendations', 'get', '', token)
+        return request('/notes/' + noteId + '/recommendations', 'get')
             .then((list) => {
                 if (list.resultValues.length > 0) {
                     dispatch(receiveRecommendList(list.resultValues));
