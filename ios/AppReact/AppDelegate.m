@@ -44,7 +44,7 @@
   
   //设置全局的app标识，在电商模块里等同于isv_code
   //没有申请过isv_code的接入方,默认不需要调用该函数
-  [[AlibcTradeSDK sharedInstance] setISVCode:@"your_isv_code"];
+//  [[AlibcTradeSDK sharedInstance] setISVCode:@"your_isv_code"];
   
   // 设置全局配置，是否强制使用h5
   [[AlibcTradeSDK sharedInstance] setIsForceH5:NO];
@@ -119,15 +119,17 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
   if (!isHandled) {
     // 其他处理逻辑
   }
-  return YES;
+
+  return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+
 }
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
-  BOOL isHandled = [[AlibcTradeSDK sharedInstance] handleOpenURL:url]; // 如果百川处理过会返回YES
-  if (!isHandled) {
-    // 其他处理逻辑
-  }
-  return YES;
-}
+//- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options {
+//  BOOL isHandled = [[AlibcTradeSDK sharedInstance] handleOpenURL:url]; // 如果百川处理过会返回YES
+//  if (!isHandled) {
+//    // 其他处理逻辑
+//  }
+//  return YES;
+//}
 //****************** baichuan  **********************//
 
 @end
