@@ -52,7 +52,7 @@ class SettingPage extends React.Component {
             if (token) {
                 return request('/user/logout', 'post', '', token)
                     .then((ret) => {
-                        if(ret.ok){
+                        if(ret.resultCode === 0){
                             removeAllStorage();
                             toast('登出成功');
                             navigator.resetTo({
