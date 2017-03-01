@@ -39,6 +39,8 @@ class Binding extends React.Component {
             .then((res) => {
                 if (res.resultCode === 0) {
                     the._jumpToCodePage();
+                } else {
+                    toast('发送验证码失败，请重试！');
                 }
             }, function (error) {
                 console.log(error);
@@ -46,17 +48,17 @@ class Binding extends React.Component {
             .catch(() => {
                 console.log('network error');
             });
-        the._jumpToCodePage();
     }
 
     _jumpToCodePage(){
-        const {navigator} = this.props;
+        const {navigator, route} = this.props;
         InteractionManager.runAfterInteractions(() => {
             navigator.push({
                 component: SendCodePage,
                 name: 'SendCodePage',
                 sceneConfigs: Navigator.SceneConfigs.FloatFromLeft,
-                phone: this.state.phone
+                phone: this.state.phone,
+                bindMsg: route.bindMsg
             });
         });
 

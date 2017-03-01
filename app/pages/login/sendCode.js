@@ -6,7 +6,9 @@ import {
     TextInput,
     Alert,
     DeviceEventEmitter,
-    Platform
+    Platform,
+    InteractionManager,
+    navigator
 } from 'react-native';
 import styles from './bindingStyle';
 import Toolbar from '../../components/toolbar';
@@ -19,20 +21,34 @@ class SendCode extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            phone: this.props.route.phone
+            phone: this.props.route.phone,
+            secret: '',
+            loginChannel: this.props.route.loginChannel,
+            loginChannelUserId: this.props.route.loginChannelUserId,
+            sending: false
         };
     }
 
     _submit() {
-        const {navigator} = this.props;
+        const {navigator, route} = this.props;
         let body = {
-            phone: this.state.phone
+            secret: this.state.secret,
+            mobileNumber: this.state.phone,
+            loginChannel: route.bindMsg.loginChannel,
+            loginChannelUserId: route.bindMsg.loginChannelUserId
         };
-        request('/message/verification-code', 'POST', body)
+        request('user/login', 'POST', body)
             .then((res) => {
                 if (res.resultCode === 0) {
-
+                    InteractionManager.runAfterInteractions(() => {
+                        setTimeout(function(){
+                            navigator.jumpTo(navigator.getCurrentRoutes()[0]);
+                        }, 500);
+                    });
+                    toast('绑定成功');
+                    Token.setToken(responseJson.token);
                 }
+                toast('绑定失败');
             }, function (error) {
                 console.log(error);
             })
@@ -43,7 +59,31 @@ class SendCode extends React.Component {
 
 
     _sendCode() {
-        return true;
+        if (this.state.sending) return;
+        this.state.sending = true;
+
+        let body = {
+            purpose: 'login',
+            mobile: this.state.phone
+        };
+        request('message/verification-code', 'POST', body)
+            .then((res) => {
+                this.state.sending = false;
+                if (res.resultCode === 0) {
+                    toast('验证码已发送');
+                    Token.setToken(responseJson.token);
+                }
+                toast('验证码发送失败');
+            }, function (error) {
+                this.state.sending = false;
+                toast('验证码发送失败');
+                console.log(error);
+            })
+            .catch(() => {
+                this.state.sending = false;
+                toast('验证码发送失败');
+                console.log('network error');
+            });
     }
 
     componentDidMount() {
@@ -65,7 +105,7 @@ class SendCode extends React.Component {
                         placeholderTextColor='#bebebe'
                         underlineColorAndroid='transparent'
                         returnKeyType='done'
-                        onChangeText={(text) => {this.state.phone=text }}
+                        onChangeText={(text) => {this.state.secret=text }}
                         />
                     <View style={{marginRight: 8}}>
                         <PhoneCodeButton ref={(component) => this.codeBtn = component}
