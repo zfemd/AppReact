@@ -15,7 +15,8 @@ import {
     Picker,
     Platform,
     ActivityIndicatorIOS,
-    Navigator
+    Navigator,
+    KeyboardAvoidingView
 } from 'react-native';
 
 import Home from '../home';
@@ -241,7 +242,7 @@ export default class LoginPage extends Component {
                                clearButtonMode='while-editing' underlineColorAndroid='transparent'
                                style={[styles.textInput, Platform.OS === 'android' ? null : {height: 26}]}
                                onChangeText={(text) => {this.state.phone=text, this.validate()}}
-                               value={this.state.text} autoFocus={true} keyboardType="numeric"
+                               value={this.state.text}  keyboardType="numeric"
                                onFocus={(e) => {this.setState({focus:'phone'})}}/>
                     <Text style={{fontSize:20,color:'#696969',lineHeight:23,fontFamily:'ArialMT'}}>+86</Text>
                 </View>
@@ -254,6 +255,7 @@ export default class LoginPage extends Component {
                                keyboardType="numeric"
                                onChangeText={(text) => {this.state.code=text; this.validate();}}
                                value={this.state.text}
+                               blurOnSubmit={true}
                                onFocus={(e) => this.setState({focus:'code'})}/>
                     <PhoneCodeButton onPress={this._sendCode.bind(this)}>发送验证码</PhoneCodeButton>
                 </View>
