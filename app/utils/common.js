@@ -118,9 +118,15 @@ export function request(url, method, body, token) {
             } else {
                 success = false;
             }
-            return response.json();
+
+            const json = response.json();
+            const xAppToken = response.headers.get("x-app-token");
+            if(xAppToken) {
+                AsyncStorage.setItem(StorageKeys.X_APP_TOKEN, xAppToken);
+            }
+            return json;
         }).then((responseData) => {
-            console.log(responseData)
+
             if (success) {
                 resolve(responseData);
             } else {

@@ -16,7 +16,8 @@ import {
     Platform,
     ActivityIndicatorIOS,
     Navigator,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    AsyncStorage
 } from 'react-native';
 
 import Home from '../home';
@@ -31,6 +32,7 @@ import {
     Token,
     toast
 } from '../../utils/common';
+import StorageKeys from '../../constants/StorageKeys';
 
 const myIcon = (<Icon name="rocket" size={30} color="#900"/>)
 
@@ -102,7 +104,7 @@ export default class LoginPage extends Component {
                     }, 500);
                 });
                 toast('微信登录成功');
-                Token.setToken(responseJson.token);
+                Token.setToken(AsyncStorage.getItem(StorageKeys.X_APP_TOKEN));
             } else {
                 InteractionManager.runAfterInteractions(() => {
                     navigator.push({

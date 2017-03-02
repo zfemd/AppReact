@@ -8,7 +8,8 @@ import {
     DeviceEventEmitter,
     Platform,
     InteractionManager,
-    navigator
+    navigator,
+    AsyncStorage
 } from 'react-native';
 import styles from './bindingStyle';
 import Toolbar from '../../components/toolbar';
@@ -16,6 +17,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Token, toast, request } from '../../utils/common';
 import { connect } from 'react-redux';
 import PhoneCodeButton from '../../../app/components/button/PhoneCodeButton';
+import StorageKeys from '../../constants/StorageKeys';
 
 class SendCode extends React.Component {
     constructor(props) {
@@ -46,7 +48,7 @@ class SendCode extends React.Component {
                         }, 500);
                     });
                     toast('绑定成功');
-                    Token.setToken(responseJson.token);
+                    Token.setToken(AsyncStorage.getItem(StorageKeys.X_APP_TOKEN));
                 }
                 toast('绑定失败');
             }, function (error) {
