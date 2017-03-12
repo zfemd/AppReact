@@ -70,17 +70,14 @@ export default class ForgetPasswordPage extends Component {
                 mobile: this.state.phone
             })
         }).then((response) => {
-            console.log(response);
             this.state.sending = false;
-            if (response.ok) {
-                return response.json();
-            }
+            return response.ok ? response.json() : response;
         }).then((responseJson) => {
-            if(responseJson.resultCode == 0){
+            if (responseJson.resultCode == 0) {
                 toast('验证码已发送');
                 return responseJson.resultCode;
             }
-            //toast('验证码发送失败');
+            toast('验证码发送失败');
         }).catch((error) => {
             this.state.sending = false;
             console.error(error);
