@@ -150,9 +150,7 @@ export default class LoginPage extends Component {
             })
         }).then((response) => {
             this.state.sending = false;
-            if (response.ok) {
-                return response.json();
-            }
+            return response.ok ? response.json() : response;
         }).then((responseJson) => {
             if (responseJson.resultCode == 0) {
                 toast('验证码已发送');
