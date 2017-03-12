@@ -150,16 +150,18 @@ export default class LoginPage extends Component {
             })
         }).then((response) => {
             this.state.sending = false;
-            return response.ok ? response.json() : response;
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('网络响应不正常');
         }).then((responseJson) => {
             if (responseJson.resultCode == 0) {
                 toast('验证码已发送');
                 return responseJson.resultCode;
             }
-            toast('验证码发送失败');
+            throw new Error('验证码发送失败');
         }).catch((error) => {
-            this.state.sending = false;
-            console.error(error);
+            toast(error.message);
         });
     }
 

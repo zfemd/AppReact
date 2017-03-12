@@ -8,13 +8,11 @@ const photo = `<html lang="en">
     <title></title>
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
-    <div style="overflow:hidden; height:300px;">
-        <div style="display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
-            <canvas id="c" style="margin:0;padding:0;"></canvas>
-        </div>
-        <div>
-            <image id="image-origin" style="display:none;"/>
-        </div>
+    <div style="display:-webkit-flex;display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
+        <canvas id="c" style="margin:0;padding:0;flex:1;"></canvas>
+    </div>
+    <div>
+        <image id="image-origin" style="display:none;"/>
     </div>
     <script type="application/javascript">
 
@@ -219,6 +217,11 @@ const photo = `<html lang="en">
                         if (message.image.height > maxHeight) {
                             displaySize.height = maxHeight;
                             displaySize.width = Math.round(maxHeight / message.image.height * message.image.width);
+                        }
+
+                        if (displaySize.width > message.window.width) {
+                            displaySize.height = Math.round(message.window.width / displaySize.width * displaySize.height);
+                            displaySize.width = message.window.width;
                         }
 
                         canvasFab.setDimensions(displaySize, {cssOnly:true});
