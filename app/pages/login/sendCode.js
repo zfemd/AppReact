@@ -59,7 +59,6 @@ class SendCode extends React.Component {
             });
     }
 
-
     _sendCode() {
         if (this.state.sending) return;
         this.state.sending = true;

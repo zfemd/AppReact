@@ -82,7 +82,7 @@ Token.isTokenValid = async function () {
         }).then(response => {
             console.log(response);
             if (response.ok) {
-                return response.json()
+                return response.json();
             }
         }).then((responseJson) => {
             if (responseJson && responseJson.resultCode == 0) {
@@ -126,7 +126,7 @@ export function request(url, method, body, token) {
             }
             return json;
         }).then((responseData) => {
-
+console.log(responseData)
             if (success) {
                 resolve(responseData);
             } else {
