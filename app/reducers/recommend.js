@@ -6,6 +6,14 @@ const initialState = {
     recommendList: {},
 };
 
+//口罩：545078615667
+//棒棒糖：520104863331
+const testData = {
+    providerItemId: 520104863331,
+    title:'口罩',
+    price: '100',
+    image: ''
+};
 
 const channel = function (state = initialState, action = {}) {
     switch (action.type) {

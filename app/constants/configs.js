@@ -3,8 +3,9 @@
  */
 const configs = {
     serviceUrl: 'http://restapi.share68.com/',
-    imageSeriveUrl: 'http://postimage.share68.com/',
-    mobileServiceUrl: 'http://m.share68.com:3000/'
+    imageServiceUrl: 'http://postimage.share68.com/',
+    mobileServiceUrl: 'http://m.share68.com:3000/',
+    itemSearchUrl: 'http://dsj-search-service.herokuapp.com/'
 };
 
 export default configs;

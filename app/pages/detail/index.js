@@ -55,7 +55,7 @@ class Detail extends React.Component {
 
     _renderRow(rowData:string, sectionID:number, rowID:number) {
         return (
-            <TouchableOpacity onPress={() => this._jumpToRecommendPage(rowData.providerItemId)}
+            <TouchableOpacity onPress={() => this._jumpToRecommendPage(rowData.providerItemId.toString())}
                               underlayColor="transparent" activeOpacity={0.5}>
                 <View>
                     <View style={styles.sysRow}>

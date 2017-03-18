@@ -116,7 +116,7 @@ class UpdatePortrait extends Component {
                 };
                 Token.getToken(navigator).then((token) => {
                     if (token) {
-                        fetch(configs.imageSeriveUrl + 'user/settings/personal-information/portrait', {
+                        fetch(configs.imageServiceUrl + 'user/settings/personal-information/portrait', {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json',

@@ -113,7 +113,7 @@ class PostNotePage extends Component {
 
         data.images = data.images.map(image => {return {"image":image.image, "marks":image.marks}});
 
-        fetch(configs.imageSeriveUrl + 'notes/' + noteId + '/images', {
+        fetch(configs.imageServiceUrl + 'notes/' + noteId + '/images', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
