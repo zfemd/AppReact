@@ -112,7 +112,13 @@ export function request(url, method, body, token) {
     }
 
     return new Promise((resolve, reject) => {
-        fetch(configs.serviceUrl + url, options).then((response) => {
+        let uri;
+        if(typeof url === 'string') {
+            uri = configs.serviceUrl + url;
+        } else {
+            uri = url.host + url.route
+        }
+        fetch(uri, options).then((response) => {
             if (response.status == 200) {
                 success = true;
             } else {

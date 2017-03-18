@@ -30,7 +30,8 @@ export default keyMirror({
     FETCH_CATEGORIES:null,
     FETCH_CITIES: null,
     RECEIVE_FOLLOWING_LIST: null,
-    RECEIVE_FOLLOWER_LIST: null
+    RECEIVE_FOLLOWER_LIST: null,
+    RECEIVE_ITEM_SEARCH_LIST: null
 });
 
 

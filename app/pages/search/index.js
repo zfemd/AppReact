@@ -17,12 +17,17 @@ import ImageButton from '../../components/toolbar/ImageButton.js';
 import * as common from '../../utils/common';
 import { connect } from 'react-redux';
 var backImg = require('../../assets/upload/rg_left.png');
+import { fetchItemSearchList } from '../../actions/search';
+import SearchItem from '../../components/searchItem';
+import Spinner from 'react-native-spinkit';
 
 class Search extends React.Component {
     constructor(props) {
         super(props);
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
-
+        this.state = {
+            searching: false
+        };
     }
 
     _onLeftIconClicked() {
@@ -33,7 +38,12 @@ class Search extends React.Component {
     }
 
     _search(text) {
-
+        const { dispatch } = this.props;
+        let the = this;
+        this.setState({searching: true});
+        dispatch(fetchItemSearchList(text)).then(() =>{
+            the.setState({searching: false});
+        });
     }
 
     render() {
@@ -52,8 +62,28 @@ class Search extends React.Component {
                         multiline={false}
                         underlineColorAndroid='transparent'
                         returnKeyType='go'
-                        onSubmitEditing={(text) => this._search({text})}
+                        onSubmitEditing={(event) => this._search(event.nativeEvent.text)}
                         />
+
+                </View>
+                <View style={styles.searchTab}>
+                    <View style={[styles.tab,styles.tabActive]}>
+                        <Text>商品</Text>
+                    </View>
+                    <View style={styles.tab}>
+                        <Text>笔记</Text>
+                    </View>
+                </View>
+                <View style={styles.searchBody}>
+                    {
+                        this.state.searching ?
+                            <View style={[styles.center,{marginTop: 40}]}><
+                                Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt"
+                                        color={'#fc7d30'}/>
+                            </View> :
+                            <SearchItem />
+                    }
+
                 </View>
             </View>
         )
@@ -61,12 +91,11 @@ class Search extends React.Component {
     }
 }
 
-//function mapStateToProps(state) {
-//    const { search } = state;
-//    return {
-//        search
-//    };
-//}
-//
-//export default connect(mapStateToProps)(Search);
-export default Search;
+function mapStateToProps(state) {
+    const { search } = state;
+    return {
+        search
+    };
+}
+
+export default connect(mapStateToProps)(Search);

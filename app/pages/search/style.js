@@ -49,6 +49,31 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 3
     },
+    center: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    searchBody : {
+        marginBottom: 44
+    },
+    searchTab: {
+        height: 40,
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderColor: '#f1f1f1',
+        justifyContent: 'space-around',
+        alignItems: 'flex-end',
+    },
+    tab: {
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        borderColor: '#f1f1f1',
+        paddingBottom: 10,
+        width: width/2
+    },
+    tabActive: {
+        borderColor: '#fc7d30'
+    }
 });
 
 export default styles;

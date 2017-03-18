@@ -13,6 +13,7 @@ import user from './user';
 import categories from './categories';
 import cities from './cities';
 import follow from './follow';
+import search from './search';
 
 const rootReducer = combineReducers({
     home,
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
     user,
     categories,
     cities,
-    follow
+    follow,
+    search
 });
 
 export default rootReducer;
