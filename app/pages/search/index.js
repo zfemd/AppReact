@@ -53,22 +53,34 @@ class Search extends React.Component {
     _search(text) {
         let the = this;
         text = text || this.state.keyWord;
-        let searchItemHistory = [];
+
         AsyncStorage.getItem(StorageKeys.SEARCH_ITEM, (error, result) => {
             if (error) {
                 console.error("Error happened when to get token: " + error);
             }
-            searchItemHistory = result && result !== '' ? result : '[]';
 
-            searchItemHistory = JSON.parse(searchItemHistory);
-            searchItemHistory.push(text);
-            searchItemHistory = JSON.stringify(searchItemHistory);
-            AsyncStorage.setItem(StorageKeys.SEARCH_ITEM, searchItemHistory);
-            AsyncStorage.setItem(StorageKeys.SEARCH_NOTE, searchItemHistory);
-
+            the._updateHistory(result, text);
             the._jumpToResultPage(text);
         });
 
+    }
+
+    _updateHistory(searchItemHistory, text) {
+        searchItemHistory = searchItemHistory && searchItemHistory !== '' ? searchItemHistory : '[]';
+
+        searchItemHistory = JSON.parse(searchItemHistory);
+        _.remove(searchItemHistory, function(n) {
+            return n === text;
+        });
+        searchItemHistory.push(text);
+
+        let tempValue = _.clone(searchItemHistory);
+        _.reverse(tempValue);
+        this.setState({searchItemHistory: tempValue});
+        this.setState({searchNoteHistory: tempValue});
+        searchItemHistory = JSON.stringify(searchItemHistory);
+        AsyncStorage.setItem(StorageKeys.SEARCH_ITEM, searchItemHistory);
+        AsyncStorage.setItem(StorageKeys.SEARCH_NOTE, searchItemHistory);
     }
 
     _jumpToResultPage(text) {
@@ -86,12 +98,22 @@ class Search extends React.Component {
     componentDidMount() {
         const the = this;
         AsyncStorage.getItem(StorageKeys.SEARCH_ITEM, (error, result) => {
-            the.setState({searchItemHistory: JSON.parse(result)});
+            result = _.reverse(JSON.parse(result));
+            the.setState({searchItemHistory: result});
         });
         AsyncStorage.getItem(StorageKeys.SEARCH_NOTE, (error, result) => {
-            the.setState({searchNoteHistory: JSON.parse(result)});
+            result = _.reverse(JSON.parse(result));
+            the.setState({searchNoteHistory: result});
         });
 
+    }
+
+    _deleteHistory() {
+        AsyncStorage.removeItem(StorageKeys.SEARCH_ITEM);
+        AsyncStorage.removeItem(StorageKeys.SEARCH_NOTE);
+
+        this.setState({searchItemHistory: []});
+        this.setState({searchNoteHistory: []});
     }
 
     _historyFrame() {
@@ -109,13 +131,19 @@ class Search extends React.Component {
         return (
             <View style={styles.historyC}>
                 <View style={styles.delete}>
-                    <Icon
-                        name='md-trash'
-                        size={26}
-                        color={'#aaa'}
-                        />
+                    <TouchableOpacity onPress={() => this._deleteHistory()}>
+                        <Icon
+                            name='md-trash'
+                            size={26}
+                            color={'#aaa'}
+                            />
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <Text style={[styles.historyTitle,styles.baseText]}>搜索历史：</Text>
                 </View>
                 <View style={styles.history}>
+
                     {
                         rows
                     }
@@ -173,7 +201,6 @@ class Search extends React.Component {
                     </View>
                 </ScrollableTabView>
                 <View style={styles.searchBody}>
-
 
                 </View>
             </View>

@@ -102,11 +102,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     history: {
-        marginTop: 10,
+        marginTop: 8,
         flexDirection: 'row',
         flexWrap: 'wrap',
-        alignSelf: 'flex-start',
-        paddingTop: 10
+        alignSelf: 'flex-start'
     },
     historyItem: {
         backgroundColor: '#f1f1f1',
@@ -117,12 +116,16 @@ const styles = StyleSheet.create({
         paddingBottom: 4,
         borderRadius: 4,
         alignItems: 'center',
-        marginLeft: 5,
+        marginLeft: 10,
         marginBottom: 10
     },
     historyItemFont: {
         color: '#000',
         lineHeight: 25,
+    },
+    historyTitle: {
+        marginLeft: 10,
+        marginTop: 10
     }
 });
 
