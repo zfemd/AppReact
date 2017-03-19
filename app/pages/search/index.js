@@ -28,6 +28,8 @@ import ResultPage from './result';
 import StorageKeys from '../../constants/StorageKeys';
 import ScrollableTabView  from 'react-native-scrollable-tab-view';
 import _ from 'lodash';
+import { request } from '../../utils/common';
+import configs from '../../constants/configs';
 
 class Search extends React.Component {
     constructor(props) {
@@ -39,7 +41,9 @@ class Search extends React.Component {
         this.state = {
             keyWord: '',
             searchItemHistory: [],
-            searchNoteHistory: []
+            searchNoteHistory: [],
+            itemAuto: false,
+            itemAutoForList: this.ds.cloneWithRows([])
         };
     }
 
@@ -54,6 +58,8 @@ class Search extends React.Component {
         let the = this;
         text = text || this.state.keyWord;
 
+        if (!text)
+            return;
         AsyncStorage.getItem(StorageKeys.SEARCH_ITEM, (error, result) => {
             if (error) {
                 console.error("Error happened when to get token: " + error);
@@ -69,7 +75,7 @@ class Search extends React.Component {
         searchItemHistory = searchItemHistory && searchItemHistory !== '' ? searchItemHistory : '[]';
 
         searchItemHistory = JSON.parse(searchItemHistory);
-        _.remove(searchItemHistory, function(n) {
+        _.remove(searchItemHistory, function (n) {
             return n === text;
         });
         searchItemHistory.push(text);
@@ -128,29 +134,80 @@ class Search extends React.Component {
                     </TouchableOpacity>
                 );
         });
+        if (!this.state.itemAuto)
+            return (
+                <View style={styles.historyC}>
+                    <View style={styles.delete}>
+                        <TouchableOpacity onPress={() => this._deleteHistory()}>
+                            <Icon
+                                name='md-trash'
+                                size={26}
+                                color={'#aaa'}
+                                />
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <Text style={[styles.historyTitle,styles.baseText]}>搜索历史：</Text>
+                    </View>
+                    <View style={styles.history}>
+                        {
+                            rows
+                        }
+                    </View>
+                </View>
+
+            );
+        else
+            return (
+                <View style={styles.auto}>
+                    <ListView
+                        contentContainerStyle={styles.itemAutoList}
+                        dataSource={this.state.itemAutoForList}
+                        renderRow={this._renderItemAutoRow}
+                        horizontal={false}
+                        showsVerticalScrollIndicator={false}
+                        enableEmptySections={true}
+                        />
+                </View>
+            )
+    }
+
+    _renderItemAutoRow(rowData:string, sectionID:number, rowID:number) {
         return (
-            <View style={styles.historyC}>
-                <View style={styles.delete}>
-                    <TouchableOpacity onPress={() => this._deleteHistory()}>
-                        <Icon
-                            name='md-trash'
-                            size={26}
-                            color={'#aaa'}
-                            />
-                    </TouchableOpacity>
+            <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
+                <View style={styles.itemAutoRow}>
+                    <Text style={styles.baseText}>{rowData[0]}</Text>
                 </View>
-                <View>
-                    <Text style={[styles.historyTitle,styles.baseText]}>搜索历史：</Text>
-                </View>
-                <View style={styles.history}>
-
-                    {
-                        rows
-                    }
-                </View>
-            </View>
-
+            </TouchableOpacity>
         )
+    }
+
+    _autoComplete(text) {
+        this.setState({keyWord: text});
+        let url = {
+            host: configs.taobaoAutoCompleteUrl,
+            route: 'sug?code=utf-8&q=' + text,
+            headers: {}
+        };
+        if (!text) {
+            this.setState({itemAuto: false});
+            return;
+        }
+        this.setState({itemAuto: true});
+        return request(url, 'GET')
+            .then((list) => {
+                if (list.result.length > 0) {
+                    this.setState({itemAutoForList: this.ds.cloneWithRows(list.result)});
+                } else {
+                    this.setState({itemAuto: false});
+                }
+
+            }, function (error) {
+                console.log(error);
+            })
+            .catch(() => {
+                console.log('network error');
+            });
     }
 
     render() {
@@ -169,7 +226,7 @@ class Search extends React.Component {
                         multiline={false}
                         underlineColorAndroid='transparent'
                         returnKeyType='go'
-                        onChangeText={(text) => {this.setState({keyWord:text})}}
+                        onChangeText={(text) => {this._autoComplete(text)}}
                         value={this.state.keyWord}
                         onSubmitEditing={(event) => this._search(event.nativeEvent.text)}
                         />

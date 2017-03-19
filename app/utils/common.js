@@ -99,13 +99,20 @@ Token.isTokenValid = async function () {
     return false;
 };
 
-export function request(url, method, body, token) {
+export function request(request, method, body, token) {
     let success;
-    let options = {method, headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-App-Token': token ? token : ''
-    }};
+
+    let headers;
+    if(request.headers) {
+        headers = request.headers;
+    } else {
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'X-App-Token': token ? token : ''
+        };
+    }
+    let options = {method, headers: headers};
 
     if (method.toLowerCase() === 'post') {
         options.body = body;
@@ -113,10 +120,10 @@ export function request(url, method, body, token) {
 
     return new Promise((resolve, reject) => {
         let uri;
-        if(typeof url === 'string') {
-            uri = configs.serviceUrl + url;
+        if(typeof request === 'string') {
+            uri = configs.serviceUrl + request;
         } else {
-            uri = url.host + url.route
+            uri = request.host + request.route
         }
         fetch(uri, options).then((response) => {
             if (response.status == 200) {
@@ -132,7 +139,6 @@ export function request(url, method, body, token) {
             }
             return json;
         }).then((responseData) => {
-console.log(responseData)
             if (success) {
                 resolve(responseData);
             } else {

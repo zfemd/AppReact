@@ -126,6 +126,20 @@ const styles = StyleSheet.create({
     historyTitle: {
         marginLeft: 10,
         marginTop: 10
+    },
+    auto: {
+        flex: 1
+    },
+    itemAutoList: {
+        backgroundColor: '#fff',
+        flexDirection: 'column'
+    },
+    itemAutoRow: {
+        height: 40,
+        paddingLeft: 20,
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderColor: '#f1f1f1',
     }
 });
 
