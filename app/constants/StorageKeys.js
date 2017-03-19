@@ -17,6 +17,10 @@ const StorageKeys = {
     TOKEN_WEIXIN_PUBLIC_STORAGE_KEY: '@duoshouji:weixinpublictoken',
 
     X_APP_TOKEN: '@duoshouji:token',
+
+    SEARCH_ITEM: '@duoshouji:item',
+
+    SEARCH_NOTE: '@duoshouji:note',
 };
 
 module.exports = StorageKeys;

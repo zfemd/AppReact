@@ -10,13 +10,13 @@ var {
 const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    baseText:{
+    baseText: {
         fontSize: 13,
         color: '#4a4a4a',
         lineHeight: 18,
         paddingBottom: 2
     },
-    dimText:{
+    dimText: {
         color: '#9b9b9b',
     },
     container: {
@@ -29,11 +29,13 @@ const styles = StyleSheet.create({
         paddingTop: 0,
         backgroundColor: '#fff',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderColor: '#f1f1f1',
     },
     back: {
         marginLeft: 10,
-        marginTop:  Platform.OS === 'android' ? 6 : 0
+        marginTop: Platform.OS === 'android' ? 6 : 0
     },
     searchText: {
         height: 24,
@@ -53,26 +55,74 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    searchBody : {
-        marginBottom: 44
+    searchBody: {
+        marginBottom: 0
     },
     searchTab: {
-        height: 40,
         flexDirection: 'row',
         borderBottomWidth: 1,
-        borderColor: '#f1f1f1',
+        borderColor: '#ddd',
         justifyContent: 'space-around',
         alignItems: 'flex-end',
+        backgroundColor: '#fff',
     },
     tab: {
         alignItems: 'center',
         borderBottomWidth: 2,
         borderColor: '#f1f1f1',
         paddingBottom: 10,
-        width: width/2
+        width: width / 2
     },
     tabActive: {
         borderColor: '#fc7d30'
+    },
+    sButton: {
+        height: 24,
+        backgroundColor: '#fc7d30',
+        marginLeft: 4,
+        marginRight: 10,
+        borderRadius: 4,
+        alignItems: 'center',
+        width: 35
+    },
+    sButtonFont: {
+        fontSize: 12,
+        lineHeight: 22,
+        color: '#fff'
+    },
+    delete: {
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        paddingRight: 10,
+        backgroundColor: '#f1f1f1'
+    },
+    historyC: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    history: {
+        marginTop: 10,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignSelf: 'flex-start',
+        paddingTop: 10
+    },
+    historyItem: {
+        backgroundColor: '#f1f1f1',
+        height: 25,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 4,
+        paddingBottom: 4,
+        borderRadius: 4,
+        alignItems: 'center',
+        marginLeft: 5,
+        marginBottom: 10
+    },
+    historyItemFont: {
+        color: '#000',
+        lineHeight: 25,
     }
 });
 
