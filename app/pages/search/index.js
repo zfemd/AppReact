@@ -36,6 +36,7 @@ class Search extends React.Component {
         super(props);
         this._onLeftIconClicked = this._onLeftIconClicked.bind(this);
         this._jumpToResultPage = this._jumpToResultPage.bind(this);
+        this._renderItemAutoRow = this._renderItemAutoRow.bind(this);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
         this.state = {
@@ -174,7 +175,8 @@ class Search extends React.Component {
 
     _renderItemAutoRow(rowData:string, sectionID:number, rowID:number) {
         return (
-            <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}>
+            <TouchableOpacity underlayColor="transparent" activeOpacity={0.5}
+                              onPress={() => this._search(rowData[0])}>
                 <View style={styles.itemAutoRow}>
                     <Text style={styles.baseText}>{rowData[0]}</Text>
                 </View>
