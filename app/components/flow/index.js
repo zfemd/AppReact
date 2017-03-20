@@ -81,6 +81,10 @@ class Flow extends React.Component {
     }
 
     componentWillReceiveProps() {
+        if (JSON.stringify(this.props.flow.flowList) === '{}'
+            || !this.props.flow.flowList[this.props.tag]) {
+            return;
+        }
         if (this.props.tabForRefresh) {
             this._scrollView.scrollTo({y: 0});
             setTimeout(() => {

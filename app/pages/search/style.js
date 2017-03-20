@@ -109,10 +109,10 @@ const styles = StyleSheet.create({
     },
     historyItem: {
         backgroundColor: '#f1f1f1',
-        height: 25,
+        height: 26,
         paddingLeft: 10,
         paddingRight: 10,
-        paddingTop: 4,
+        paddingTop: 3,
         paddingBottom: 4,
         borderRadius: 4,
         alignItems: 'center',
