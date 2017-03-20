@@ -9,7 +9,8 @@ import {
     Alert,
     DeviceEventEmitter,
     Platform,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Image
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -96,9 +97,8 @@ class SearchResult extends React.Component {
                         >
                         {
                             this.state.searching ?
-                                <View style={[styles.center,{marginTop: 40}]}><
-                                    Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt"
-                                            color={'#fc7d30'}/>
+                                <View style={[styles.center,{marginTop: 40}]}>
+                                     <Image source={require('../../assets/gif/loading.gif')}/>
                                 </View> :
                                 <SearchItem />
                         }
@@ -110,9 +110,8 @@ class SearchResult extends React.Component {
                         >
                         {
                             this.state.searching ?
-                                <View style={[styles.center,{marginTop: 40}]}><
-                                    Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt"
-                                            color={'#fc7d30'}/>
+                                <View style={[styles.center,{marginTop: 40}]}>
+                                    <Image source={require('../../assets/gif/loading.gif')}/>
                                 </View> :
                                 <SearchItem />
                         }

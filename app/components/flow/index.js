@@ -362,9 +362,9 @@ class Flow extends React.Component {
                 <View>
                     {
                         flow.refreshing || this.state.offlineReloading ? (
-                            <View style={[styles.center,{marginTop: 40}]}><
-                                Spinner style={styles.spinner} isVisible size={80} type="FadingCircleAlt"
-                                        color={'#fc7d30'}/>
+                            <View style={[styles.center,{marginTop: 40}]}>
+
+                                <Image source={require('../../assets/gif/loading.gif')}/>
                             </View>
                         ) : (
                             <View>
