@@ -35,7 +35,7 @@
 			<string>weixin</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wx9ddba3ee3672de95</string>
+				<string>wx5a3b4079960e0261</string>
 			</array>
 		</dict>
 		<dict>
@@ -47,7 +47,7 @@
 			<string>tb</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>tbopen23362952</string>
+				<string>tbopen23568050</string>
 			</array>
 		</dict>
 	</array>
@@ -95,8 +95,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
