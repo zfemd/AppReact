@@ -80,6 +80,7 @@ export default class LoginPage extends Component {
         const body = {
             code: res.code
         };
+        Alert.alert('微信登录', "code：" + res.code);
         fetch(configs.serviceUrl + 'login/weixin', {
             method: 'POST',
             headers: {

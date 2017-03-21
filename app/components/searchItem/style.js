@@ -10,13 +10,13 @@ var {
 const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
-    baseText:{
+    baseText: {
         fontSize: 13,
         color: '#4a4a4a',
         lineHeight: 18,
         paddingBottom: 2
     },
-    dimText:{
+    dimText: {
         color: '#9b9b9b',
     },
     container: {
@@ -43,11 +43,33 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     price: {
-        color: '#fc7d30'
+        color: '#fc7d30',
+        fontSize: 15,
     },
     title: {
         paddingRight: 50,
         width: width - 70
+    },
+    itemDigit: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    itemDigitO: {
+        marginRight: 60
+    },
+    loading: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5,
+        backgroundColor: '#f1f1f1'
+    },
+    loadingText: {
+        textAlign: 'center',
+        fontSize: 12,
+        marginLeft: 10,
+        color: '#bdbdbd'
     }
 });
 

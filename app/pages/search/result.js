@@ -45,7 +45,12 @@ class SearchResult extends React.Component {
         const { dispatch, route } = this.props;
         let the = this;
         this.setState({searching: true});
-        dispatch(fetchItemSearchList(route.text)).then(() =>{
+        const params = {
+            text: route.text,
+            loadingMore: false,
+            currentPage: 1
+        };
+        dispatch(fetchItemSearchList(params)).then(() =>{
             the.setState({searching: false});
         });
     }
@@ -100,7 +105,7 @@ class SearchResult extends React.Component {
                                 <View style={[styles.center,{marginTop: 40}]}>
                                      <Image source={require('../../assets/gif/loading.gif')}/>
                                 </View> :
-                                <SearchItem />
+                                <SearchItem text={this.props.route.text}/>
                         }
                     </View>
                     <View
@@ -113,7 +118,7 @@ class SearchResult extends React.Component {
                                 <View style={[styles.center,{marginTop: 40}]}>
                                     <Image source={require('../../assets/gif/loading.gif')}/>
                                 </View> :
-                                <SearchItem />
+                                <SearchItem text={this.props.route.text}/>
                         }
                     </View>
                 </ScrollableTabView>
