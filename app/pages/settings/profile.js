@@ -10,7 +10,9 @@ import {
     Picker,
     TouchableOpacity,
     DeviceEventEmitter,
-    TextInput
+    TextInput,
+    KeyboardAvoidingView,
+    ScrollView
 } from 'react-native';
 import styles from './style';
 import Toolbar from '../../components/toolbar';
@@ -126,7 +128,7 @@ class ProfilePage extends React.Component {
 
     render() {
         return (
-            <View key="m"
+            <KeyboardAvoidingView key="m"  behavior={'height'}
                   style={[{backgroundColor: '#f5f5f5', flex: 1},Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="个人资料"
@@ -229,7 +231,7 @@ class ProfilePage extends React.Component {
                 }
 
 
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 }
