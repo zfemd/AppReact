@@ -5,15 +5,18 @@ const photo = `<html lang="en">
     <script src="json2.js" type="application/javascript"></script>
     <script src="fabric.min.js" type="application/javascript"></script>
     <script src="imageFilters.js" type="application/javascript"></script>
+    <script src="forHtml.js" type="application/javascript"></script>
     <title></title>
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
-    <div style="display:-webkit-flex;display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
-        <canvas id="c" style="margin:0;padding:0;flex:1;"></canvas>
-    </div>
-    <div>
-        <image id="image-origin" style="display:none;"/>
-    </div>
+    <!--<div style="overflow:hidden; height:300px;">-->
+        <div style="display:-webkit-flex;display:flex;align-items:center;justify-content:center;height:300px;width:100%;">
+            <canvas id="c" style="margin:0;padding:0;"></canvas>
+        </div>
+        <div>
+            <image id="image-origin" style="display:none;"/>
+        </div>
+    <!--</div>-->
     <script type="application/javascript">
 
         var intervalId = setInterval(function(){
@@ -145,12 +148,21 @@ const photo = `<html lang="en">
 
                     applyFilters();
                 } else if (message.type === 'addSticker') {
-                    fabric.Image.fromURL(message.data, function(oImage) {
-                        canvasFab.add(oImage);
-                        choseStickers[message.name] = oImage;
-                        canvasFab.renderAll();
-                    }, { scaleX:scale, scaleY:scale, hasControls:true, cornerSize:12 * scale, rotatingPointOffset: 40 * scale, transparentCorners: false, cornerColor: "#ccc"});
+                    fabric.loadSVGFromString(stickers.myStickers[message.name].uri,function (objects,options) {
+                        var shape = fabric.util.groupSVGElements(objects,options);
+                        shape.set({
+                            left: 200,
+                            top: 200,
+                            angle: 0,
+                            scaleX: 3,
+                            scaleY: 3,
+                            flipY: false
+                        });
 
+                        canvasFab.add(shape);
+                        choseStickers[message.name] = shape;
+                        canvasFab.renderAll();
+                    });
 
                     WebViewBridge.send(JSON.stringify({type:"addedSticker"}));
 

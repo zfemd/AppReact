@@ -5,6 +5,7 @@
     <script src="json2.js" type="application/javascript"></script>
     <script src="fabric.min.js" type="application/javascript"></script>
     <script src="imageFilters.js" type="application/javascript"></script>
+    <script src="forHtml.js" type="application/javascript"></script>
     <title></title>
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
@@ -147,12 +148,21 @@
 
                     applyFilters();
                 } else if (message.type === 'addSticker') {
-                    fabric.Image.fromURL(message.data, function(oImage) {
-                        canvasFab.add(oImage);
-                        choseStickers[message.name] = oImage;
-                        canvasFab.renderAll();
-                    }, { scaleX:scale, scaleY:scale, hasControls:true, cornerSize:12 * scale, rotatingPointOffset: 40 * scale, transparentCorners: false, cornerColor: "#ccc"});
+                    fabric.loadSVGFromString(stickers.myStickers[message.name].uri,function (objects,options) {
+                        var shape = fabric.util.groupSVGElements(objects,options);
+                        shape.set({
+                            left: 200,
+                            top: 200,
+                            angle: 0,
+                            scaleX: 3,
+                            scaleY: 3,
+                            flipY: false
+                        });
 
+                        canvasFab.add(shape);
+                        choseStickers[message.name] = shape;
+                        canvasFab.renderAll();
+                    });
 
                     WebViewBridge.send(JSON.stringify({type:"addedSticker"}));
 
