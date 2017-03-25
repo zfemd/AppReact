@@ -17,7 +17,8 @@ import {
     Text,
     TextInput,
     TouchableHighlight,
-    View
+    View,
+    TouchableOpacity
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { connect } from 'react-redux';
@@ -48,7 +49,7 @@ const sharpenImg = require('../../assets/photo/sharpen.jpg');
 const photoHtmlAndroid = require('../../assets/html/photo.html');
 import photoHtmlIos from '../../assets/html/photo';
 
-import stickers from '../../assets/stickers.js';
+import stickers from '../../assets/stickers/index.js';
 
 var clone = require('lodash/clone');
 
@@ -88,7 +89,7 @@ class PhotoEditPage extends Component {
             updatedSticks: {}
         };
 
-        let stickersDataSource =new ListView.DataSource({
+        this.stickersDataSource =new ListView.DataSource({
             rowHasChanged: (r1, r2) => {
                 return (r1 !== r2 || this.state.updatedSticks[r1.name]);
             },
@@ -97,7 +98,7 @@ class PhotoEditPage extends Component {
 
         this.state.stickers = clone(stickers);
         // here, datasource's argument must be original "stickers" object.
-        this.state.stickersDataSource = stickersDataSource.cloneWithRowsAndSections(this.state.stickers);
+        this.state.stickersDataSource = this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers);
     }
 
     _onWebViewLoadEnd() {
@@ -337,25 +338,25 @@ class PhotoEditPage extends Component {
         if (!stickerInfo.added) {
             stickerInfo.added = true;
             this.state.updatedSticks[rowID] = true;
-            webviewbridge.sendToBridge(JSON.stringify({type:"addSticker", data: stickerInfo.uri, name:rowID}));
-            this.setState({stickersDataSource: this.state.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
+            webviewbridge.sendToBridge(JSON.stringify({type:"addSticker", name:rowID}));
+            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
         } else {
             stickerInfo.added = false;
             this.state.updatedSticks[rowID] = true;
             webviewbridge.sendToBridge(JSON.stringify({type:"removeSticker", name:rowID}));
-            this.setState({stickersDataSource: this.state.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
+            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
         }
     }
 
     _renderSticker(rowData, sectionID, rowID, highlightRow) {
-        let selectedStyle = rowData.added ? {backgroundColor:'#ccc'} : null;
+        let selectedStyle = rowData.added ? {borderColor: '#fc7d30'} : {borderColor:'#f1f1f1'};
         this.state.updatedSticks[rowID] = false; // reset
-        return <TouchableHighlight style={[{marginHorizontal:10}, selectedStyle]}
+        return <TouchableOpacity style={[{marginHorizontal:10,borderWidth: 2,backgroundColor:'#f1f1f1'}, selectedStyle]}
                                    onPress={() => {
                                         highlightRow(sectionID, rowID);
                                         this._toggleSticker.call(this, rowData, sectionID, rowID);}}>
-                <Image key={rowID} source={{uri:rowData.uri}} style={{width:80, height:80}} resizeMode="contain" />
-            </TouchableHighlight>;
+                <Image key={rowID} source={rowData.thumb} style={{width:80, height:80}} resizeMode="contain" />
+            </TouchableOpacity>;
     }
 
     render() {
