@@ -94,17 +94,20 @@ const styles = StyleSheet.create({
         marginVertical: 0,
         //backgroundColor:'#eee',
         alignItems:'stretch',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     filterImageFrame: {
         justifyContent:'flex-start',
-        alignItems: 'center'
+        alignItems: 'center',
+
     },
     filterImage: {
         width: 100,
-        height: 80,
+        height: 74,
         marginVertical: 0,
-        paddingVertical: 0
+        paddingVertical: 0,
+        borderWidth: 2,
+        borderColor: 'transparent',
     },
     textInput: {
         flex:1,

@@ -362,7 +362,7 @@ class PhotoEditPage extends Component {
     render() {
         let {height, width} = Dimensions.get('window');
 
-        let choseFilterStyle = {backgroundColor: '#ccc'};
+        let choseFilterStyle = {borderColor: '#fc7d30'};
         console.log(height);
 
         return (
@@ -399,35 +399,44 @@ class PhotoEditPage extends Component {
                     tabBarPosition='bottom' locked={true}
                     renderTabBar={this.state.oTabsBar}
                     onChangeTab={this._onChangeTab.bind(this)}
+                    tabBarActiveTextColor="#fc7d30"
+                    style={{marginBottom:-1}}
+                    tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 2}}
                     >
                     <ScrollView navigator={this.props.navigator}  tabLabel="美化" contentContainerStyle={{flex:1}}>
-                        <ScrollableTabView ref="nestedTabs" locked={true} tabBarPosition='top'>
+                        <ScrollableTabView
+                            ref="nestedTabs"
+                            locked={true}
+                            tabBarPosition='top'
+                            tabBarActiveTextColor="#fc7d30"
+                            tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 2}}
+                            >
                             <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" removeClippedSubviews={false}
                                         horizontal={true} style={{flex:1}} contentContainerStyle={{alignItems:'stretch'}}>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={originImg} style={styles.filterImage} resizeMode="contain" />
+                                        <Image source={originImg} style={[styles.filterImage,(this.state.currentFilter == 'none' ? choseFilterStyle : null)]} resizeMode="contain" />
                                         <Text style={{marginTop: 0}}>原图</Text>
                                     </View>
-                                </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={sepiaImg} style={styles.filterImage} resizeMode="contain" />
+                                        <Image source={sepiaImg} style={[styles.filterImage,(this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]} resizeMode="contain" />
                                         <Text>怀旧1</Text>
                                     </View>
-                                </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sepia2');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]}>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia2');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={sepia2Img} style={styles.filterImage} resizeMode="contain" />
+                                        <Image source={sepia2Img} style={[styles.filterImage,(this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]} resizeMode="contain" />
                                         <Text>怀旧2</Text>
                                     </View>
-                                </TouchableHighlight>
-                                <TouchableHighlight onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={[styles.filterBox, (this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]}>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={[styles.filterBox, (this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={sharpenImg} style={styles.filterImage} resizeMode="contain" />
+                                        <Image source={sharpenImg} style={[styles.filterImage,(this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]} resizeMode="contain" />
                                         <Text>锐化</Text>
                                     </View>
-                                </TouchableHighlight>
+                                </TouchableOpacity>
                             </ScrollView>
                             <ScrollView navigator={this.props.navigator}  tabLabel="美化照片" horizontal={true} style={{flex:1}} contentContainerStyle={{flex:1, backgroundColor:'#fff'}}>
                                 {
