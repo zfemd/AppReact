@@ -278,7 +278,7 @@ class PostNotePage extends Component {
                                returnKeyType="next" maxLength={30} style={[styles.textInput, {flex:1}]}/>
                     <Text>30</Text>
                 </View>
-                <View style={{flexDirection: 'row', paddingVertical:10, marginHorizontal: 15}}>
+                <View style={{flexDirection: 'row', paddingVertical:10, marginHorizontal: 15,height: 100}}>
                     <TextInput ref='contentInput' placeholder='说点你的心得吧' defaultValue={this.state.content}
                                clearButtonMode='while-editing' underlineColorAndroid='transparent'
                                returnKeyType="next" multiline={true} numberOfLines = {8} style={[styles.textInput, {flex:1}]}

@@ -177,7 +177,7 @@ class SelectPhotoPage extends Component {
                     />
                 <View
                     style={{marginBottom: 4, width: width, height: 200,alignItems: 'center',justifyContent: 'center'}}>
-                    <Image source={this.state.selectedPhoto.image} style={styles.uploadAvatar} width={pWidth}
+                    <Image source={this.state.selectedPhoto.image} style={{}} width={pWidth}
                            height={pHeight} resizeMode={'contain'}/>
                 </View>
                 <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
