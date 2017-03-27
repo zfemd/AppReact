@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     selectedPhotoContainer: {
         backgroundColor: colors.black,
         flexDirection: 'row',
-        height:300
+        height:400
     },
     tabView: {
         justifyContent: 'center',

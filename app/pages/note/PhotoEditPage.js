@@ -18,7 +18,8 @@ import {
     TextInput,
     TouchableHighlight,
     View,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableWithoutFeedback
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import { connect } from 'react-redux';
@@ -409,7 +410,7 @@ class PhotoEditPage extends Component {
                             locked={true}
                             tabBarPosition='top'
                             tabBarActiveTextColor="#fc7d30"
-                            tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 2}}
+                            tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 0}}
                             >
                             <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" removeClippedSubviews={false}
                                         horizontal={true} style={{flex:1}} contentContainerStyle={{alignItems:'stretch'}}>
