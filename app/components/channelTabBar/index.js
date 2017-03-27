@@ -160,6 +160,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0,
         borderLeftWidth: 0,
         borderRightWidth: 0,
+        borderBottomWidth: 0,
         borderBottomColor: '#ccc',
         minWidth: width-arrowWidth,
         //paddingRight: arrowWidth

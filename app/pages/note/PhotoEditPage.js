@@ -51,11 +51,12 @@ const photoHtmlAndroid = require('../../assets/html/photo.html');
 import photoHtmlIos from '../../assets/html/photo';
 
 import stickers from '../../assets/stickers/index.js';
+import ChannelTabBar from '../../components/channelTabBar';
 
 var clone = require('lodash/clone');
 
-var contrastIcon = <Icon name="adjust" size={30} color="#333" />;
-var brightnessIcon = <Icon name="sun-o" size={30} color="#333" />;
+var contrastIcon = <Icon name="adjust" size={30} color="#333"/>;
+var brightnessIcon = <Icon name="sun-o" size={30} color="#333"/>;
 var maxSize = 1024;
 
 class PhotoEditPage extends Component {
@@ -72,19 +73,19 @@ class PhotoEditPage extends Component {
             oImageTag: null,
             sImageBase64Data: null,
             avatarSource: this.props.photo,
-            optionsModalVisible:false,
+            optionsModalVisible: false,
             categoryOptionsVisible: false,
             currencyOptionsVisible: false,
             brandOptionsVisible: false,
             nationOptionsVisible: false,
-            transparent:true,
+            transparent: true,
             tagOverlayVisible: false,
             tags: [],
             currentTag: null,
             beautifyTab: 'default',
             beautify: {
-                brightness: {oldValue: 0.5, newValue: 0.5 },
-                contrast: {oldValue: 1, newValue: 1 }
+                brightness: {oldValue: 0.5, newValue: 0.5},
+                contrast: {oldValue: 1, newValue: 1}
             },
             currentFilter: null,
             updatedSticks: {},
@@ -92,7 +93,7 @@ class PhotoEditPage extends Component {
             ready: false
         };
 
-        this.stickersDataSource =new ListView.DataSource({
+        this.stickersDataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => {
                 return (r1 !== r2 || this.state.updatedSticks[r1.name]);
             },
@@ -113,24 +114,34 @@ class PhotoEditPage extends Component {
                 let displaySize = {};
 
                 if (imageSize.width > imageSize.height && imageSize.width > maxSize) {
-                    displaySize = {width:maxSize, height: (maxSize / imageSize.width * imageSize.height)};
+                    displaySize = {width: maxSize, height: (maxSize / imageSize.width * imageSize.height)};
                 } else if (imageSize.height > imageSize.width && imageSize.height > maxSize) {
-                    displaySize = {height:maxSize, width: (maxSize / imageSize.height * imageSize.width)};
+                    displaySize = {height: maxSize, width: (maxSize / imageSize.height * imageSize.width)};
                 } else {
-                    displaySize = {height: imageSize.height , width: imageSize.width}
+                    displaySize = {height: imageSize.height, width: imageSize.width}
                 }
 
                 console.log(this.state.avatarSource);
 
                 // get base64data of image
-                ImageEditor.cropImage(this.state.avatarSource.image.uri, {offset:{x:0, y:0},size:imageSize, displaySize:displaySize, resizeMode:'contain'}, (url) => {
+                ImageEditor.cropImage(this.state.avatarSource.image.uri, {
+                    offset: {x: 0, y: 0},
+                    size: imageSize,
+                    displaySize: displaySize,
+                    resizeMode: 'contain'
+                }, (url) => {
                     ImageStore.getBase64ForTag(url, (base64Data) => {
                         const { webviewbridge } = this.refs;
                         let {height, width} = Dimensions.get('window');
                         let sImageBase64Data = "data:" + this.state.avatarSource.type + ";base64," + base64Data.replace(/\n|\r/g, "");
                         //console.log('data:' + sImageBase64Data);
 
-                        webviewbridge.sendToBridge(JSON.stringify({type:"imageReady", window:{width:width, height:height}, image:displaySize, data: sImageBase64Data}));
+                        webviewbridge.sendToBridge(JSON.stringify({
+                            type: "imageReady",
+                            window: {width: width, height: height},
+                            image: displaySize,
+                            data: sImageBase64Data
+                        }));
                     }, (error) => {
                         console.log(error);
                     });
@@ -145,7 +156,7 @@ class PhotoEditPage extends Component {
         const { navigator, dispatch } = this.props;
         let {currentPhotoIndex} = this.props.draftNote;
 
-        dispatch({type:StoreActions.REMOVE_NOTE_PHOTO, index: currentPhotoIndex});
+        dispatch({type: StoreActions.REMOVE_NOTE_PHOTO, index: currentPhotoIndex});
 
         if (navigator) {
             navigator.pop();
@@ -156,9 +167,9 @@ class PhotoEditPage extends Component {
         const { navigator, dispatch } = this.props;
         const { webviewbridge } = this.refs;
 
-        dispatch({type:StoreActions.ADD_TAGS, tags: this.state.tags.slice()});
+        dispatch({type: StoreActions.ADD_TAGS, tags: this.state.tags.slice()});
 
-        webviewbridge.sendToBridge(JSON.stringify({type:'continue'}));
+        webviewbridge.sendToBridge(JSON.stringify({type: 'continue'}));
 
         this.setState({next: true});
     }
@@ -169,7 +180,7 @@ class PhotoEditPage extends Component {
      */
     _onChangeTab(args) {
         const { webviewbridge } = this.refs;
-        webviewbridge.sendToBridge(JSON.stringify({type:'changeTab', imageClickable: (args.i == 1)}));
+        webviewbridge.sendToBridge(JSON.stringify({type: 'changeTab', imageClickable: (args.i == 1)}));
     }
 
     _onCurrencyInputFocus() {
@@ -199,12 +210,12 @@ class PhotoEditPage extends Component {
     }
 
     _onNationSelect(rowData) {
-        this.state.currentTag.city = {title:rowData.title, id:rowData.id};
+        this.state.currentTag.city = {title: rowData.title, id: rowData.id};
         this.showCurrencyModal(false);
     }
 
     setOptionsModalVisible(flag) {
-        this.setState({optionsModalVisible:flag});
+        this.setState({optionsModalVisible: flag});
     }
 
     showCategoryModal(flag) {
@@ -223,7 +234,7 @@ class PhotoEditPage extends Component {
         this.setOptionsModalVisible(flag);
     }
 
-    showCurrencyModal(flag){
+    showCurrencyModal(flag) {
         this.state.currencyOptionsVisible = flag;
         this.state.categoryOptionsVisible = false;
         this.state.brandOptionsVisible = false;
@@ -231,7 +242,7 @@ class PhotoEditPage extends Component {
         this.setOptionsModalVisible(flag);
     }
 
-    showNationModal(flag){
+    showNationModal(flag) {
         this.state.nationOptionsVisible = flag;
         this.state.currencyOptionsVisible = false;
         this.state.brandOptionsVisible = false;
@@ -260,7 +271,7 @@ class PhotoEditPage extends Component {
         console.log(data);
 
         tags.push(tagData);
-        webviewbridge.sendToBridge(JSON.stringify({type:'addTag', data: data}));
+        webviewbridge.sendToBridge(JSON.stringify({type: 'addTag', data: data}));
 
         this.state.tags = tags;
         this.setState({tagOverlayVisible: false});
@@ -284,23 +295,23 @@ class PhotoEditPage extends Component {
 
     _adjustImageBrightness(value) {
         const { webviewbridge } = this.refs;
-        this.setState({bHandlingFilter:true});
-        webviewbridge.sendToBridge(JSON.stringify({type:'beautify', beautify:'brightness', value: value}));
+        this.setState({bHandlingFilter: true});
+        webviewbridge.sendToBridge(JSON.stringify({type: 'beautify', beautify: 'brightness', value: value}));
         this.state.beautify.brightness.newValue = value;
     }
 
-    _adjustImageContrast(value){
+    _adjustImageContrast(value) {
         const { webviewbridge } = this.refs;
-        this.setState({bHandlingFilter:true});
-        webviewbridge.sendToBridge(JSON.stringify({type:'beautify', beautify:'contrast', value: value}));
+        this.setState({bHandlingFilter: true});
+        webviewbridge.sendToBridge(JSON.stringify({type: 'beautify', beautify: 'contrast', value: value}));
         this.state.beautify.contrast.newValue = value;
     }
 
-    _applyImageFilter(filter){
+    _applyImageFilter(filter) {
         const { webviewbridge } = this.refs;
-        this.setState({bHandlingFilter:true});
-        webviewbridge.sendToBridge(JSON.stringify({type:'filter', value: filter}));
-        this.setState({currentFilter : filter});
+        this.setState({bHandlingFilter: true});
+        webviewbridge.sendToBridge(JSON.stringify({type: 'filter', value: filter}));
+        this.setState({currentFilter: filter});
     }
 
     _onBridgeMessage(message) {
@@ -311,23 +322,23 @@ class PhotoEditPage extends Component {
 
         if (message.startsWith("{")) {
             message = JSON.parse(message);
-            switch(message.type) {
+            switch (message.type) {
                 case "bridgeReady":
                     this._onWebViewLoadEnd();
                     this.setState({ready: true});
                     break;
                 case "clickImage":
-                    this.setState({tagOverlayVisible:true, currentTag: {x:message.x, y:message.y}});
+                    this.setState({tagOverlayVisible: true, currentTag: {x: message.x, y: message.y}});
                     break;
                 case "imageUpdated":
-                    this.setState({bHandlingFilter:false});
+                    this.setState({bHandlingFilter: false});
                     console.log(message.type);
                     //this.setState({sImageBase64Data: message.data});
                     break;
                 case "continue":
-                    dispatch({type:StoreActions.ADD_NOTE_PHOTO_DATA, imageData: message.imageData});
+                    dispatch({type: StoreActions.ADD_NOTE_PHOTO_DATA, imageData: message.imageData});
                     this.setState({next: false});
-                    if(navigator) {
+                    if (navigator) {
                         navigator.push({
                             name: 'PostNotePage',
                             component: PostNotePage
@@ -344,25 +355,25 @@ class PhotoEditPage extends Component {
         if (!stickerInfo.added) {
             stickerInfo.added = true;
             this.state.updatedSticks[rowID] = true;
-            webviewbridge.sendToBridge(JSON.stringify({type:"addSticker", name:rowID}));
-            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
+            webviewbridge.sendToBridge(JSON.stringify({type: "addSticker", name: rowID}));
+            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers)});
         } else {
             stickerInfo.added = false;
             this.state.updatedSticks[rowID] = true;
-            webviewbridge.sendToBridge(JSON.stringify({type:"removeSticker", name:rowID}));
-            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers) });
+            webviewbridge.sendToBridge(JSON.stringify({type: "removeSticker", name: rowID}));
+            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers)});
         }
     }
 
     _renderSticker(rowData, sectionID, rowID, highlightRow) {
-        let selectedStyle = rowData.added ? {borderColor: '#fc7d30'} : {borderColor:'#f1f1f1'};
+        let selectedStyle = rowData.added ? {borderColor: '#fc7d30'} : {borderColor: '#f1f1f1'};
         this.state.updatedSticks[rowID] = false; // reset
         return <TouchableOpacity style={[{marginHorizontal:10,borderWidth: 2,backgroundColor:'#f1f1f1'}, selectedStyle]}
-                                   onPress={() => {
+                                 onPress={() => {
                                         highlightRow(sectionID, rowID);
                                         this._toggleSticker.call(this, rowData, sectionID, rowID);}}>
-                <Image key={rowID} source={rowData.thumb} style={{width:80, height:80}} resizeMode="contain" />
-            </TouchableOpacity>;
+            <Image key={rowID} source={rowData.thumb} style={{width:80, height:80}} resizeMode="contain"/>
+        </TouchableOpacity>;
     }
 
     render() {
@@ -386,16 +397,20 @@ class PhotoEditPage extends Component {
 
                 <View style={styles.selectedPhotoContainer}>
                     {
-                        Platform.OS === 'ios'?
-                            <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
-                                           scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
+                        Platform.OS === 'ios' ?
+                            <WebViewBridge ref="webviewbridge" javaScriptEnabled={true}
+                                           onBridgeMessage={this._onBridgeMessage.bind(this)}
+                                           scrollEnabled={false} allowFileAccessFromFileURLs={true}
+                                           allowUniversalAccessFromFileURLs={true}
                                            domStorageEnabled={true}
-                                           source={photoHtmlAndroid} >
+                                           source={photoHtmlAndroid}>
                             </WebViewBridge> :
-                            <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
-                                           scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
+                            <WebViewBridge ref="webviewbridge" javaScriptEnabled={true}
+                                           onBridgeMessage={this._onBridgeMessage.bind(this)}
+                                           scrollEnabled={false} allowFileAccessFromFileURLs={true}
+                                           allowUniversalAccessFromFileURLs={true}
                                            domStorageEnabled={true}
-                                           source={{html:photoHtmlIos}} >
+                                           source={{html:photoHtmlIos}}>
                             </WebViewBridge>
                     }
 
@@ -409,7 +424,7 @@ class PhotoEditPage extends Component {
                     style={{marginBottom:-1}}
                     tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 2}}
                     >
-                    <ScrollView navigator={this.props.navigator}  tabLabel="美化" contentContainerStyle={{flex:1}}>
+                    <ScrollView navigator={this.props.navigator} tabLabel="美化" contentContainerStyle={{flex:1}}>
                         <ScrollableTabView
                             ref="nestedTabs"
                             locked={true}
@@ -417,49 +432,71 @@ class PhotoEditPage extends Component {
                             tabBarActiveTextColor="#fc7d30"
                             tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 0}}
                             renderTabBar={() => <DefaultTabBar
-                                style={{height: 38,borderBottomWidth: 0}}
-                                tabStyle={{paddingBottom: 0,marginTop: 8,marginBottom: 8, borderRightWidth: 1, borderColor: '#f1f1f1'}}
-                            />
-                            }
+                                    style={{height: 38,borderBottomWidth: 0}}
+                                    tabStyle={{paddingBottom: 0,marginTop: 8,marginBottom: 8, borderRightWidth: 1, borderColor: '#f1f1f1'}}
+                                />
+                                }
                             >
                             <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" removeClippedSubviews={false}
-                                        horizontal={true} style={{flex:1}} contentContainerStyle={{alignItems:'stretch'}}>
-                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
+                                        horizontal={true} style={{flex:1}}
+                                        contentContainerStyle={{alignItems:'stretch'}}>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'none');}}
+                                                  style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={originImg} style={[styles.filterImage,(this.state.currentFilter == 'none' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'none' ? {color: '#fc7d30'} : null)]}>原图</Text>
+                                        <Image source={originImg}
+                                               style={[styles.filterImage,(this.state.currentFilter == 'none' ? choseFilterStyle : null)]}
+                                               resizeMode="contain"/>
+                                        <Text
+                                            style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'none' ? {color: '#fc7d30'} : null)]}>原图</Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia');}}
+                                                  style={[styles.filterBox, (this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={sepiaImg} style={[styles.filterImage,(this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sepia' ? {color: '#fc7d30'} : null)]}>怀旧1</Text>
+                                        <Image source={sepiaImg}
+                                               style={[styles.filterImage,(this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}
+                                               resizeMode="contain"/>
+                                        <Text
+                                            style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sepia' ? {color: '#fc7d30'} : null)]}>怀旧1</Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia2');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]}>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia2');}}
+                                                  style={[styles.filterBox, (this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={sepia2Img} style={[styles.filterImage,(this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sepia2' ? {color: '#fc7d30'} : null)]}>怀旧2</Text>
+                                        <Image source={sepia2Img}
+                                               style={[styles.filterImage,(this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]}
+                                               resizeMode="contain"/>
+                                        <Text
+                                            style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sepia2' ? {color: '#fc7d30'} : null)]}>怀旧2</Text>
                                     </View>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={[styles.filterBox, (this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]}>
+                                <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sharpen');}}
+                                                  style={[styles.filterBox, (this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
-                                        <Image source={sharpenImg} style={[styles.filterImage,(this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sharpen' ? {color: '#fc7d30'} : null)]}>锐化</Text>
+                                        <Image source={sharpenImg}
+                                               style={[styles.filterImage,(this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]}
+                                               resizeMode="contain"/>
+                                        <Text
+                                            style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sharpen' ? {color: '#fc7d30'} : null)]}>锐化</Text>
                                     </View>
                                 </TouchableOpacity>
                             </ScrollView>
-                            <ScrollView navigator={this.props.navigator}  tabLabel="美化照片" horizontal={true} style={{flex:1}} contentContainerStyle={{flex:1, backgroundColor:'#fff'}}>
+                            <ScrollView navigator={this.props.navigator} tabLabel="美化照片" horizontal={true}
+                                        style={{flex:1}} contentContainerStyle={{flex:1, backgroundColor:'#fff'}}>
                                 {
-                                    this.state.beautifyTab == 'default' ? (<View style={{flex:1, flexDirection: 'row', alignItems: 'stretch', justifyContent:'space-between', backgroundColor:'#999'}}>
-                                        <TouchableHighlight onPress={this._onPressBrightness.bind(this)} style={{flex:1}}>
-                                            <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
+                                    this.state.beautifyTab == 'default' ? (<View
+                                        style={{flex:1, flexDirection: 'row', alignItems: 'stretch', justifyContent:'space-between', backgroundColor:'#999'}}>
+                                        <TouchableHighlight onPress={this._onPressBrightness.bind(this)}
+                                                            style={{flex:1}}>
+                                            <View
+                                                style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
                                                 {brightnessIcon}
                                                 <Text>亮度</Text>
                                             </View>
                                         </TouchableHighlight>
                                         <TouchableHighlight onPress={this._onPressContrast.bind(this)} style={{flex:1}}>
-                                            <View style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
+                                            <View
+                                                style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
                                                 {contrastIcon}
                                                 <Text>对比度</Text>
                                             </View>
@@ -468,47 +505,106 @@ class PhotoEditPage extends Component {
                                 }
 
                                 {
-                                    this.state.beautifyTab == 'brightness' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
-                                        <Slider value={this.state.beautify.brightness.oldValue} onSlidingComplete={(value) => this._adjustImageBrightness(value)} style={{flex:1}}></Slider>
-                                        <ConfirmBar style={styles.confirmBar} title='亮度'
-                                                    onCancel={() => {
+                                    this.state.beautifyTab == 'brightness' ? (
+                                        <View style={{flex:1, justifyContent:'flex-end'}}>
+                                            <Slider value={this.state.beautify.brightness.oldValue}
+                                                    onSlidingComplete={(value) => this._adjustImageBrightness(value)}
+                                                    style={{flex:1}}></Slider>
+                                            <ConfirmBar style={styles.confirmBar} title='亮度'
+                                                        onCancel={() => {
                                                             this._adjustImageBrightness(this.state.beautify.brightness.oldValue)
                                                             this.setState({beautifyTab:'default', oTabsBar:null})}
                                                         }
-                                                    onConfirm={() => {
+                                                        onConfirm={() => {
                                                             this.state.beautify.brightness.oldValue = this.state.beautify.brightness.newValue;
                                                             this.setState({beautifyTab:'default', oTabsBar:null})}
                                                         }></ConfirmBar>
-                                    </View>) : null
+                                        </View>) : null
                                 }
 
                                 {
-                                    this.state.beautifyTab == 'contrast' ? (<View style={{flex:1, justifyContent:'flex-end'}}>
-                                        <Slider value={this.state.beautify.contrast.oldValue} onSlidingComplete={(value) => this._adjustImageContrast(value)} minimumValue={0} maximumValue={2} step={0.1} style={{flex:1}}></Slider>
-                                        <ConfirmBar style={styles.confirmBar} title='对比度'
-                                                    onCancel={() => {
+                                    this.state.beautifyTab == 'contrast' ? (
+                                        <View style={{flex:1, justifyContent:'flex-end'}}>
+                                            <Slider value={this.state.beautify.contrast.oldValue}
+                                                    onSlidingComplete={(value) => this._adjustImageContrast(value)}
+                                                    minimumValue={0} maximumValue={2} step={0.1}
+                                                    style={{flex:1}}></Slider>
+                                            <ConfirmBar style={styles.confirmBar} title='对比度'
+                                                        onCancel={() => {
                                                         this._adjustImageContrast(this.state.beautify.contrast.oldValue);
                                                         this.setState({beautifyTab:'default', oTabsBar:null})}}
-                                                    onConfirm={() => {
+                                                        onConfirm={() => {
                                                             this.state.beautify.contrast.oldValue = this.state.beautify.contrast.newValue;
                                                             this.setState({beautifyTab:'default', oTabsBar:null})}
                                                         }></ConfirmBar>
-                                    </View>) : null
+                                        </View>) : null
                                 }
                             </ScrollView>
                         </ScrollableTabView>
                     </ScrollView>
 
-                    <ScrollView tabLabel="标签" horizontal={true} contentContainerStyle={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                    <ScrollView tabLabel="标签" horizontal={true}
+                                contentContainerStyle={{flex:1, justifyContent:'center', alignItems:'center'}}>
                         <View style={[styles.tabView]}>
                             <Text>点击照片</Text>
                             <Text>选择添加相关信息</Text>
                         </View>
                     </ScrollView>
 
-                    <ListView tabLabel="贴图" style={{flex:1}} horizontal={true} contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                              dataSource={this.state.stickersDataSource} enableEmptySections={true}
-                              renderRow={this._renderSticker.bind(this)} />
+                    <ScrollableTabView
+                        tabLabel="贴图"
+                        ref="nestedTabs"
+                        locked={true}
+                        tabBarPosition='top'
+                        tabBarActiveTextColor="#fc7d30"
+                        tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 0}}
+                        renderTabBar={() =>
+                                  <ChannelTabBar
+                                    underlineHeight={1}
+                                    textStyle={{ fontSize: 14, marginTop: 8 }}
+                                    style={{height: 38}}
+                                    underlineColor="#fc7d30"
+                                  />
+                                }
+                        >
+                        <ListView tabLabel="便宜有好货" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="健身" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="全球购" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="吃货志" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="基本款" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="宝贝书" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="男人装" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="美人志" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                        <ListView tabLabel="耍大牌" style={{flex:1}} horizontal={true}
+                                  contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
+                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  renderRow={this._renderSticker.bind(this)}/>
+                    </ScrollableTabView>
+
 
                 </ScrollableTabView>
 
@@ -519,28 +615,32 @@ class PhotoEditPage extends Component {
                                              contentContainerStyle={styles.framedTextInput}
                                              style={[styles.textInput, {color: '#fff'}]}
                                              onChangeText={text => this.state.currentTag.name = text}
-                                             onSubmitEditing={(event) => {this.state.currentTag.name = event.nativeEvent.text;}} />
+                                             onSubmitEditing={(event) => {this.state.currentTag.name = event.nativeEvent.text;}}/>
                         </View>
                         <View style={styles.formRow}>
                             <FramedTextInput placeholder='价格' placeholderTextColor='#fff' clearTextOnFocus={true}
                                              keyboardType='numeric'
-                                             contentContainerStyle={styles.framedTextInput} style={[styles.textInput, {color: '#fff'}]}
+                                             contentContainerStyle={styles.framedTextInput}
+                                             style={[styles.textInput, {color: '#fff'}]}
                                              onChangeText={text => this.state.currentTag.price = text}
                                              onSubmitEditing={(event) => {this.state.currentTag.price = event.nativeEvent.text;}}/>
                         </View>
                         <View style={styles.formRow}>
                             <FramedTextInput ref="categoryInput" placeholder='品类' placeholderTextColor='#fff'
-                                             clearTextOnFocus={true} enablesReturnKeyAutomatically={true} blurOnSubmit={true}
+                                             clearTextOnFocus={true} enablesReturnKeyAutomatically={true}
+                                             blurOnSubmit={true}
                                              value={this.state.currentTag.category && this.state.currentTag.category.title}
                                              contentContainerStyle={styles.framedTextInput}
                                              style={[styles.textInput, {color: '#fff'}]}
-                                             onFocus={() => {this.showCategoryModal(true); this.refs.categoryInput.blur()}} />
+                                             onFocus={() => {this.showCategoryModal(true); this.refs.categoryInput.blur()}}/>
                         </View>
                         <View style={{marginHorizontal: 20}}>
-                            <Button style={styles.buttonText} containerStyle={styles.button} onPress={() => this._onAddTag.call(this)}>
+                            <Button style={styles.buttonText} containerStyle={styles.button}
+                                    onPress={() => this._onAddTag.call(this)}>
                                 完成
                             </Button>
-                            <Button style={[styles.buttonText, styles.cancelBtnText]} containerStyle={[styles.button, styles.cancelBtn]}
+                            <Button style={[styles.buttonText, styles.cancelBtnText]}
+                                    containerStyle={[styles.button, styles.cancelBtn]}
                                     onPress={() => this._onModalCancel.call(this)}>
                                 取消
                             </Button>
@@ -553,11 +653,20 @@ class PhotoEditPage extends Component {
                     visible={this.state.optionsModalVisible}
                     onRequestClose={() => {alert("Modal has been closed.")}}
                     >
-                    <View style={[styles.container, {height: height - 21}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
-                        { this.state.categoryOptionsVisible ? <CategoryOptionList style={{flex:1}} onCancel={() => {this.showCategoryModal.call(this, false);}} onSelect={(rowData)=> this._onCategorySelect.call(this, rowData) }/> : null}
-                        { this.state.brandOptionsVisible ? <BrandOptionList onCancel={() => this.showBrandModal.call(this, false)} onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
-                        { this.state.currencyOptionsVisible ? <CurrencyOptionList onCancel={() => this.showCurrencyModal.call(this, false)} onSelect={(rowData)=> this._onCurrencySelect.call(this, rowData) }/> : null}
-                        { this.state.nationOptionsVisible ? <NationOptionList onCancel={() => this.showNationModal.call(this, false)} onSelect={(rowData)=> this._onNationSelect.call(this, rowData) }/> : null}
+                    <View
+                        style={[styles.container, {height: height - 21}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
+                        { this.state.categoryOptionsVisible ? <CategoryOptionList style={{flex:1}}
+                                                                                  onCancel={() => {this.showCategoryModal.call(this, false);}}
+                                                                                  onSelect={(rowData)=> this._onCategorySelect.call(this, rowData) }/> : null}
+                        { this.state.brandOptionsVisible ?
+                            <BrandOptionList onCancel={() => this.showBrandModal.call(this, false)}
+                                             onSelect={(rowData)=> this._onBrandSelect.call(this, rowData) }/> : null}
+                        { this.state.currencyOptionsVisible ?
+                            <CurrencyOptionList onCancel={() => this.showCurrencyModal.call(this, false)}
+                                                onSelect={(rowData)=> this._onCurrencySelect.call(this, rowData) }/> : null}
+                        { this.state.nationOptionsVisible ?
+                            <NationOptionList onCancel={() => this.showNationModal.call(this, false)}
+                                              onSelect={(rowData)=> this._onNationSelect.call(this, rowData) }/> : null}
                     </View>
                 </Modal>
             </View>
