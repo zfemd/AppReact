@@ -18,7 +18,8 @@
         </div>
     <!--</div>-->
     <script type="application/javascript">
-
+        var deviceWindow = null;
+        var displaySize = null;
         var intervalId = setInterval(function(){
             if (!window.WebViewBridge) {return;}
             clearInterval(intervalId);
@@ -151,8 +152,8 @@
                     fabric.loadSVGFromString(stickers.myStickers[message.name].uri,function (objects,options) {
                         var shape = fabric.util.groupSVGElements(objects,options);
                         shape.set({
-                            left: 200,
-                            top: 200,
+                            left: deviceWindow.width/2 - 140,
+                            top: displaySize.height/2 ,
                             angle: 0,
                             scaleX: 3,
                             scaleY: 3,
@@ -178,7 +179,7 @@
                     WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'jpeg'})}));
 
                 } else if (message.type === 'imageReady') {
-
+                    deviceWindow = message.window;
                     imgElementOrigin.addEventListener('load', function(){
 
                         imgFab = new fabric.Image(imgElementOrigin, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
@@ -222,7 +223,7 @@
 
                     if (message.data) {
                         var maxHeight = message.window.height-280+20;
-                        var displaySize = {
+                        displaySize = {
                             width:message.image.width,
                             height:message.image.height
                         };

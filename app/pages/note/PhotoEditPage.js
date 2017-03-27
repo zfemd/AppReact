@@ -87,7 +87,8 @@ class PhotoEditPage extends Component {
                 contrast: {oldValue: 1, newValue: 1 }
             },
             currentFilter: null,
-            updatedSticks: {}
+            updatedSticks: {},
+            next: false,
         };
 
         this.stickersDataSource =new ListView.DataSource({
@@ -157,6 +158,8 @@ class PhotoEditPage extends Component {
         dispatch({type:StoreActions.ADD_TAGS, tags: this.state.tags.slice()});
 
         webviewbridge.sendToBridge(JSON.stringify({type:'continue'}));
+
+        this.setState({next: true});
     }
 
     /**
@@ -321,7 +324,7 @@ class PhotoEditPage extends Component {
                     break;
                 case "continue":
                     dispatch({type:StoreActions.ADD_NOTE_PHOTO_DATA, imageData: message.imageData});
-
+                    this.setState({next: false});
                     if(navigator) {
                         navigator.push({
                             name: 'PostNotePage',
@@ -377,7 +380,7 @@ class PhotoEditPage extends Component {
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
 
-                {this.state.bHandlingFilter ? <Loading /> : null}
+                {this.state.bHandlingFilter || this.state.next ? <Loading /> : null}
 
                 <View style={styles.selectedPhotoContainer}>
                     {
