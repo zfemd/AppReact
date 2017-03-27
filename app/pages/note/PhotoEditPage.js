@@ -111,9 +111,9 @@ class PhotoEditPage extends Component {
                 let displaySize = {};
 
                 if (imageSize.width > imageSize.height && imageSize.width > maxSize) {
-                    displaySize = {width:maxSize, height: Math.round(maxSize / imageSize.width * imageSize.height)};
+                    displaySize = {width:maxSize, height: (maxSize / imageSize.width * imageSize.height)};
                 } else if (imageSize.height > imageSize.width && imageSize.height > maxSize) {
-                    displaySize = {height:maxSize, width: Math.round(maxSize / imageSize.height * imageSize.width)};
+                    displaySize = {height:maxSize, width: (maxSize / imageSize.height * imageSize.width)};
                 } else {
                     displaySize = {height: imageSize.height , width: imageSize.width}
                 }
@@ -381,16 +381,16 @@ class PhotoEditPage extends Component {
 
                 <View style={styles.selectedPhotoContainer}>
                     {
-                        Platform.OS === 'android'?
+                        Platform.OS === 'ios'?
                             <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
                                            scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
                                            domStorageEnabled={true}
-                                           source={photoHtmlAndroid} style={[{height:300, padding: 0}]}>
+                                           source={photoHtmlAndroid} >
                             </WebViewBridge> :
                             <WebViewBridge ref="webviewbridge" javaScriptEnabled={true} onBridgeMessage={this._onBridgeMessage.bind(this)}
                                            scrollEnabled={false} allowFileAccessFromFileURLs={true} allowUniversalAccessFromFileURLs={true}
                                            domStorageEnabled={true}
-                                           source={{html:photoHtmlIos}} style={[{height:300, padding: 0}]}>
+                                           source={{html:photoHtmlIos}} >
                             </WebViewBridge>
                     }
 
@@ -411,31 +411,36 @@ class PhotoEditPage extends Component {
                             tabBarPosition='top'
                             tabBarActiveTextColor="#fc7d30"
                             tabBarUnderlineStyle={{backgroundColor:'#fc7d30',height: 0}}
+                            renderTabBar={() => <DefaultTabBar
+                                style={{height: 38,borderBottomWidth: 0}}
+                                tabStyle={{paddingBottom: 0,marginTop: 8,marginBottom: 8, borderRightWidth: 1, borderColor: '#f1f1f1'}}
+                            />
+                            }
                             >
                             <ScrollView navigator={this.props.navigator} tabLabel="滤镜库" removeClippedSubviews={false}
                                         horizontal={true} style={{flex:1}} contentContainerStyle={{alignItems:'stretch'}}>
                                 <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'none');}} style={[styles.filterBox, (this.state.currentFilter == 'none' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={originImg} style={[styles.filterImage,(this.state.currentFilter == 'none' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text style={{marginTop: 0}}>原图</Text>
+                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'none' ? {color: '#fc7d30'} : null)]}>原图</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={sepiaImg} style={[styles.filterImage,(this.state.currentFilter == 'sepia' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text>怀旧1</Text>
+                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sepia' ? {color: '#fc7d30'} : null)]}>怀旧1</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sepia2');}} style={[styles.filterBox, (this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={sepia2Img} style={[styles.filterImage,(this.state.currentFilter == 'sepia2' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text>怀旧2</Text>
+                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sepia2' ? {color: '#fc7d30'} : null)]}>怀旧2</Text>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => {this._applyImageFilter.call(this, 'sharpen');}} style={[styles.filterBox, (this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]}>
                                     <View style={styles.filterImageFrame}>
                                         <Image source={sharpenImg} style={[styles.filterImage,(this.state.currentFilter == 'sharpen' ? choseFilterStyle : null)]} resizeMode="contain" />
-                                        <Text>锐化</Text>
+                                        <Text style={[styles.baseText,{marginTop: 2},(this.state.currentFilter == 'sharpen' ? {color: '#fc7d30'} : null)]}>锐化</Text>
                                     </View>
                                 </TouchableOpacity>
                             </ScrollView>

@@ -28,6 +28,7 @@ import styles from './style';
 class SelectPhotoPage extends Component {
     constructor(props, context) {
         super(props);
+        this._onContinue = this._onContinue.bind(this);
 
         this.state = {
             selectedPhoto: {},

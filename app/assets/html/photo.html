@@ -10,7 +10,7 @@
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
     <!--<div style="overflow:hidden; height:300px;">-->
-        <div style="display:-webkit-flex;display:flex;align-items:center;justify-content:center;height:400px;width:100%;">
+        <div id="cFrame" style="display:-webkit-flex;display:flex;align-items:center;justify-content:center;height:400px;width:100%;">
             <canvas id="c" style="margin:0;padding:0;"></canvas>
         </div>
         <div>
@@ -221,18 +221,19 @@
                     });
 
                     if (message.data) {
-                        var maxHeight = 400;
+                        var maxHeight = message.window.height-280+20;
                         var displaySize = {
                             width:message.image.width,
                             height:message.image.height
                         };
+                        document.getElementById('cFrame').style.height = maxHeight + 'px';
                         if (message.image.height > maxHeight) {
                             displaySize.height = maxHeight;
-                            displaySize.width = Math.round(maxHeight / message.image.height * message.image.width);
+                            displaySize.width =(maxHeight / message.image.height * message.image.width);
                         }
 
                         if (displaySize.width > message.window.width) {
-                            displaySize.height = Math.round(message.window.width / displaySize.width * displaySize.height);
+                            displaySize.height =(message.window.width / displaySize.width * displaySize.height);
                             displaySize.width = message.window.width;
                         }
 

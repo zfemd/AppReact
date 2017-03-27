@@ -11,6 +11,12 @@ import colors from '../../constants/colors';
 var {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
+    baseText: {
+        fontSize: 13,
+        color: '#4a4a4a',
+        lineHeight: 18,
+        paddingBottom: 2
+    },
     container: {
         backgroundColor: colors.white
     },
@@ -20,7 +26,7 @@ const styles = StyleSheet.create({
     selectedPhotoContainer: {
         backgroundColor: colors.black,
         flexDirection: 'row',
-        height:400
+        height:height-260
     },
     tabView: {
         justifyContent: 'center',

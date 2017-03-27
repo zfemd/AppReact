@@ -101,7 +101,7 @@ class PhotosReviewPage extends Component {
 
     render() {
         return (
-            <View style={[styles.container, {minHeight: height}]}>
+            <View style={[styles.container, {height: height - 21}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title={this.state.currentPhotoIndex + 1 + "/" + this.state.notePhotos.length}
                     navigator={this.props.navigator}
