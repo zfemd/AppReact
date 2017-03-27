@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white
     },
     uploadAvatar: {
-        marginRight: 10
     },
     selectedPhotoContainer: {
         backgroundColor: colors.black,

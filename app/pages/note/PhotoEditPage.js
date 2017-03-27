@@ -89,6 +89,7 @@ class PhotoEditPage extends Component {
             currentFilter: null,
             updatedSticks: {},
             next: false,
+            ready: false
         };
 
         this.stickersDataSource =new ListView.DataSource({
@@ -313,6 +314,7 @@ class PhotoEditPage extends Component {
             switch(message.type) {
                 case "bridgeReady":
                     this._onWebViewLoadEnd();
+                    this.setState({ready: true});
                     break;
                 case "clickImage":
                     this.setState({tagOverlayVisible:true, currentTag: {x:message.x, y:message.y}});
@@ -380,7 +382,7 @@ class PhotoEditPage extends Component {
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
 
-                {this.state.bHandlingFilter || this.state.next ? <Loading /> : null}
+                {this.state.bHandlingFilter || this.state.next || !this.state.ready ? <Loading /> : null}
 
                 <View style={styles.selectedPhotoContainer}>
                     {

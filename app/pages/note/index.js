@@ -58,7 +58,7 @@ class SelectPhotoPage extends Component {
         ImagePicker.launchCamera(this.cameraOptions, (response)  => {
             if (response.didCancel) {
             } else if (response.error) {
-                Toast.show(response.error, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                Toast.show(response.error, {duration: Toast.durations.SHORT, position: Toast.positions.CENTER});
             } else if (response.customButton) {
             } else {
                 // You can display the image using either data...
@@ -76,7 +76,7 @@ class SelectPhotoPage extends Component {
         ImagePicker.launchImageLibrary(this.phoneLibOptions, (response)  => {
             if (response.didCancel) {
             } else if (response.error) {
-                Toast.show(response.error, {duration:Toast.durations.SHORT, position:Toast.positions.CENTER});
+                Toast.show(response.error, {duration: Toast.durations.SHORT, position: Toast.positions.CENTER});
             } else if (response.customButton) {
             } else {
                 // You can display the image using either data...
@@ -87,7 +87,7 @@ class SelectPhotoPage extends Component {
             }
         });
     }
-    
+
     _onPressImage(imageNode) {
         console.log(imageNode);
         this.setState({
@@ -107,7 +107,7 @@ class SelectPhotoPage extends Component {
     _onCancel() {
         const { navigator } = this.props;
 
-        if(navigator) {
+        if (navigator) {
             navigator.pop();
         }
     }
@@ -118,14 +118,14 @@ class SelectPhotoPage extends Component {
         if (!this.state.continuePressed) {
             this.state.continuePressed = true;
 
-            dispatch({type:StoreActions.ADD_NOTE_PHOTO, photo: this.state.selectedPhoto});
+            dispatch({type: StoreActions.ADD_NOTE_PHOTO, photo: this.state.selectedPhoto});
 
             InteractionManager.runAfterInteractions(() => {
-                if(navigator) {
+                if (navigator) {
                     navigator.push({
                         name: 'PhotoEditPage',
                         component: PhotoEditPage,
-                        params: {photo:this.state.selectedPhoto}
+                        params: {photo: this.state.selectedPhoto}
                     })
                 }
                 this.state.continuePressed = false;
@@ -135,7 +135,7 @@ class SelectPhotoPage extends Component {
 
     componentDidMount() {
         // only fetch JPEG images.
-        var fetchParams: Object = {
+        var fetchParams:Object = {
             first: 1,
             groupTypes: 'SavedPhotos',
             assetType: "Photos",
@@ -155,21 +155,33 @@ class SelectPhotoPage extends Component {
         let {height, width} = Dimensions.get('window');
         height -= 21; // top navigator
 
+        let pHeight = 200;
+        let pWidth = width;
+        if (this.state.selectedPhoto.image) {
+            const image = this.state.selectedPhoto.image;
+            pWidth = image.width / image.height * pHeight;
+            if (pWidth > width) {
+                pWidth = width;
+                pHeight = image.height / image.width * pWidth;
+            }
+        }
         return (
             <View style={[styles.container, {height}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
                     title="所有照片"
-                    onTitlePress = {this._onPressImageLib.bind(this)}
+                    onTitlePress={this._onPressImageLib.bind(this)}
                     navigator={this.props.navigator}
                     hideDrop={true}
                     rightText='继续'
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
-                <View style={{marginBottom: 4}}>
-                    <Image source={this.state.selectedPhoto.image} style={styles.uploadAvatar} width={width} height={200} />
+                <View
+                    style={{marginBottom: 4, width: width, height: 200,alignItems: 'center',justifyContent: 'center'}}>
+                    <Image source={this.state.selectedPhoto.image} style={styles.uploadAvatar} width={pWidth}
+                           height={pHeight} resizeMode={'contain'}/>
                 </View>
                 <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
-                          onPressCamera={this._onPressCamera.bind(this)} onPressImage={this._onPressImage.bind(this)} />
+                          onPressCamera={this._onPressCamera.bind(this)} onPressImage={this._onPressImage.bind(this)}/>
 
             </View>
         );

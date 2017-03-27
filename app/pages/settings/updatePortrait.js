@@ -31,7 +31,9 @@ class UpdatePortrait extends Component {
     constructor(props, context) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            avatarSource: {}
+        };
 
         this.cameraOptions = {
             title: '选择照片',
@@ -171,6 +173,17 @@ class UpdatePortrait extends Component {
         let {height, width} = Dimensions.get('window');
         height -= 21; // top navigator
 
+        let pHeight = 200;
+        let pWidth = width;
+        if (this.state.avatarSource.width) {
+            const image = this.state.avatarSource;
+            pWidth = image.width / image.height * pHeight;
+            if (pWidth > width) {
+                pWidth = width;
+                pHeight = image.height / image.width * pWidth;
+            }
+        }
+
         return (
             <View style={[styles.container, {height}, Platform.OS === 'android' ? null : {marginTop: 21}]}>
                 <Toolbar
@@ -181,12 +194,15 @@ class UpdatePortrait extends Component {
                     rightText='上传'
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
-                <View style={{marginBottom: 4}}>
-                    <Image source={this.state.avatarSource} style={styles.uploadAvatar} width={width} height={200}/>
+                <View
+                    style={{marginBottom: 4,width: width, height: 200,alignItems: 'center',justifyContent: 'center'}}>
+                    <Image source={this.state.avatarSource}
+                           style={styles.uploadAvatar} width={pWidth}
+                           height={pHeight} resizeMode={'contain'}/>
                 </View>
                 <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
                           onPressCamera={this._onPressCamera.bind(this)} onPressImage={this._onPressImage.bind(this)}/>
-                {this.state.loading? (<Loading/>): null}
+                {this.state.loading ? (<Loading/>) : null}
             </View>
         );
     }
