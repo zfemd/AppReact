@@ -7,10 +7,24 @@ const photo = `<html lang="en">
     <script src="imageFilters.js" type="application/javascript"></script>
     <script src="forHtml.js" type="application/javascript"></script>
     <title></title>
+    <style>
+        .rotate90{
+            transform:rotate(90deg);
+        }
+        .rotate180{
+            transform:rotate(180deg);
+        }
+        .rotate270{
+            transform:rotate(-90deg);
+        }
+        .rotate360{
+            transform:rotate(0deg);
+        }
+    </style>
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
     <!--<div style="overflow:hidden; height:300px;">-->
-        <div style="display:-webkit-flex;display:flex;align-items:center;justify-content:center;height:400px;width:100%;">
+        <div id="cFrame" style="display:-webkit-flex;display:flex;align-items:center;justify-content:center;height:400px;width:100%;">
             <canvas id="c" style="margin:0;padding:0;"></canvas>
         </div>
         <div>
@@ -18,7 +32,10 @@ const photo = `<html lang="en">
         </div>
     <!--</div>-->
     <script type="application/javascript">
-
+        var maxHeight = null;
+        var deviceWindow = null;
+        var displaySize = null;
+        var originImg = null;
         var intervalId = setInterval(function(){
             if (!window.WebViewBridge) {return;}
             clearInterval(intervalId);
@@ -122,6 +139,70 @@ const photo = `<html lang="en">
                 applyFilters();
             };
 
+            var currentRotate = 0;
+            var applyRotate = function() {
+                if(currentRotate === 0) {
+                    Rotate90();
+                    currentRotate = 90;
+                } else if(currentRotate === 90) {
+                    Rotate180();
+                    currentRotate = 180;
+                } else if(currentRotate === 180) {
+                    Rotate270();
+                    currentRotate = 270;
+                } else if(currentRotate === 270) {
+                    Rotate0();
+                    currentRotate = 0;
+                }
+//                Rotate0()
+            };
+
+            var Rotate0 = function () {
+                canvasFab.setDimensions({width:displaySize.width,height:displaySize.height}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.width, height:originImg.height}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 0,
+                    top: 0
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
+            var Rotate90 = function () {
+                canvasFab.setDimensions({width:displaySize.height,height:displaySize.width}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.height, height:originImg.width}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 90,
+                    left:  originImg.height,
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
+            var Rotate180 = function () {
+                canvasFab.setDimensions({width:displaySize.width,height:displaySize.height}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.width, height:originImg.height}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 180,
+                    left:  originImg.width,
+                    top: originImg.height,
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
+            var Rotate270 = function () {
+                canvasFab.setDimensions({width:displaySize.height,height:displaySize.width}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.height, height:originImg.width}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 270,
+                    top: originImg.width,
+                    left: 0
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
             WebViewBridge.onMessage = function (message) {
                 try {
                     message = JSON.parse(message);
@@ -135,6 +216,8 @@ const photo = `<html lang="en">
                         applyBrightness(message.value);
                     } else if (message.beautify == 'contrast') {
                         applyContrast(message.value);
+                    } else if (message.beautify == 'rotate') {
+                        applyRotate();
                     }
                 } else if (message.type === 'filter') {
                     Object.keys(imageFilters).forEach(function(filterName){
@@ -151,8 +234,8 @@ const photo = `<html lang="en">
                     fabric.loadSVGFromString(stickers.myStickers[message.name].uri,function (objects,options) {
                         var shape = fabric.util.groupSVGElements(objects,options);
                         shape.set({
-                            left: 200,
-                            top: 200,
+                            left: deviceWindow.width/2 - 140,
+                            top: displaySize.height/2 ,
                             angle: 0,
                             scaleX: 3,
                             scaleY: 3,
@@ -177,8 +260,11 @@ const photo = `<html lang="en">
                     canvasFab.getActiveObject() && canvasFab.getActiveObject().setOptions({hasControls:false});
                     WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'jpeg'})}));
 
+                } else if (message.type == 'toSvg') {
+                    var svgResult = canvasFab.toSVG({suppressPreamble: true});
+                    WebViewBridge.send(JSON.stringify({type:"toSvg", imageData:svgResult}));
                 } else if (message.type === 'imageReady') {
-
+                    deviceWindow = message.window;
                     imgElementOrigin.addEventListener('load', function(){
 
                         imgFab = new fabric.Image(imgElementOrigin, {left: 0,top: 0,angle: 0,opacity: 1,meetOrSlice: "meet", selectable:false, evented:false});
@@ -221,18 +307,23 @@ const photo = `<html lang="en">
                     });
 
                     if (message.data) {
-                        var maxHeight = 400;
-                        var displaySize = {
+                        maxHeight = message.window.height-280+20;
+                        displaySize = {
                             width:message.image.width,
                             height:message.image.height
                         };
+                        originImg =  {
+                            width:message.image.width,
+                            height:message.image.height
+                        };
+                        document.getElementById('cFrame').style.height = maxHeight + 'px';
                         if (message.image.height > maxHeight) {
                             displaySize.height = maxHeight;
-                            displaySize.width = Math.round(maxHeight / message.image.height * message.image.width);
+                            displaySize.width =(maxHeight / message.image.height * message.image.width);
                         }
 
                         if (displaySize.width > message.window.width) {
-                            displaySize.height = Math.round(message.window.width / displaySize.width * displaySize.height);
+                            displaySize.height =(message.window.width / displaySize.width * displaySize.height);
                             displaySize.width = message.window.width;
                         }
 
