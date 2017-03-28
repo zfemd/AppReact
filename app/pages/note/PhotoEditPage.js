@@ -345,6 +345,8 @@ class PhotoEditPage extends Component {
                         })
                     }
                     break;
+                case 'toSvg':
+                    console.log(message.imageData)
             }
         }
     }
@@ -374,6 +376,11 @@ class PhotoEditPage extends Component {
                                         this._toggleSticker.call(this, rowData, sectionID, rowID);}}>
             <Image key={rowID} source={rowData.thumb} style={{width:80, height:80}} resizeMode="contain"/>
         </TouchableOpacity>;
+    }
+
+    _toSvg(){
+        const { webviewbridge } = this.refs;
+        webviewbridge.sendToBridge(JSON.stringify({type: 'toSvg'}));
     }
 
     render() {

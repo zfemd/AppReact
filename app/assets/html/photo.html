@@ -178,6 +178,9 @@
                     canvasFab.getActiveObject() && canvasFab.getActiveObject().setOptions({hasControls:false});
                     WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'jpeg'})}));
 
+                } else if (message.type == 'toSvg') {
+                    var svgResult = canvasFab.toSVG({suppressPreamble: true});
+                    WebViewBridge.send(JSON.stringify({type:"toSvg", imageData:svgResult}));
                 } else if (message.type === 'imageReady') {
                     deviceWindow = message.window;
                     imgElementOrigin.addEventListener('load', function(){
