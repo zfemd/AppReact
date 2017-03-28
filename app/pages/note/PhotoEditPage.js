@@ -114,35 +114,35 @@ class PhotoEditPage extends Component {
         this.state.stickersQqg = {};
         this.state.stickersSdp = {};
         _.each(this.state.stickers.myStickers, (v, k)=> {
-            if(v.type === 'bbs')
+            if (v.type === 'bbs')
                 this.state.stickersBbs[k] = v;
-            if(v.type === 'chz')
+            if (v.type === 'chz')
                 this.state.stickersChz[k] = v;
-            if(v.type === 'jbk')
+            if (v.type === 'jbk')
                 this.state.stickersJbk[k] = v;
-            if(v.type === 'js')
+            if (v.type === 'js')
                 this.state.stickersJs[k] = v;
-            if(v.type === 'mrz')
+            if (v.type === 'mrz')
                 this.state.stickersMrz[k] = v;
-            if(v.type === 'nrz')
+            if (v.type === 'nrz')
                 this.state.stickersNrz[k] = v;
-            if(v.type === 'pyyhh')
+            if (v.type === 'pyyhh')
                 this.state.stickersPyyhh[k] = v;
-            if(v.type === 'qqg')
+            if (v.type === 'qqg')
                 this.state.stickersQqg[k] = v;
-            if(v.type === 'sdp')
+            if (v.type === 'sdp')
                 this.state.stickersSdp[k] = v;
         });
 
-        this.state.stickersDataSourceBbs = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersBbs});
-        this.state.stickersDataSourceChz = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersChz});
-        this.state.stickersDataSourceJbk = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJbk});
-        this.state.stickersDataSourceJs = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJs});
-        this.state.stickersDataSourceMrz = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersMrz});
-        this.state.stickersDataSourceNrz = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersNrz});
-        this.state.stickersDataSourcePyyhh = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersPyyhh});
-        this.state.stickersDataSourceQqg = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersQqg});
-        this.state.stickersDataSourceSdp = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersSdp});
+        this.state.stickersDataSourceBbs = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersBbs});
+        this.state.stickersDataSourceChz = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersChz});
+        this.state.stickersDataSourceJbk = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersJbk});
+        this.state.stickersDataSourceJs = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersJs});
+        this.state.stickersDataSourceMrz = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersMrz});
+        this.state.stickersDataSourceNrz = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersNrz});
+        this.state.stickersDataSourcePyyhh = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersPyyhh});
+        this.state.stickersDataSourceQqg = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersQqg});
+        this.state.stickersDataSourceSdp = this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersSdp});
         this.state.stickersDataSource = this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers);
     }
 
@@ -349,6 +349,8 @@ class PhotoEditPage extends Component {
     }
 
     _applyImageFilter(filter) {
+        if (this.state.currentFilter === filter)
+            return;
         const { webviewbridge } = this.refs;
         this.setState({bHandlingFilter: true});
         webviewbridge.sendToBridge(JSON.stringify({type: 'filter', value: filter}));
@@ -410,25 +412,25 @@ class PhotoEditPage extends Component {
         this._stickerUpdateState(stickerInfo);
     }
 
-    _stickerUpdateState(stickerInfo){
-        if(stickerInfo.type === 'bbs')
-            this.setState({stickersDataSourceBbs: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersBbs})});
-        if(stickerInfo.type === 'chz')
-            this.setState({stickersDataSourceChz: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersChz})});
-        if(stickerInfo.type === 'jbk')
-            this.setState({stickersDataSourceJbk: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJbk})});
-        if(stickerInfo.type === 'js')
-            this.setState({stickersDataSourceJs: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJs})});
-        if(stickerInfo.type === 'mrz')
-            this.setState({stickersDataSourceMrz: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersMrz})});
-        if(stickerInfo.type === 'nrz')
-            this.setState({stickersDataSourceNrz: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersNrz})});
-        if(stickerInfo.type === 'pyyhh')
-            this.setState({stickersDataSourcePyyhh: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersPyyhh})});
-        if(stickerInfo.type === 'qqg')
-            this.setState({stickersDataSourceQqg: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersQqg})});
-        if(stickerInfo.type === 'sdp')
-            this.setState({stickersDataSourceSdp: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersSdp})});
+    _stickerUpdateState(stickerInfo) {
+        if (stickerInfo.type === 'bbs')
+            this.setState({stickersDataSourceBbs: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersBbs})});
+        if (stickerInfo.type === 'chz')
+            this.setState({stickersDataSourceChz: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersChz})});
+        if (stickerInfo.type === 'jbk')
+            this.setState({stickersDataSourceJbk: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersJbk})});
+        if (stickerInfo.type === 'js')
+            this.setState({stickersDataSourceJs: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersJs})});
+        if (stickerInfo.type === 'mrz')
+            this.setState({stickersDataSourceMrz: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersMrz})});
+        if (stickerInfo.type === 'nrz')
+            this.setState({stickersDataSourceNrz: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersNrz})});
+        if (stickerInfo.type === 'pyyhh')
+            this.setState({stickersDataSourcePyyhh: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersPyyhh})});
+        if (stickerInfo.type === 'qqg')
+            this.setState({stickersDataSourceQqg: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersQqg})});
+        if (stickerInfo.type === 'sdp')
+            this.setState({stickersDataSourceSdp: this.stickersDataSource.cloneWithRowsAndSections({m: this.state.stickersSdp})});
     }
 
     _renderSticker(rowData, sectionID, rowID, highlightRow) {
@@ -448,7 +450,7 @@ class PhotoEditPage extends Component {
     }
 
     componentDidMount() {
-        _.each(this.state.stickers.myStickers, (v,k)=> {
+        _.each(this.state.stickers.myStickers, (v, k)=> {
             this.state.stickers.myStickers[k].added = false;
         });
     }
