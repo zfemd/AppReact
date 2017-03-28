@@ -52,6 +52,7 @@ import photoHtmlIos from '../../assets/html/photo';
 
 import stickers from '../../assets/stickers/index.js';
 import ChannelTabBar from '../../components/channelTabBar';
+import _ from 'lodash';
 
 var clone = require('lodash/clone');
 
@@ -62,7 +63,7 @@ var maxSize = 1024;
 class PhotoEditPage extends Component {
     constructor(props) {
         super(props);
-
+        this._stickerUpdateState = this._stickerUpdateState.bind(this);
         this.state = {
             bShowTabsBar: true,
             bHandlingFilter: false,
@@ -102,6 +103,46 @@ class PhotoEditPage extends Component {
 
         this.state.stickers = clone(stickers);
         // here, datasource's argument must be original "stickers" object.
+
+        this.state.stickersBbs = {};
+        this.state.stickersChz = {};
+        this.state.stickersJbk = {};
+        this.state.stickersJs = {};
+        this.state.stickersMrz = {};
+        this.state.stickersNrz = {};
+        this.state.stickersPyyhh = {};
+        this.state.stickersQqg = {};
+        this.state.stickersSdp = {};
+        _.each(this.state.stickers.myStickers, (v, k)=> {
+            if(v.type === 'bbs')
+                this.state.stickersBbs[k] = v;
+            if(v.type === 'chz')
+                this.state.stickersChz[k] = v;
+            if(v.type === 'jbk')
+                this.state.stickersJbk[k] = v;
+            if(v.type === 'js')
+                this.state.stickersJs[k] = v;
+            if(v.type === 'mrz')
+                this.state.stickersMrz[k] = v;
+            if(v.type === 'nrz')
+                this.state.stickersNrz[k] = v;
+            if(v.type === 'pyyhh')
+                this.state.stickersPyyhh[k] = v;
+            if(v.type === 'qqg')
+                this.state.stickersQqg[k] = v;
+            if(v.type === 'sdp')
+                this.state.stickersSdp[k] = v;
+        });
+
+        this.state.stickersDataSourceBbs = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersBbs});
+        this.state.stickersDataSourceChz = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersChz});
+        this.state.stickersDataSourceJbk = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJbk});
+        this.state.stickersDataSourceJs = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJs});
+        this.state.stickersDataSourceMrz = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersMrz});
+        this.state.stickersDataSourceNrz = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersNrz});
+        this.state.stickersDataSourcePyyhh = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersPyyhh});
+        this.state.stickersDataSourceQqg = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersQqg});
+        this.state.stickersDataSourceSdp = this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersSdp});
         this.state.stickersDataSource = this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers);
     }
 
@@ -358,13 +399,36 @@ class PhotoEditPage extends Component {
             stickerInfo.added = true;
             this.state.updatedSticks[rowID] = true;
             webviewbridge.sendToBridge(JSON.stringify({type: "addSticker", name: rowID}));
-            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers)});
+            //this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers)});
         } else {
             stickerInfo.added = false;
             this.state.updatedSticks[rowID] = true;
             webviewbridge.sendToBridge(JSON.stringify({type: "removeSticker", name: rowID}));
-            this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers)});
+            //this.setState({stickersDataSource: this.stickersDataSource.cloneWithRowsAndSections(this.state.stickers)});
         }
+
+        this._stickerUpdateState(stickerInfo);
+    }
+
+    _stickerUpdateState(stickerInfo){
+        if(stickerInfo.type === 'bbs')
+            this.setState({stickersDataSourceBbs: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersBbs})});
+        if(stickerInfo.type === 'chz')
+            this.setState({stickersDataSourceChz: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersChz})});
+        if(stickerInfo.type === 'jbk')
+            this.setState({stickersDataSourceJbk: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJbk})});
+        if(stickerInfo.type === 'js')
+            this.setState({stickersDataSourceJs: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersJs})});
+        if(stickerInfo.type === 'mrz')
+            this.setState({stickersDataSourceMrz: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersMrz})});
+        if(stickerInfo.type === 'nrz')
+            this.setState({stickersDataSourceNrz: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersNrz})});
+        if(stickerInfo.type === 'pyyhh')
+            this.setState({stickersDataSourcePyyhh: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersPyyhh})});
+        if(stickerInfo.type === 'qqg')
+            this.setState({stickersDataSourceQqg: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersQqg})});
+        if(stickerInfo.type === 'sdp')
+            this.setState({stickersDataSourceSdp: this.stickersDataSource.cloneWithRowsAndSections({m:this.state.stickersSdp})});
     }
 
     _renderSticker(rowData, sectionID, rowID, highlightRow) {
@@ -378,7 +442,7 @@ class PhotoEditPage extends Component {
         </TouchableOpacity>;
     }
 
-    _toSvg(){
+    _toSvg() {
         const { webviewbridge } = this.refs;
         webviewbridge.sendToBridge(JSON.stringify({type: 'toSvg'}));
     }
@@ -576,39 +640,39 @@ class PhotoEditPage extends Component {
                         >
                         <ListView tabLabel="便宜有好货" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourcePyyhh} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="健身" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceJs} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="全球购" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceQqg} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="吃货志" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceChz} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="基本款" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceJbk} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="宝贝书" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceBbs} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="男人装" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceNrz} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="美人志" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceMrz} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                         <ListView tabLabel="耍大牌" style={{flex:1}} horizontal={true}
                                   contentContainerStyle={{justifyContent: 'center', alignItems:'center'}}
-                                  dataSource={this.state.stickersDataSource} enableEmptySections={true}
+                                  dataSource={this.state.stickersDataSourceSdp} enableEmptySections={true}
                                   renderRow={this._renderSticker.bind(this)}/>
                     </ScrollableTabView>
 
