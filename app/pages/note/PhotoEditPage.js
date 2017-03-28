@@ -54,11 +54,14 @@ import stickers from '../../assets/stickers/index.js';
 import ChannelTabBar from '../../components/channelTabBar';
 import _ from 'lodash';
 
-var clone = require('lodash/clone');
+let clone = require('lodash/clone');
 
-var contrastIcon = <Icon name="adjust" size={30} color="#333"/>;
-var brightnessIcon = <Icon name="sun-o" size={30} color="#333"/>;
-var maxSize = 1024;
+let contrastIcon = <Icon name="adjust" size={30} color="#333"/>;
+let brightnessIcon = <Icon name="sun-o" size={30} color="#333"/>;
+let cropIcon = <Icon name="crop" size={30} color="#333"/>;
+let rotateIcon = <Icon name="rotate-right" size={30} color="#333"/>;
+
+let maxSize = 1024;
 
 class PhotoEditPage extends Component {
     constructor(props) {
@@ -330,6 +333,12 @@ class PhotoEditPage extends Component {
         this.setState({beautifyTab: 'contrast'});
     }
 
+    _onPressRotate() {
+        const { webviewbridge } = this.refs;
+        this.setState({bHandlingFilter: true});
+        webviewbridge.sendToBridge(JSON.stringify({type: 'beautify', beautify: 'rotate'}));
+    }
+
     _resetTabBars() {
         this.state.oTabsBar = this.state.bShowTabsBar ? this.state.oDefaultTabsBar : false;
     }
@@ -573,6 +582,15 @@ class PhotoEditPage extends Component {
                                                 <Text>亮度</Text>
                                             </View>
                                         </TouchableHighlight>
+                                        <TouchableHighlight onPress={this._onPressRotate.bind(this)}
+                                                            style={{flex:1}}>
+                                            <View
+                                                style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>
+                                                {rotateIcon}
+                                                <Text>旋转</Text>
+                                            </View>
+                                        </TouchableHighlight>
+
                                         <TouchableHighlight onPress={this._onPressContrast.bind(this)} style={{flex:1}}>
                                             <View
                                                 style={{flex:1, alignItems:'center', justifyContent:'center', backgroundColor:'#eee'}}>

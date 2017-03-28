@@ -7,6 +7,20 @@
     <script src="imageFilters.js" type="application/javascript"></script>
     <script src="forHtml.js" type="application/javascript"></script>
     <title></title>
+    <style>
+        .rotate90{
+            transform:rotate(90deg);
+        }
+        .rotate180{
+            transform:rotate(180deg);
+        }
+        .rotate270{
+            transform:rotate(-90deg);
+        }
+        .rotate360{
+            transform:rotate(0deg);
+        }
+    </style>
 </head>
 <body style="margin: 0;padding:0;border:0px solid #f00;background:#000;">
     <!--<div style="overflow:hidden; height:300px;">-->
@@ -18,8 +32,10 @@
         </div>
     <!--</div>-->
     <script type="application/javascript">
+        var maxHeight = null;
         var deviceWindow = null;
         var displaySize = null;
+        var originImg = null;
         var intervalId = setInterval(function(){
             if (!window.WebViewBridge) {return;}
             clearInterval(intervalId);
@@ -123,6 +139,70 @@
                 applyFilters();
             };
 
+            var currentRotate = 0;
+            var applyRotate = function() {
+                if(currentRotate === 0) {
+                    Rotate90();
+                    currentRotate = 90;
+                } else if(currentRotate === 90) {
+                    Rotate180();
+                    currentRotate = 180;
+                } else if(currentRotate === 180) {
+                    Rotate270();
+                    currentRotate = 270;
+                } else if(currentRotate === 270) {
+                    Rotate0();
+                    currentRotate = 0;
+                }
+//                Rotate0()
+            };
+
+            var Rotate0 = function () {
+                canvasFab.setDimensions({width:displaySize.width,height:displaySize.height}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.width, height:originImg.height}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 0,
+                    top: 0
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
+            var Rotate90 = function () {
+                canvasFab.setDimensions({width:displaySize.height,height:displaySize.width}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.height, height:originImg.width}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 90,
+                    left:  originImg.height,
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
+            var Rotate180 = function () {
+                canvasFab.setDimensions({width:displaySize.width,height:displaySize.height}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.width, height:originImg.height}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 180,
+                    left:  originImg.width,
+                    top: originImg.height,
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
+            var Rotate270 = function () {
+                canvasFab.setDimensions({width:displaySize.height,height:displaySize.width}, {cssOnly:true});
+                canvasFab.setDimensions({width:originImg.height, height:originImg.width}, {backstoreOnly:true});
+                imgFab.set({
+                    angle: 270,
+                    top: originImg.width,
+                    left: 0
+                });
+                canvasFab.renderAll();
+                WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
+            };
+
             WebViewBridge.onMessage = function (message) {
                 try {
                     message = JSON.parse(message);
@@ -136,6 +216,8 @@
                         applyBrightness(message.value);
                     } else if (message.beautify == 'contrast') {
                         applyContrast(message.value);
+                    } else if (message.beautify == 'rotate') {
+                        applyRotate();
                     }
                 } else if (message.type === 'filter') {
                     Object.keys(imageFilters).forEach(function(filterName){
@@ -225,8 +307,12 @@
                     });
 
                     if (message.data) {
-                        var maxHeight = message.window.height-280+20;
+                        maxHeight = message.window.height-280+20;
                         displaySize = {
+                            width:message.image.width,
+                            height:message.image.height
+                        };
+                        originImg =  {
                             width:message.image.width,
                             height:message.image.height
                         };
