@@ -447,6 +447,12 @@ class PhotoEditPage extends Component {
         webviewbridge.sendToBridge(JSON.stringify({type: 'toSvg'}));
     }
 
+    componentDidMount() {
+        _.each(this.state.stickers.myStickers, (v,k)=> {
+            this.state.stickers.myStickers[k].added = false;
+        });
+    }
+
     render() {
         let {height, width} = Dimensions.get('window');
 
