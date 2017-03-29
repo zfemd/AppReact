@@ -176,11 +176,11 @@ class SelectPhotoPage extends Component {
                     onRightIconClicked={this._onContinue.bind(this)}
                     />
                 <View
-                    style={{marginBottom: 4, width: width, height: 200,alignItems: 'center',justifyContent: 'center'}}>
+                    style={{borderBottomWidth: 1, borderColor: '#f1f1f1', width: width, height: 200,alignItems: 'center',justifyContent: 'center'}}>
                     <Image source={this.state.selectedPhoto.image} style={{}} width={pWidth}
                            height={pHeight} resizeMode={'contain'}/>
                 </View>
-                <PhoneLib contentContainerStyle={{flex:1}} navigator={this.props.navigator}
+                <PhoneLib contentContainerStyle={{flex:1,paddingLeft:3,paddingTop:3,paddingBottom: 3}} navigator={this.props.navigator}
                           onPressCamera={this._onPressCamera.bind(this)} onPressImage={this._onPressImage.bind(this)}/>
 
             </View>

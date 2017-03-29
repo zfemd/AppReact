@@ -80,11 +80,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#F5FCFF'
     },
     image: {
-        margin: 4
+        margin: 3
     },
     cameraContainer: {
         backgroundColor: '#fff',
-        margin: 4,
+        margin: 3,
         justifyContent:'center',
         alignItems:'center'
     }
