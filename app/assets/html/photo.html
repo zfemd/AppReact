@@ -251,11 +251,11 @@
                     fabric.loadSVGFromString(stickers.myStickers[message.name].uri,function (objects,options) {
                         var shape = fabric.util.groupSVGElements(objects,options);
                         shape.set({
-                            left: deviceWindow.width/2 - 140,
-                            top: displaySize.height/2 ,
+                            left: originImg.width/2 - 120,
+                            top: originImg.height/2 - 120 ,
                             angle: 0,
-                            scaleX: 3,
-                            scaleY: 3,
+                            scaleX: 2,
+                            scaleY: 2,
                             flipY: false
                         });
 
