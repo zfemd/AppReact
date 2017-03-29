@@ -485,7 +485,7 @@ class PhotoEditPage extends Component {
 
                 <View style={styles.selectedPhotoContainer}>
                     {
-                        Platform.OS === 'ios' ?
+                        Platform.OS === 'android' ?
                             <WebViewBridge ref="webviewbridge" javaScriptEnabled={true}
                                            onBridgeMessage={this._onBridgeMessage.bind(this)}
                                            scrollEnabled={false} allowFileAccessFromFileURLs={true}
