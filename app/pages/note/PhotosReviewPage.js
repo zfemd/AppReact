@@ -106,8 +106,8 @@ class PhotosReviewPage extends Component {
         if (notePhotos != null && notePhotos.length > 0) {
             notePhotos.forEach(function(photo, index){
                 let image = {
-                    width: photo.photo.image.width,
-                    height:photo.photo.image.height,
+                    width: photo.width,
+                    height:photo.height,
                     uri: photo.image
                 };
                 images.push(image);

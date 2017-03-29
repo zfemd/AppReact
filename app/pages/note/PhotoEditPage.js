@@ -210,12 +210,12 @@ class PhotoEditPage extends Component {
     _onContinue() {
         const { navigator, dispatch } = this.props;
         const { webviewbridge } = this.refs;
+        this.setState({next: true});
 
         dispatch({type: StoreActions.ADD_TAGS, tags: this.state.tags.slice()});
 
         webviewbridge.sendToBridge(JSON.stringify({type: 'continue'}));
 
-        this.setState({next: true});
     }
 
     /**
@@ -388,7 +388,7 @@ class PhotoEditPage extends Component {
                     //this.setState({sImageBase64Data: message.data});
                     break;
                 case "continue":
-                    dispatch({type: StoreActions.ADD_NOTE_PHOTO_DATA, imageData: message.imageData});
+                    dispatch({type: StoreActions.ADD_NOTE_PHOTO_DATA, imageData: message.imageData, ImgSize: message.ImgSize});
                     this.setState({next: false});
                     if (navigator) {
                         navigator.push({
@@ -485,7 +485,7 @@ class PhotoEditPage extends Component {
 
                 <View style={styles.selectedPhotoContainer}>
                     {
-                        Platform.OS === 'android' ?
+                        Platform.OS === 'ios' ?
                             <WebViewBridge ref="webviewbridge" javaScriptEnabled={true}
                                            onBridgeMessage={this._onBridgeMessage.bind(this)}
                                            scrollEnabled={false} allowFileAccessFromFileURLs={true}

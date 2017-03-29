@@ -36,6 +36,7 @@
         var deviceWindow = null;
         var displaySize = null;
         var originImg = null;
+        var currentImg = null;
         var intervalId = setInterval(function(){
             if (!window.WebViewBridge) {return;}
             clearInterval(intervalId);
@@ -164,6 +165,10 @@
                     angle: 0,
                     top: 0
                 });
+                currentImg = {
+                    width: originImg.width,
+                    height: originImg.height
+                };
                 canvasFab.renderAll();
                 WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
             };
@@ -176,6 +181,10 @@
                     left:  originImg.height,
                 });
                 canvasFab.renderAll();
+                currentImg = {
+                    width: originImg.height,
+                    height: originImg.width
+                };
                 WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
             };
 
@@ -187,6 +196,10 @@
                     left:  originImg.width,
                     top: originImg.height,
                 });
+                currentImg = {
+                    width: originImg.width,
+                    height: originImg.height
+                };
                 canvasFab.renderAll();
                 WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
             };
@@ -200,6 +213,10 @@
                     left: 0
                 });
                 canvasFab.renderAll();
+                currentImg = {
+                    width: originImg.height,
+                    height: originImg.width
+                };
                 WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
             };
 
@@ -258,7 +275,7 @@
 
                     // remove controls before export to data url.
                     canvasFab.getActiveObject() && canvasFab.getActiveObject().setOptions({hasControls:false});
-                    WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'jpeg'})}));
+                    WebViewBridge.send(JSON.stringify({type:"continue", imageData:canvasFab.toDataURL({format:'jpeg'}),ImgSize: currentImg}));
 
                 } else if (message.type == 'toSvg') {
                     var svgResult = canvasFab.toSVG({suppressPreamble: true});
@@ -305,7 +322,6 @@
 
                         WebViewBridge.send(JSON.stringify({type:"imageUpdated"}));
                     });
-
                     if (message.data) {
                         maxHeight = message.window.height-280+20;
                         displaySize = {
@@ -334,6 +350,7 @@
                         padding *= scale;
 
                         imgElementOrigin.src = message.data;
+                        currentImg = originImg;
 
                         WebViewBridge.send(JSON.stringify({canvasFab:{width:canvasFab.width, height:canvasFab.height}}));
                     }

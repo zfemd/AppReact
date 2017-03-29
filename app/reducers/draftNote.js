@@ -20,6 +20,8 @@ const draftNote = function (state = initialState, action = {}) {
         case Actions.ADD_NOTE_PHOTO_DATA:
             if (state.currentPhotoIndex >= 0) {
                 state.notePhotos[state.currentPhotoIndex].image = action.imageData;
+                state.notePhotos[state.currentPhotoIndex].height = action.ImgSize.height;
+                state.notePhotos[state.currentPhotoIndex].width = action.ImgSize.width;
             }
             break;
         case Actions.EDIT_NOTE_PHOTO:
